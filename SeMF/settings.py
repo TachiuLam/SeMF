@@ -1,4 +1,4 @@
-#coding:utf-8
+# coding:utf-8
 """
 Django settings for SeMF project.
 
@@ -16,7 +16,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.0/howto/deployment/checklist/
 
@@ -28,28 +27,28 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 REGEX_URL = '{url}'  # url作严格匹配
-#设置不需要权限的叶绵绵
-SAFE_URL =[
-            '/view/',
-            '/user/',
-            '/notice/',
-            ]
+# 设置不需要权限的叶绵绵
+SAFE_URL = [
+    '/view/',
+    '/user/',
+    '/notice/',
+]
 
-#设置网站根地址
+# 设置网站根地址
 WEB_URL = 'http://localhost:8000'
 
-#设置登录初始路径
+# 设置登录初始路径
 LOGIN_URL = '/view/'
 
-#设置缓存文件路径
+# 设置缓存文件路径
 TMP_PATH = os.path.join(BASE_DIR, 'tmp')
 
-#设置登录session有效时间
-SESSION_COOKIE_AGE = 60*360
-#设置session管理历览器失效
-SESSION_EXPIRE_AT_BROWSER_CLOSE  = True
+# 设置登录session有效时间
+SESSION_COOKIE_AGE = 60 * 360
+# 设置session管理历览器失效
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
-#设置上传路径
+# 设置上传路径
 MEDIA_ROOT = os.path.join(BASE_DIR, 'files')
 MEDIA_URL = "/uploads/"
 
@@ -61,25 +60,26 @@ SESSION_MENU_KEY = 'smk'
 ALL_MENU_KEY = 'amk'
 PERMISSION_MENU_KEY = 'pmk'
 
-#设置邮箱
-#设置邮箱
-EMAIL_HOST = 'smtp-mail.outlook.com'          #SMTP地址
-EMAIL_PORT = 25                 #SMTP端口
-EMAIL_HOST_USER = 'xxxx@xxx.com'    #我自己的邮箱
-EMAIL_HOST_PASSWORD = 'password3'         #我的邮箱密码
-EMAIL_SUBJECT_PREFIX = u'[SeMF]'      #为邮件Subject-line前缀,默认是'[django]'
-EMAIL_USE_TLS = True               #与SMTP服务器通信时，是否启动TLS链接(安全链接)。默认是false
-#管理员站点
+# 设置邮箱
+# 设置邮箱
+EMAIL_HOST = 'smtp-mail.outlook.com'  # SMTP地址
+EMAIL_PORT = 25  # SMTP端口
+EMAIL_HOST_USER = 'xxxx@xxx.com'  # 我自己的邮箱
+EMAIL_HOST_PASSWORD = 'password3'  # 我的邮箱密码
+EMAIL_SUBJECT_PREFIX = u'[SeMF]'  # 为邮件Subject-line前缀,默认是'[django]'
+EMAIL_USE_TLS = True  # 与SMTP服务器通信时，是否启动TLS链接(安全链接)。默认是false
+# 管理员站点
 SERVER_EMAIL = 'xxxxx'
 DEFAULT_FROM_EMAIL = '安全管控平台<Se@outlook.com>'
 
-#设置队列存储
-BROKER_URL = 'amqp://user:psd@xx.xx.xx.xx/vhost'    #设置与rabbitmq一致
+# 设置队列存储
+BROKER_URL = 'amqp://user:psd@xx.xx.xx.xx/vhost'  # 设置与rabbitmq一致
 CELERY_ACCEPT_CONTENT = ['pickle', 'json', 'msgpack', 'yaml']
 
 # Application definition
 
 INSTALLED_APPS = [
+    "simpleui",  # admin后台UI库
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -110,7 +110,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'SeMF.urls'
 
-#设置静态模板文件路径
+# 设置静态模板文件路径
 TEMPLATE_PATH = os.path.join(BASE_DIR, 'templates')
 TEMPLATES = [
     {
@@ -130,33 +130,30 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'SeMF.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+#     }
+# }
 
-'''
-#设置mysql数据配置信息
+# 设置mysql数据配置信息
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'SeMF',
-        'USER': 'username',
-        'PASSWORD': 'password',
-        'HOST': 'XX.XX.XX.XX',
+        'USER': 'root',
+        'PASSWORD': '1qaz@WSX',
+        'HOST': '172.19.130.20',
         'PORT': '3306',
-        'OPTIONS':{
-                   'init_command':"SET sql_mode='STRICT_TRANS_TABLES' ",
-                   'charset':'utf8',}
+        'OPTIONS': {
+            'init_command': "SET sql_mode='STRICT_TRANS_TABLES' ",
+            'charset': 'utf8', }
     }
 }
-'''
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
@@ -176,7 +173,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
 LANGUAGE_CODE = 'zh-Hans'
@@ -189,12 +185,11 @@ USE_L10N = True
 
 USE_TZ = False
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'collectstatic')
-STATICFILES_DIRS=(
-                   os.path.join(BASE_DIR, "static"),
-                   ) 
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "static"),
+)
