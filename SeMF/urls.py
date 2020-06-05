@@ -30,7 +30,7 @@ urlpatterns = [
                   path('article/', include('ArticleManage.urls')),
                   path('mapped/', include('MappedManage.urls')),
                   path('task/', include('TaskManage.urls')),
-                  # path('api/', include('API.urls')),
+                  path('api/', include('API.urls')),
               ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 handler404 = views.page_not_found
