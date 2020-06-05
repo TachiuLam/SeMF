@@ -27,11 +27,12 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 REGEX_URL = '{url}'  # url作严格匹配
-# 设置不需要权限的叶绵绵
+# 设置不需要权限的页面
 SAFE_URL = [
     '/view/',
     '/user/',
     '/notice/',
+    '/api/',
 ]
 
 # 设置网站根地址

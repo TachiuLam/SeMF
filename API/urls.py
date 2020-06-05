@@ -8,5 +8,5 @@ from .views import rsas_upload
 
 
 urlpatterns = [
-    path('rsas/upload', rsas_upload, name='rsas_upload'),
+    path('rsas/', rsas_upload, name='rsas_upload'),
 ]
