@@ -95,6 +95,7 @@ INSTALLED_APPS = [
     'ArticleManage',
     'MappedManage',
     'TaskManage',
+    'API',
 ]
 
 MIDDLEWARE = [
