@@ -7,6 +7,6 @@ from django.urls import path
 from .views import rsas_upload
 
 
-urlpatterns = {
-    path('api/rsas/upload', rsas_upload, name='rsas_upload'),
-}
+urlpatterns = [
+    path('rsas/upload', rsas_upload, name='rsas_upload'),
+]
