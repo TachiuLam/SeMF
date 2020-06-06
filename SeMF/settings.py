@@ -21,6 +21,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '5o@#+%b-%j_-47tzgdy6-e#hz+cu%*^#0$^%(2*ie!7++=&a)%'
+# jwt加密算法
+ALGORITHM = 'HS256'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -51,6 +53,7 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 # 设置上传路径
 MEDIA_ROOT = os.path.join(BASE_DIR, 'files')
+MEDIA_API = os.path.join(MEDIA_ROOT, 'api')
 MEDIA_URL = "/uploads/"
 
 # 定义session 键：
