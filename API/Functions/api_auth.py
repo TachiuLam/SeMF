@@ -13,7 +13,7 @@ class JWT:
     @staticmethod
     def generate_jwt(user):
         """生成jwt"""
-        encoded_jwt = jwt.encode({'username': user, 'site': WEB_URL}, SECRET_KEY,
+        encoded_jwt = jwt.encode({'username': str(user), 'site': WEB_URL}, SECRET_KEY,
                                  algorithm=ALGORITHM)
         return 'Token ' + bytes.decode(encoded_jwt)
 

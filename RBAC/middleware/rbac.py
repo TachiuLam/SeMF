@@ -32,7 +32,7 @@ class RbacMiddleware(MiddlewareMixin):
     def process_request(self, request):
         request_url = request.path_info
         permission_url = request.session.get(settings.SESSION_PERMISSION_URL_KEY)
-        # 如果请求url在白名单，放行
+        # 如果请求url在白名单，放行, 添加任意的接口都需要在以下目录下，如/user/info/，或者在setting文件中定义无需授权访问
         if request_url =='/':
             if request.user.is_authenticated:
                 return HttpResponseRedirect('/user/')

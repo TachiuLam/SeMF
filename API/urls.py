@@ -4,9 +4,10 @@
 # 2020/6/4 18:00
 
 from django.urls import path
-from .views import rsas_upload
+from . import views
 
 
 urlpatterns = [
-    path('rsas/', rsas_upload, name='rsas_upload'),
+    path('rsas/', views.rsas_upload, name='rsas_upload'),
+    path('info/', views.api_info, name='apiinfo'),
 ]
