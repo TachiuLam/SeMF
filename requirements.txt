@@ -2,8 +2,11 @@ anyjson==0.3.3
 celery==4.1.1
 chardet==3.0.4
 Django==2.1.8
-pymysql
 python-nmap==0.6.1
 pytz==2018.4
 requests>=2.20.0pty
 django-simpleui
+pandas==1.0.4
+PyJWT==1.7.1
+PyMySQL==0.9.3
+

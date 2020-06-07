@@ -2,7 +2,6 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
-from django.shortcuts import HttpResponse, render
 from django.contrib.auth.decorators import login_required
 from SeMF.settings import MEDIA_API, SESSION_PERMISSION_URL_KEY, REGEX_URL
 from .Functions.api_auth import JWT
@@ -11,7 +10,7 @@ from .Functions.api_auth import JWT
 # Create your views here.
 @csrf_exempt
 @require_http_methods(['GET', 'POST'])
-def rsas_upload(request):
+def report_upload(request):
     """绿盟漏扫结果上传"""
     if request.method == 'POST':
         data = request.content_type
@@ -34,4 +33,5 @@ def rsas_upload(request):
 def api_info(request):
     user = request.user
     token = JWT.generate_jwt(user=user)
-    return render(request, 'API/apiinfo.html', {'info': {'token': token, 'method': 'method'}})
+    return render(request, 'API/apiinfo.html', {'info': {'token': token, 'method': {'type': 'rsas',  # 目前支持rsas
+                                                                                    'file': 'file'}}})

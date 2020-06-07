@@ -5,11 +5,10 @@
 <div class="x-body layui-anim layui-anim-up">
 	<table class="layui-table" lay-skin="nob">
 		<tr><td><h5>Authorization: </h5></td><td>{{ info.token }}</td></tr>
-        <tr><td><h5>RSAS报告上传</h5></td></tr>
-		<tr><td><h5>GET： </h5></td><td>/api/rsas/</td></tr>
-{#		<tr><td><h5>员工编号： </h5></td><td>{{ user.profile.user_num }}</td></tr>#}
-{#		<tr><td><h5>入驻日期 ：</h5></td><td>{{ user.date_joined }}</td></tr>#}
-{#		<tr><td><h5>职位名称：</h5></td><td>{{ user.profile.title }}</td></tr>#}
+        <tr><td><h5>扫描报告上传</h5></td></tr>
+		<tr><td><h5>POST： </h5></td><td>/api/upload/</td></tr>
+		<tr><td><h5>headers： </h5></td><td>{ 'Authorization': '{{ info.token }}' }</td></tr>
+		<tr><td><h5>body：</h5></td><td>{{ info.method }}</td></tr>
 {#		<tr><td><h5>直属领导：</h5></td><td>{{ user.profile.parent_email }}</td></tr>#}
 {#		<tr><td><h5>系统角色：</h5></td><td>{{ user.profile.roles.title }}</td></tr>#}
 {#		<tr><td><h5>座机号码： </h5></td><td>{{ user.profile.telephone }}</td></tr>#}

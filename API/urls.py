@@ -8,6 +8,6 @@ from . import views
 
 
 urlpatterns = [
-    path('rsas/', views.rsas_upload, name='rsas_upload'),
+    path('upload/', views.report_upload, name='report_upload'),
     path('info/', views.api_info, name='apiinfo'),
 ]
