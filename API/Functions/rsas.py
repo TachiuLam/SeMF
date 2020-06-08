@@ -6,11 +6,12 @@
 from AssetManage import models
 from SeMF.settings import MEDIA_API
 import pandas as pd
-import os, time
+import os
+import time
 
 
 class RSAS:
-    """处理绿盟极光扫描器报告/.html格式"""
+    """处理绿盟极光扫描器报告/.xls格式"""
 
     @staticmethod
     def end_with(path=None):
@@ -32,7 +33,7 @@ class RSAS:
     @staticmethod
     def port_add_or_update(num_id, filename):
         """根据asset_key即IP刷新该主机开放端口:删除旧端口、添加新端口"""
-        models.Port_Info.objects.filter(asset_id=num_id).delete()   # 删除已有端口
+        models.Port_Info.objects.filter(asset_id=num_id).delete()  # 删除已有端口
 
         other_info = pd.read_excel(filename, sheet_name=2).to_dict()
         # dict_keys(['操作系统类型', 'Unnamed: 1', 'Unnamed: 2', 'Unnamed: 3', 'Unnamed: 4'])
