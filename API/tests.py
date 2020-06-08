@@ -1,5 +1,6 @@
 from django.test import TestCase
 import requests
+from API.Functions.rsas import RSAS
 
 
 # Create your tests here.
@@ -21,7 +22,12 @@ def rsas_api_test(url, file=None):
 
 
 if __name__ == '__main__':
-    filepath = '/Users/tc.lam/Tachiu/Project/HexoBlog/blog/source/_posts/hello-world.md'
-    url1 = 'http://127.0.0.1:8000/api/upload/'
-    r1 = rsas_api_test(url1, filepath)
-    print(r1.text)
+    # filepath = '/Users/tc.lam/Tachiu/Project/HexoBlog/blog/source/_posts/hello-world.md'
+    # url1 = 'http://127.0.0.1:8000/api/upload/'
+    # r1 = rsas_api_test(url1, filepath)
+    # print(r1.text)
+    file1 = r'C:\Users\lintechao\Downloads\711_2020扫描1.0.2_2020_05_09_xls'
+    fl = RSAS.end_with(file1)
+    for f in fl:
+        r = RSAS.report_main(f)
+        print(r)

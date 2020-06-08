@@ -4,11 +4,12 @@
 {% block index %}
 <div class="x-body layui-anim layui-anim-up">
 	<table class="layui-table" lay-skin="nob">
-		<tr><td><h5>Authorization: </h5></td><td>{{ info.token }}</td></tr>
-        <tr><td><h5>扫描报告上传</h5></td></tr>
-		<tr><td><h5>POST： </h5></td><td>/api/upload/</td></tr>
-		<tr><td><h5>headers： </h5></td><td>{ 'Authorization': '{{ info.token }}' }</td></tr>
-		<tr><td><h5>body：</h5></td><td>{{ info.method }}</td></tr>
+        <tr><h5><pre>Authorization: {{ info.token }}</pre></h5></tr>
+        <tr><strong>扫描报告上传</strong></tr>
+        <tr><pre>/api/upload/       POST</pre></tr>
+		<tr><pre>headers = { 'Authorization': '{{ info.token }}' }
+
+body = {{ info.method }}</pre></tr>
 {#		<tr><td><h5>直属领导：</h5></td><td>{{ user.profile.parent_email }}</td></tr>#}
 {#		<tr><td><h5>系统角色：</h5></td><td>{{ user.profile.roles.title }}</td></tr>#}
 {#		<tr><td><h5>座机号码： </h5></td><td>{{ user.profile.telephone }}</td></tr>#}

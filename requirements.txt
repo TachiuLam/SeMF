@@ -9,4 +9,5 @@ django-simpleui
 pandas==1.0.4
 PyJWT==1.7.1
 PyMySQL==0.9.3
+xlrd==1.2.0
 
