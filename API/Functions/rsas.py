@@ -108,7 +108,6 @@ class RSAS:
                 print(error)
                 v_num_id = 0
 
-
             rows = len(v_info.get('漏洞名称'))
             for row in range(rows):
                 # rsas相同端口和协议是合并行保存的，需要处理
