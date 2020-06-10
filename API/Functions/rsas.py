@@ -85,7 +85,12 @@ class RSAS:
 
     @classmethod
     def vlun_add_or_update(cls, num_id, filename):
-        """关联漏洞信息，漏洞信息只新增不自动删除"""
+        """
+        关联漏洞信息，漏洞信息只新增不自动删除
+        :param num_id: 根据资产id获取相应字段进行关联
+        :param filename:  单个ip.xls的绝对路径+文件名
+        :return: {'result': '执行结果'}
+        """
         # vuln_data.keys():['端口', '协议', '服务', '漏洞名称', '漏洞风险值', '风险等级', '服务分类','应用分类',
         #                   '系统分类', '威胁分类', '时间分类', 'CVE年份分类', '发现日期', 'CVE编号', 'CNNVD编号',
         #                   'CNCVE编号', 'CNVD编号', '详细描述', '解决办法', '返回信息']
@@ -95,55 +100,58 @@ class RSAS:
         asset_type_name = asset.asset_type.name
 
         # Vulnerability_scan.objects.filter(vuln_asset_id=num_id).delete()  # 删除已有漏洞
-        try:
-            v_num_id = Vulnerability_scan.objects.latest('id').id + 1
-        except Exception as error:
-            print(error)
-            v_num_id = 0
-
         v_info = pd.read_excel(filename, sheet_name=1).to_dict()
-        rows = len(v_info.get('漏洞名称'))
-        for row in range(rows):
-            # rsas相同端口和协议是合并行保存的，需要处理
-            if str(v_info.get('端口').get(row)) == 'nan':
-                v_info['端口'][row] = str(v_info.get('端口').get(row - 1)).replace('.0', '')
-            v_port = str(v_info.get('端口').get(row)).replace('.0', '')
-            v_level = cls.vuln_severity(v_info.get('风险等级').get(row))
-            v_name = v_info.get('漏洞名称').get(row)
-            v_introduce = v_info.get('详细描述').get(row)
-            v_fix = v_info.get('解决办法').get(row)
-            v_cve = v_info.get('CVE编号').get(row)
+        if v_info.get('漏洞名称'):
+            try:
+                v_num_id = Vulnerability_scan.objects.latest('id').id + 1
+            except Exception as error:
+                print(error)
+                v_num_id = 0
 
-            v_type = asset_type_name  # 漏洞类型，关联到资产类型
-            v_id = str(asset_type_id) + time.strftime('%Y%m%d', time.localtime(time.time())) + str(v_num_id)
-            # print(v_port, v_level, v_name, v_introduce, v_fix, v_type, v_id, v_cve)
 
-            res = Vulnerability_scan.objects.get_or_create(
-                vuln_name=v_name,
-                cve_name=v_cve,
-                vuln_type=v_type,
-                leave=v_level,
-                introduce=v_introduce,
-                vuln_info=v_introduce,
-                scopen=v_port,
-                fix=v_fix,
-                vuln_asset=asset,
-            )
-            vuln = res[0]
-            # 漏洞修复状态初始化
-            if vuln.vuln_id == v_id:         # 漏洞已存在
-                if vuln.fix_status == '1':   # 若状态已修复，置为漏洞复现；其余情况维持漏洞状态
-                    vuln.fix_status = '3'
-            else:
-                vuln.vuln_id = v_id        # 漏洞未存在
-                if v_level == '0':          # 威胁等级为 信息
-                    vuln.fix_status = '0'    # 状态修改为 已忽略
-                vuln.fix_status = '2'
+            rows = len(v_info.get('漏洞名称'))
+            for row in range(rows):
+                # rsas相同端口和协议是合并行保存的，需要处理
+                if str(v_info.get('端口').get(row)) == 'nan':
+                    v_info['端口'][row] = str(v_info.get('端口').get(row - 1)).replace('.0', '')
+                v_port = str(v_info.get('端口').get(row)).replace('.0', '')
+                v_level = cls.vuln_severity(v_info.get('风险等级').get(row))
+                v_name = v_info.get('漏洞名称').get(row)
+                v_introduce = v_info.get('详细描述').get(row)
+                v_fix = v_info.get('解决办法').get(row)
+                v_cve = v_info.get('CVE编号').get(row)
 
-            v_num_id += 1  # 新建查询漏洞，漏洞id都需要递增
-            vuln.save()
+                v_type = asset_type_name  # 漏洞类型，关联到资产类型
+                v_id = str(asset_type_id) + time.strftime('%Y%m%d', time.localtime(time.time())) + str(v_num_id)
+                # print(v_port, v_level, v_name, v_introduce, v_fix, v_type, v_id, v_cve)
 
-        return {'result': '漏洞导入成功'}
+                res = Vulnerability_scan.objects.get_or_create(
+                    vuln_name=v_name,
+                    cve_name=v_cve,
+                    vuln_type=v_type,
+                    leave=v_level,
+                    introduce=v_introduce,
+                    vuln_info=v_introduce,
+                    scopen=v_port,
+                    fix=v_fix,
+                    vuln_asset=asset,
+                )
+                vuln = res[0]
+                # 漏洞修复状态初始化
+                if vuln.vuln_id == v_id:         # 漏洞已存在
+                    if vuln.fix_status == '1':   # 若状态已修复，置为漏洞复现；其余情况维持漏洞状态
+                        vuln.fix_status = '3'
+                else:
+                    vuln.vuln_id = v_id        # 漏洞未存在
+                    if v_level == '0':          # 威胁等级为 信息
+                        vuln.fix_status = '0'    # 状态修改为 已忽略
+                    vuln.fix_status = '2'
+
+                v_num_id += 1  # 新建查询漏洞，漏洞id都需要递增
+                vuln.save()
+
+            return {'result': '漏洞导入成功'}
+        return {'result': '无漏洞信息'}
 
     @classmethod
     def report_main(cls, filename):
