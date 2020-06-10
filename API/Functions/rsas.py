@@ -154,6 +154,11 @@ class RSAS:
 
     @classmethod
     def report_main(cls, filename):
+        """
+        单个IP报告处理主程序
+        :param filename: 单个ip.xls的绝对路径+文件名
+        :return: return {'ip': asset_key, 'port': port_result, 'vulnerability': vuln_result}
+        """
         # sheet json数据格式为去（前行后列）：{(0,0):{(0,1),(0,2)...},(1,0):{(1,1),(1,2)..,}
         # 要取坐标(1,2)单元格的值，则data.get('(1,0)').get(1)
 
