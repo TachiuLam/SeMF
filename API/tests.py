@@ -28,17 +28,17 @@ if __name__ == '__main__':
     # print(r1.text)
 
     # windows测试
-    # file1 = r'C:\Users\lintechao\Downloads\711_2020扫描1.0.2_2020_05_09_xls'
-    # fl = RSAS.end_with(file1)
-    # for f in fl:
-    #     r = RSAS.report_main(f)
-    #     print(r)
+    file1 = r'C:\Users\lintechao\Downloads\711_2020扫描1.0.2_2020_05_09_xls'
+    fl = RSAS.end_with(file1)
+    for f in fl:
+        r = RSAS.report_main(f)
+        print(r)
 
     # token鉴权测试
-    u = 'rot'
-    r = JWT.generate_jwt(u)
-    print(r)
-    print(type(r))
-    # r= r+b'kjahkhdkashd'
-    d = JWT.decode_jwt(r)
-    print(d)
+    # u = 'root'
+    # r = JWT.generate_jwt(u)
+    # print(r)
+    # print(type(r))
+    # # r= r+b'kjahkhdkashd'
+    # d = JWT.decode_jwt(r)
+    # print(d)
