@@ -110,6 +110,7 @@ class RSAS:
                 v['introduce'] = v_info.get('详细描述').get(row)
                 v['fix'] = v_info.get('解决办法').get(row)
                 v['cve'] = v_info.get('CVE编号').get(row)
+                v['return'] = v_info.get('返回信息').get(row)
 
                 exits = Vulnerability.status(num_id, v['name'], v_num_id)
                 v['asset'] = exits['asset']     # 先进行漏洞和资产绑定，避免删除其他资产漏洞

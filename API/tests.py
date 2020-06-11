@@ -1,6 +1,7 @@
 from django.test import TestCase
 import requests
 from API.Functions.rsas import RSAS
+from VulnManage.models import Vulnerability_scan
 from API.Functions.api_auth import JWT
 
 # Create your tests here.
@@ -29,6 +30,8 @@ if __name__ == '__main__':
 
     # windows测试
     file1 = r'C:\Users\lintechao\Downloads\711_2020扫描1.0.2_2020_05_09_xls'
+    # Vulnerability_scan.objects.filter(vuln_asset_id=14).delete()
+    # Vulnerability_scan.objects.filter(vuln_asset_id=1).delete()
     fl = RSAS.end_with(file1)
     for f in fl:
         r = RSAS.report_main(f)
