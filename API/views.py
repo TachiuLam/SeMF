@@ -7,7 +7,8 @@ from django.contrib.auth.models import User
 from SeMF.settings import MEDIA_API, SESSION_PERMISSION_URL_KEY, REGEX_URL
 from .Functions.api_auth import JWT
 from API.Functions.rsas import RSAS
-import shutil, os
+import shutil
+import os
 
 
 # Create your views here.
@@ -22,7 +23,7 @@ def report_upload(request):
         if user and User.objects.filter(username=user).first():
             file = request.FILES.get('file', None)
             # 保存报告
-            if file and file.name.endswith('.zip'):     # 只接收.zip后缀文件
+            if file and file.name.endswith('.zip'):  # 只接收.zip后缀文件
                 with open(MEDIA_API + '/' + 'rsas.zip', 'wb+') as dst:  # 打开特定的文件进行二进制的写操作
                     for chunk in file.chunks():  # 分块写入文件
                         dst.write(chunk)
