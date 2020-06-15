@@ -3,7 +3,6 @@
 # techaolin@gmail.com
 # 2020/6/6 2:59 下午
 # PyCharm
-from django.contrib.auth.models import User
 from SeMF.settings import SECRET_KEY, WEB_URL, ALGORITHM
 import jwt
 
@@ -25,12 +24,13 @@ class JWT:
             # print(b_token)
             decode_jwt = jwt.decode(b_token, SECRET_KEY, algorithms=ALGORITHM)
             user = decode_jwt.get('username')
-            if User.objects.filter(username=user).first():
-                return {'result': True}
+            return {'user': user}
+            # if User.objects.filter(username=user).first():
+            #     return {'result': True}
         except Exception as error:
             print(error)
             pass
-        return {'result': False}
+        return {'user': False}
 
         # return {'user': decode_jwt.get('username')}
 

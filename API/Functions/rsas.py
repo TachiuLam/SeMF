@@ -9,10 +9,24 @@ from SeMF.settings import MEDIA_API
 import pandas as pd
 import os
 import time
+import zipfile
 
 
 class RSAS:
     """处理绿盟极光扫描器报告/.xls格式"""
+
+    @classmethod
+    def unzip_file(cls, zip_src, dst_dir):
+        """
+        :param zip_src: 压缩文件的绝对路径
+        :param dst_dir: 解压后所在的文件夹
+        :return: 返回文件名绝对路径列表或None
+        """
+        fz = zipfile.ZipFile(str(zip_src), 'r')
+        for file in fz.namelist():
+            fz.extract(file, dst_dir)
+        file_list = cls.end_with(dst_dir)
+        return file_list
 
     @staticmethod
     def end_with(path=None):
@@ -178,11 +192,3 @@ class RSAS:
         # 导入漏洞，后续逻辑需要细化
         vuln_result = cls.vlun_add_or_update(num_id, filename)
         return {'ip': asset_key, 'port': port_result, 'vulnerability': vuln_result}
-
-
-if __name__ == '__main__':
-    file1 = r'C:\Users\lintechao\Downloads\711_2020扫描1.0.2_2020_05_09_xls'
-    fl = RSAS.end_with(file1)
-    for f in fl:
-        RSAS.report_main(f)
-        RSAS.port_update('ip', f)
