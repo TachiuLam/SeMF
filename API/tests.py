@@ -36,15 +36,15 @@ if __name__ == '__main__':
     # Vulnerability_scan.objects.filter(vuln_asset_id=14).delete()
     # Vulnerability_scan.objects.filter(vuln_asset_id=1).delete()
 
-    # fl = RSAS.end_with(file1)
-    # for f in fl:
-    #     res = rsas_api_test(url='http://127.0.0.1:8000/api/upload/', file=f)
-    #     print(res.text)
-    #     r = RSAS.report_main(f)
-    #     print(r)
-    f2 = r'C:\Users\lintechao\Downloads\728_扫描【172.18.129.25】_2020_06_15_xls.zip'
-    res = rsas_api_test(url='http://127.0.0.1:8000/api/upload/', file=f2)
-    print(res.text)
+    fl = RSAS.end_with(file1)
+    for f in fl:
+        # res = rsas_api_test(url='http://127.0.0.1:8000/api/upload/', file=f)
+        # print(res.text)
+        r = RSAS.report_main(f)
+        print(r)
+    # f2 = r'C:\Users\lintechao\Downloads\728_扫描【172.18.129.25】_2020_06_15_xls.zip'
+    # res = rsas_api_test(url='http://127.0.0.1:8000/api/upload/', file=f2)
+    # print(res.text)
 
     # token鉴权测试
     # u = 'root'

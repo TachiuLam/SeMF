@@ -46,23 +46,26 @@ class RSAS:
             return None
 
     @classmethod
-    def vuln_severity(cls, severity):
+    def vuln_severity(cls, score):
         """
-        将rsas漏洞等级转义为数据库对应字段[信息、低危、中危、高危、紧急]
-        :param severity:  rsas漏洞等级
+        将rsas漏洞等级风险值为数据库对应字段[信息、低危、中危、高危、紧急]
+        :param score:  rsas漏洞风险值
         :return: 低危 | 中危 ...
         """
-        if severity == '[低]':
+        score = float(score)
+        if score < 2.0:
+            return '0'
+        elif 2.0 <= score < 4.0:
             return '1'
-        elif severity == '[中]':
+        elif 4.0 <= score < 7.0:
             return '2'
-        elif severity == '[高]':
+        elif 7.0 <= score <= 10.0:
             return '3'
         else:
             return '0'
 
-    @staticmethod
-    def port_update(num_id, filename):
+    @classmethod
+    def port_update(cls, num_id, filename):
         """
         根据asset_key即IP刷新该主机开放端口:删除旧端口、添加新端口
         :param num_id: 资产表id字段
@@ -72,30 +75,41 @@ class RSAS:
         Port_Info.objects.filter(asset_id=num_id).delete()  # 删除已有端口
 
         other_info = pd.read_excel(filename, sheet_name=2).to_dict()
-        # dict_keys(['操作系统类型', 'Unnamed: 1', 'Unnamed: 2', 'Unnamed: 3', 'Unnamed: 4'])
-        # print(other_info.keys())
-        # print(other_info.get('操作系统类型').keys())
-        if other_info.get('操作系统类型'):
-            k = [k for (k, v) in other_info.get('操作系统类型').items() if v == '端口信息']  # ep: k = [7]
-            if k:
-                k = int(k[0])  # 确定端口信息在第k行，根据csv报告，需要提取的单元格从(1,9)-(4,9,)四格
-                while k:
-                    # 参考Asset.models.Port_Info
-                    port = other_info.get('Unnamed: 1').get(k + 2)
-                    port_product = other_info.get('Unnamed: 3').get(k + 2)
-                    port_info = other_info.get('Unnamed: 4').get(k + 2)
-                    if str(port) == 'nan' or port is None:  #
-                        break
-                    # 写入新端口
-                    Port_Info.objects.get_or_create(
-                        port=port,
-                        product=port_product,
-                        port_info=port_info,
-                        asset_id=num_id,
-                    )
-                    k += 1
-            return {'result': '端口更新成功'}
+        # print(list(other_info.values())[0].items())
+        # if other_info.get('操作系统类型'):
+        #     k = [k for (k, v) in other_info.get('操作系统类型').items() if v == '端口信息']  # ep: k = [7]
+        k = cls.port_line(other_info)
+        # 确定端口信息在第k行，根据csv报告，需要提取的单元格从(1,9)-(4,9,)四格
+        while k or k == 0:
+            # 参考Asset.models.Port_Info
+            port = other_info.get('Unnamed: 1').get(k + 2)
+            port_product = other_info.get('Unnamed: 3').get(k + 2)
+            port_info = other_info.get('Unnamed: 4').get(k + 2)
+            if str(port) == 'nan' or port is None:
+                return {'result': '端口更新成功'}
+            # 写入新端口
+            Port_Info.objects.get_or_create(
+                port=port,
+                product=port_product,
+                port_info=port_info,
+                asset_id=num_id,
+            )
+            k += 1
+
         return {'result': '无端口信息'}
+
+    @staticmethod
+    def port_line(other_info):
+        if other_info:  # other_info不为空时
+            if other_info.get('端口信息'):  # 当"端口信息"在第一行时
+                # dict_keys(['端口信息', 'Unnamed: 1', 'Unnamed: 2', 'Unnamed: 3', 'Unnamed: 4'])
+                return 0
+            else:  # 当"端口信息"不在第一行时
+                # dict_keys(['任意列名', 'Unnamed: 1', 'Unnamed: 2', 'Unnamed: 3', 'Unnamed: 4'])
+                k = [k for (k, v) in list(other_info.values())[0].items() if v == '端口信息']  # ep: k = [7]
+                if k:
+                    return int(k[0])
+        return None
 
     @classmethod
     def vlun_add_or_update(cls, num_id, filename):
@@ -111,7 +125,7 @@ class RSAS:
         # Vulnerability_scan.objects.filter(vuln_asset_id=num_id).delete()  # 删除已有漏洞
         v_info = pd.read_excel(filename, sheet_name=1).to_dict()
         if v_info.get('漏洞名称'):
-            v_num_id = Vulnerability.get_vuln_id() + 1      # 获取漏洞表id
+            v_num_id = Vulnerability.get_vuln_id() + 1  # 获取漏洞表id
             rows = len(v_info.get('漏洞名称'))
             for row in range(rows):
                 v = {}
@@ -119,7 +133,8 @@ class RSAS:
                 if str(v_info.get('端口').get(row)) == 'nan':
                     v_info['端口'][row] = str(v_info.get('端口').get(row - 1)).replace('.0', '')
                 v['port'] = str(v_info.get('端口').get(row)).replace('.0', '')
-                v['level'] = cls.vuln_severity(v_info.get('风险等级').get(row))
+                # v['level'] = cls.vuln_severity(v_info.get('风险等级').get(row))
+                v['level'] = cls.vuln_severity(v_info.get('漏洞风险值').get(row))
                 v['name'] = v_info.get('漏洞名称').get(row)
                 v['introduce'] = v_info.get('详细描述').get(row)
                 v['fix'] = v_info.get('解决办法').get(row)
@@ -127,9 +142,9 @@ class RSAS:
                 v['return'] = v_info.get('返回信息').get(row)
 
                 exits = Vulnerability.status(num_id, v['name'], v_num_id)
-                v['asset'] = exits['asset']     # 先进行漏洞和资产绑定，避免删除其他资产漏洞
+                v['asset'] = exits['asset']  # 先进行漏洞和资产绑定，避免删除其他资产漏洞
                 if exits.get('exits') is True:
-                    v['fix_status'] = exits['fix_status']       # 继承漏洞状态
+                    v['fix_status'] = exits['fix_status']  # 继承漏洞状态
                     Vulnerability.update_or_create(v, exits=True).get('result')
                 else:
                     v['fix_status'] = exits['fix_status']

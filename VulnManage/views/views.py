@@ -221,10 +221,10 @@ def vulnfixlist(request):
         for vuln_id in vuln_id_list:
             if user.is_superuser:
                 vuln = get_object_or_404(models.Vulnerability_scan,vuln_id=vuln_id)
-                vuln.fix_status='4'
+                vuln.fix_status='0'
             else:
                 vuln = get_object_or_404(models.Vulnerability_scan,asset_user=user,vuln_id=vuln_id)
-                vuln.fix_status='4'
+                vuln.fix_status='0'
             vuln.save()
         error = '操作成功'
     else:
