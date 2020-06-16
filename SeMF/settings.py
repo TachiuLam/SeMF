@@ -55,6 +55,8 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 MEDIA_ROOT = os.path.join(BASE_DIR, 'files')
 MEDIA_API = os.path.join(MEDIA_ROOT, 'api')
 MEDIA_URL = "/uploads/"
+# 上传报告类型
+MEDIA_TYPE = ['rsas', 'web']
 
 # 定义session 键：
 # 保存用户权限url列表

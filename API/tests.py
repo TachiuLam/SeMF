@@ -10,7 +10,7 @@ from API.Functions.api_auth import JWT
 def rsas_api_test(url, file=None):
     """测试rsas报告导入api"""
 
-    data1 = {
+    data = {
         'type': 'rsas'
     }
     headers = {
@@ -20,7 +20,7 @@ def rsas_api_test(url, file=None):
         files = {
             'file': (file, open(file, 'rb').read()),
         }
-        r = requests.post(url=url, data=data1, files=files, headers=headers)
+        r = requests.post(url=url, data=data, files=files, headers=headers)
         return r
     return 'error'
 
@@ -38,10 +38,10 @@ if __name__ == '__main__':
 
     fl = RSAS.end_with(file1)
     for f in fl:
-        # res = rsas_api_test(url='http://127.0.0.1:8000/api/upload/', file=f)
-        # print(res.text)
-        r = RSAS.report_main(f)
-        print(r)
+        res = rsas_api_test(url='http://127.0.0.1:8000/api/upload/', file=f)
+        print(res.text)
+        # r = RSAS.report_main(f)
+        # print(r)
     # f2 = r'C:\Users\lintechao\Downloads\728_扫描【172.18.129.25】_2020_06_15_xls.zip'
     # res = rsas_api_test(url='http://127.0.0.1:8000/api/upload/', file=f2)
     # print(res.text)

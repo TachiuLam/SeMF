@@ -4,7 +4,7 @@ from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from SeMF.settings import MEDIA_API, SESSION_PERMISSION_URL_KEY, REGEX_URL
+from SeMF.settings import MEDIA_API, MEDIA_TYPE, SESSION_PERMISSION_URL_KEY, REGEX_URL
 from API.Functions.api_auth import JWT
 from API.Functions.rsas import RSAS
 import shutil
@@ -13,14 +13,14 @@ import os
 
 # Create your views here.
 @csrf_exempt
-@require_http_methods(['GET', 'POST'])
+@require_http_methods(['POST'])
 def report_upload(request):
     """绿盟漏扫结果上传"""
-    if request.method == 'POST':
-        # print(request.FILES)
-        token = request.META.get('HTTP_AUTHORIZATION')
-        user = JWT.decode_jwt(token).get('user')
-        if user and User.objects.filter(username=user).first():
+    # print(request.FILES)
+    token = request.META.get('HTTP_AUTHORIZATION')
+    user = JWT.decode_jwt(token).get('user')
+    if user and User.objects.filter(username=user).first():
+        if request.POST.get('type') == MEDIA_TYPE[0]:  # rsas
             file = request.FILES.get('file', None)
             # 保存报告
             if file and file.name.endswith('.zip'):  # 只接收.zip后缀文件

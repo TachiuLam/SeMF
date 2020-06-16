@@ -5,7 +5,6 @@
 # PyCharm
 from AssetManage.models import Asset, Port_Info
 from .vulnerability import Vulnerability
-from SeMF.settings import MEDIA_API
 import pandas as pd
 import os
 import time
