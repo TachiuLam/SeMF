@@ -15,12 +15,12 @@ import os
 @csrf_exempt
 @require_http_methods(['POST'])
 def report_upload(request):
-    """绿盟漏扫结果上传"""
+    """漏洞报告上传"""
     # print(request.FILES)
     token = request.META.get('HTTP_AUTHORIZATION')
     user = JWT.decode_jwt(token).get('user')
     if user and User.objects.filter(username=user).first():
-        if request.POST.get('type') == MEDIA_TYPE[0]:  # rsas
+        if request.POST.get('type') == MEDIA_TYPE[0]:  # rsas处理漏扫结果
             file = request.FILES.get('file', None)
             # 保存报告
             if file and file.name.endswith('.zip'):  # 只接收.zip后缀文件
