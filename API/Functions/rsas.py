@@ -199,7 +199,7 @@ class RSAS:
             except Exception as error:
                 print(error)
                 pass
-            return {'ip': None, 'id': None}
+                return {'ip': None, 'id': None}
         else:  # IP已存在的情况,需要查找到资产对应的id
             num_id = Asset.objects.get(asset_key=asset_key).id
         # 更新端口
