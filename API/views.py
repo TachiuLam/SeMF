@@ -5,7 +5,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from SeMF.settings import MEDIA_API, SESSION_PERMISSION_URL_KEY, REGEX_URL
-from .Functions.api_auth import JWT
+from API.Functions.api_auth import JWT
 from API.Functions.rsas import RSAS
 import shutil
 import os
