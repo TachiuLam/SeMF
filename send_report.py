@@ -4,6 +4,7 @@
 # 2020/6/16 16:35
 import requests
 import os
+import time
 
 
 def send_report(url, token, filename=None):
@@ -34,6 +35,6 @@ if __name__ == '__main__':
         if each_file.endswith('.zip'):
             file_name = os.path.join(file_path, each_file)
             res = send_report(url=d_url, token=r_token, filename=file_name)
-            print(res.text)
+            print(time.ctime() + '\t' + res.text)
             # 删除报告
             os.remove(file_name)
