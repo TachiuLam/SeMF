@@ -16,6 +16,7 @@
 		<div class='layui-col-md6'>
 	       <form class="layui-form layui-col-md12 x-so">
 				<input class="layui-input" placeholder="资产关联" name="key" id="id_key">
+                <input class="layui-input" placeholder="漏洞名称" name="v_key" id="v_key">
 				<div class="layui-input-inline">
 		           <select name="contrller" id ='id_leave'>
 		              <option value="">威胁等级</option>
@@ -44,7 +45,7 @@
 
 	<xblock>
 		<div class="UserTable">
-			<button class="layui-btn " data-type="statuschoice"><i class="layui-icon layui-icon-senior"></i>批量变更</button>
+			<button class="layui-btn " data-type="statuschoice"><i class="layui-icon layui-icon-senior"></i>批量忽略</button>
 		</div>
 	</xblock>
 	
@@ -115,7 +116,7 @@ layui.use('table', function(){
     	for(var i=0;i<data.length;i++){
     		list[i] = data[i].vuln_id
     	}
-    	layer.confirm('该操作为敏感操作<br>点击确认，选中资产将变更为复查状态',function(index){
+    	layer.confirm('该操作为敏感操作<br>点击确认，选中资产将变更为已忽略状态',function(index){
 		    $.post("{% url 'vulnlistfix' %}",{'vuln_id_list':JSON.stringify(list),'action':'status','csrfmiddlewaretoken': csrf},function(res){
 	    		layer.msg(res.error);
 	    		setTimeout(function(){

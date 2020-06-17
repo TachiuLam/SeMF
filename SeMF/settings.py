@@ -48,7 +48,7 @@ TMP_PATH = os.path.join(BASE_DIR, 'tmp')
 
 # 设置登录session有效时间
 SESSION_COOKIE_AGE = 60 * 360
-# 设置session管理历览器失效
+# 设置session管理浏览器失效
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 # 设置上传路径

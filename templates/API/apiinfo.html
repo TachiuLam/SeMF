@@ -4,13 +4,30 @@
 {% block index %}
 <div class="x-body layui-anim layui-anim-up">
 	<table class="layui-table" lay-skin="nob">
+        <tr><strong>API key：</strong></tr>
         <tr><h5><pre>Authorization: {{ info.token }}</pre></h5></tr>
-        <tr><strong>扫描报告上传</strong></tr>
-        <tr><pre>/api/upload/       POST</pre></tr>
+    </table>
+	<table class="layui-table" lay-skin="nob">
+        <tr><strong>扫描报告上传：</strong></tr>
+        <tr><h5><pre>/api/upload/       POST</pre></h5></tr>
 		<tr><pre>headers = { 'Authorization': '{{ info.token }}' }
 
 body = {{ info.method }}</pre></tr>
 {#		<tr><td><h5>直属领导：</h5></td><td>{{ user.profile.parent_email }}</td></tr>#}
 	</table>
-</div>
+    <table class="layui-table" lay-skin="nob">
+        <tr><strong>Python example：</strong></tr>
+        <tr><h5><pre>data = {
+    'type': 'rsas'
+}
+headers = {
+    "Authorization": {{ info.token }}
+}
+if filename:
+    files = {
+        'file': (filename, open(filename, 'rb').read()),
+    }
+r = requests.post(url=url, data=data, files=files, headers=headers)</pre></h5></tr>
+    </table>
+    </div>
 {% endblock %}
