@@ -1,6 +1,8 @@
 from django.test import TestCase
 import requests
 from API.Functions.rsas import RSAS
+from SeMF.redis import Cache
+from AssetManage.models import AssetUser
 from VulnManage.models import Vulnerability_scan
 from API.Functions.api_auth import JWT
 
@@ -37,9 +39,9 @@ if __name__ == '__main__':
     # Vulnerability_scan.objects.filter(vuln_asset_id=1).delete()
 
     fl = RSAS.end_with(file1)
-    for f in fl:
-        res = rsas_api_test(url='http://127.0.0.1:8000/api/upload/', file=f)
-        print(res.text)
+    # for f in fl:
+    #     res = rsas_api_test(url='http://127.0.0.1:8000/api/upload/', file=f)
+    #     print(res.text)
         # r = RSAS.report_main(f)
         # print(r)
     # f2 = r'C:\Users\lintechao\Downloads\728_扫描【172.18.129.25】_2020_06_15_xls.zip'
@@ -54,3 +56,20 @@ if __name__ == '__main__':
     # # r= r+b'kjahkhdkashd'
     # d = JWT.decode_jwt(r)
     # print(d)
+
+
+
+
+
+    k = ['111','222']
+    key = Cache.write_onetime_cache(k)
+    print(key)
+    r = Cache.read_from_cache(key)
+    print(r,type(r))
+    for each in r:
+        print(each)
+
+    ii = '["520200611279"]'
+    ii = eval(ii)
+    print(ii, type(ii))
+

@@ -2,11 +2,12 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.decorators import login_required
-from .. import models, forms
+from .. import models, forms, tasks
 from SeMFSetting.views import paging
 from django.http import JsonResponse
-import time, json
+import time
 from django.utils.html import escape
+from SeMF.redis import Cache
 
 # Create your views here.
 
@@ -208,22 +209,30 @@ def vulntablelist(request):
 
 @login_required
 @csrf_protect
-def vulnfixlist(request):
-    user = request.user
-    error = ''
+def vulnlist_change_status(request):
     vuln_id_list = request.POST.get('vuln_id_list')
-    vuln_id_list = json.loads(vuln_id_list)
-    action = request.POST.get('action')
-    if action == 'status':
-        for vuln_id in vuln_id_list:
-            if user.is_superuser:
-                vuln = get_object_or_404(models.Vulnerability_scan, vuln_id=vuln_id)
-                vuln.fix_status = '0'
-            else:
-                vuln = get_object_or_404(models.Vulnerability_scan, asset_user=user, vuln_id=vuln_id)
-                vuln.fix_status = '0'
-            vuln.save()
-        error = '操作成功'
+    vuln_id_list_key = Cache.write_onetime_cache(vuln_id_list)
+    models.VulnlistFix.objects.get_or_create(
+        id=1,
+    )
+    return JsonResponse({'v_id': vuln_id_list_key})
+
+
+@login_required
+@csrf_protect
+def vulnlist_change_status_id(request, v_id):
+    vulnlist = get_object_or_404(models.VulnlistFix, id=1)
+    error = ''
+    if request.method == 'POST':
+        form = forms.Vulnlist_action_form(request.POST, instance=vulnlist)
+        if form.is_valid():
+            fix_status = form.cleaned_data['fix_status']
+            form.save()
+            tasks.vulnlist_save_status(v_id, fix_status)
+            error = '操作成功'
+        else:
+            error = '请检查输入'
     else:
-        error = '参数错误'
-    return JsonResponse({'error': error})
+        form = forms.Vulnlist_action_form(instance=vulnlist)
+    return render(request, 'formupdate.html',
+                  {'form': form, 'post_url': 'vulnlistfixid', 'argu': v_id, 'error': error})

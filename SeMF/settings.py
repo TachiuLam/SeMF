@@ -34,7 +34,7 @@ SAFE_URL = [
     '/view/',
     '/user/',
     '/notice/',
-    '/api/',    # 默认不需登陆，验证接口使用装饰器
+    '/api/',  # 默认不需登陆，验证接口使用装饰器
 ]
 
 # 设置网站根地址
@@ -161,6 +161,23 @@ DATABASES = {
             'charset': 'utf8', }
     }
 }
+
+# 设置redis配置信息
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://172.19.130.20:6379",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "CONNECTION_POOL_KWARGS": {"max_connections": 100},
+            # "PASSWORD": "密码",
+            "DECODE_RESPONSES": True
+        }
+    },
+}
+REDIS_TIMEOUT = 7 * 24 * 60 * 60
+CUBES_REDIS_TIMEOUT = 60 * 60
+NEVER_REDIS_TIMEOUT = 365 * 24 * 60 * 60
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators

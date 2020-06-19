@@ -10,7 +10,9 @@ from .views import views,cnvdviews
 urlpatterns = [
     path('user/',views.vulnview,name='vulnview'),
     path('user/list/',views.vulntablelist,name='vulnlist'),
-    path('user/listfix/',views.vulnfixlist,name='vulnlistfix'),
+    # path('user/listfix/',views.vulnfixlist,name='vulnlistfix'),
+    path('user/listfix/', views.vulnlist_change_status, name='vulnlistfix'),
+    path('user/listfixid/<str:v_id>', views.vulnlist_change_status_id, name='vulnlistfixid'),
     path('user/fix/<str:vuln_id>/',views.vuln_change_status,name='vulnfix'),
     path('user/details/<str:vuln_id>/',views.vulndetails,name='vulndetails'),
     

@@ -77,3 +77,11 @@ class Vulnerability_scan(models.Model):
 
     def __str__(self):
         return self.vuln_id
+
+
+# 新增漏洞状态变更模型，不保存数据，主要用于表单提交
+class VulnlistFix(models.Model):
+    fix_action = models.TextField('处理记录', null=True)
+    fix_status = models.CharField('修复状态', max_length=30, choices=VULN_STATUS)
+    asset_list = models.TextField('漏洞列表')
+    request_updatetime = models.DateField('更新时间', auto_now=True)

@@ -47,5 +47,4 @@ def report_upload(request):
 def api_info(request):
     user = request.user
     token = JWT.generate_jwt(user=user)
-    return render(request, 'API/apiinfo.html', {'info': {'token': token, 'method': {'type': 'rsas',  # 目前支持rsas
-                                                                                    'file': 'file'}}})
+    return render(request, 'API/apiinfo.html', {'info': {'token': token}})

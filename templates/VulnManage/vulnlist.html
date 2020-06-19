@@ -45,7 +45,7 @@
 
 	<xblock>
 		<div class="UserTable">
-			<button class="layui-btn " data-type="statuschoice"><i class="layui-icon layui-icon-senior"></i>批量忽略</button>
+			<button class="layui-btn " data-type="statuschoice"><i class="layui-icon layui-icon-senior"></i>批量变更</button>
 		</div>
 	</xblock>
 	
@@ -116,14 +116,15 @@ layui.use('table', function(){
     	for(var i=0;i<data.length;i++){
     		list[i] = data[i].vuln_id
     	}
-    	layer.confirm('该操作为敏感操作<br>点击确认，选中资产将变更为已忽略状态',function(index){
-		    $.post("{% url 'vulnlistfix' %}",{'vuln_id_list':JSON.stringify(list),'action':'status','csrfmiddlewaretoken': csrf},function(res){
-	    		layer.msg(res.error);
-	    		setTimeout(function(){
-		    		location.replace(location.href);
-		    	},2000)
-	    	});
-    	})
+    	if(list.length === 0){
+            layer.confirm('请先选择要操作的漏洞');
+        }else{
+    	    $.post("{% url 'vulnlistfix' %}",{'vuln_id_list':JSON.stringify(list),'csrfmiddlewaretoken': csrf},function(res){
+	    	url = "{% url 'vulnlistfixid' 'key' %}";
+	    	url = url.replace(/key/,res.v_id);
+	    	x_admin_show('状态变更',url,600);
+    	});
+        }
     }
   	,reload: function(){
       //执行重载
