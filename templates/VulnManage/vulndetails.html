@@ -8,8 +8,10 @@
 		<tr><td><h5>漏洞名称：&nbsp;&nbsp;&nbsp;</h5></td><td>{{vuln.vuln_name}}</td></tr>
 		<tr><td><h5>cve编号：&nbsp;&nbsp;&nbsp;</h5></td><td>{{vuln.cve_name}}</td></tr>
 		<tr><td><h5>危险等级：&nbsp;&nbsp;&nbsp;</h5></td><td>
-		{% if vuln.leave == '4' or vuln.leave == '3' %}
-             		<span class="label label-danger">高危</span>
+		{% if vuln.leave == '4' %}
+             		<span class="label label-default">紧急</span>
+            {% elif vuln.leave == '3' %}
+                <span class="label label-danger">高危</span>
               {% elif vuln.leave == '2' %}
               	<span class="label label-warning">中危</span>
               {% elif vuln.leave == '1' %}

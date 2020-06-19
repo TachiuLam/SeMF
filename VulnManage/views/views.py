@@ -191,7 +191,7 @@ def vulntablelist(request):
     for vuln_item in vuln_list:
         dic = {}
         dic['vuln_id'] = escape(vuln_item.vuln_id)
-        dic['cve_name'] = escape(vuln_item.cve_name)
+        dic['vuln_info'] = escape(vuln_item.vuln_info)
         dic['vuln_name'] = escape(vuln_item.vuln_name)
         dic['vuln_type'] = escape(vuln_item.vuln_type)
         dic['leave'] = escape(VULN_LEAVE[vuln_item.leave])

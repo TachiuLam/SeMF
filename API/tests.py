@@ -57,10 +57,6 @@ if __name__ == '__main__':
     # d = JWT.decode_jwt(r)
     # print(d)
 
-
-
-
-
     k = ['111','222']
     key = Cache.write_onetime_cache(k)
     print(key)
