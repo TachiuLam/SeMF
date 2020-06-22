@@ -41,9 +41,6 @@
 		        	<div class='layui-col-xs4' >
 		        		<b>所属环境 :</b> {{ asset.asset_area.name }}
 		        	</div>
-                    <div class='layui-col-xs4' >
-		        		<b>主机风险值 :</b> {{ asset.asset_score }}
-		        	</div>
 		        	<div class='layui-col-xs4' >
 		        		<b>资产归属 :</b> {{ asset.user_email }}
 		        	</div>
@@ -55,6 +52,9 @@
 		        		{% for item in asset.asset_user.all %}
 		        			{{ item.username }};
 		        		{% endfor %}
+		        	</div>
+                    <div class='layui-col-xs4' >
+		        		<b>主机风险值 :</b> {{ asset.asset_score }}
 		        	</div>
 		        	<div class='layui-col-xs12' >
 		        		<b>资产介绍:</b> {{ asset.asset_description }}
@@ -72,7 +72,7 @@
 		        		<ul class="layui-row layui-col-space10 layui-this">
 		                   <li class="layui-col-xs3">
 		                       <a href="javascript:;" class="x-admin-backlog-body">
-		                           <h3>威胁统计</h3>
+		                           <h3>总威胁</h3>
 		                           <p><cite>{{ vuln_status.vuln_count }}</cite></p>
 		                       </a>
 		                   </li>
@@ -90,7 +90,7 @@
 		                   </li>
 		                   <li class="layui-col-xs3">
 		                       <a href="javascript:;" class="x-admin-backlog-body">
-		                           <h3>接受风险</h3>
+		                           <h3>已忽略</h3>
 		                           <p><cite>{{ vuln_status.vuln_ign }}</cite></p>
 		                       </a>
 		                   </li>
