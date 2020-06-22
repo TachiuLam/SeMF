@@ -151,10 +151,15 @@ WSGI_APPLICATION = 'SeMF.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'SeMF',
-        'USER': 'root',
-        'PASSWORD': '1qaz@WSX',
-        'HOST': '172.19.130.20',
+        # 生产配置
+        'NAME': 'defectdojo',
+        'USER': 'defectdojo',
+        'PASSWORD': 'l8f3JJOhFor',
+        'HOST': '172.18.10.36',
+        # 'NAME': 'SeMF',
+        # 'USER': 'root',
+        # 'PASSWORD': '1qaz@WSX',
+        # 'HOST': '172.19.130.20',
         'PORT': '3306',
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES' ",
@@ -166,11 +171,12 @@ DATABASES = {
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://172.19.130.20:6379",
+        # "LOCATION": "redis://172.19.130.20:6379",
+        "LOCATION": "redis://redis:6379",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
             "CONNECTION_POOL_KWARGS": {"max_connections": 100},
-            # "PASSWORD": "密码",
+            "PASSWORD": "1qaz@WSX",
             "DECODE_RESPONSES": True
         }
     },
