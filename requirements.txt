@@ -11,3 +11,4 @@ PyJWT==1.7.1
 PyMySQL==0.9.3
 xlrd==1.2.0
 django-redis==4.10.0
+uwsgi

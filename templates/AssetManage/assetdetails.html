@@ -47,14 +47,14 @@
 		        	<div class='layui-col-xs4' >
 		        		<b>更新时间:</b> {{ asset.asset_starttime }}
 		        	</div>
+                    <div class='layui-col-xs4' >
+		        		<b>主机风险值 :</b> {{ asset.asset_score }}
+		        	</div>
 		        	<div class='layui-col-xs8' >
 		        		<b>管理人员:</b>
 		        		{% for item in asset.asset_user.all %}
 		        			{{ item.username }};
 		        		{% endfor %}
-		        	</div>
-                    <div class='layui-col-xs4' >
-		        		<b>主机风险值 :</b> {{ asset.asset_score }}
 		        	</div>
 		        	<div class='layui-col-xs12' >
 		        		<b>资产介绍:</b> {{ asset.asset_description }}
