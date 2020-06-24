@@ -25,7 +25,7 @@ SECRET_KEY = '5o@#+%b-%j_-47tzgdy6-e#hz+cu%*^#0$^%(2*ie!7++=&a)%'
 ALGORITHM = 'HS256'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 REGEX_URL = '{url}'  # url作严格匹配
@@ -75,11 +75,11 @@ EMAIL_HOST_PASSWORD = 'password3'  # 我的邮箱密码
 EMAIL_SUBJECT_PREFIX = u'[SeMF]'  # 为邮件Subject-line前缀,默认是'[django]'
 EMAIL_USE_TLS = True  # 与SMTP服务器通信时，是否启动TLS链接(安全链接)。默认是false
 # 管理员站点
-SERVER_EMAIL = 'xxxxx'
+SERVER_EMAIL = 'lintechao@yingzi.com'
 DEFAULT_FROM_EMAIL = '安全管控平台<Se@outlook.com>'
 
 # 设置队列存储
-BROKER_URL = 'amqp://user:psd@xx.xx.xx.xx/vhost'  # 设置与rabbitmq一致
+BROKER_URL = 'amqp://semf:1qaz@WSX@rabbitmq/vhost'  # 设置与rabbitmq一致
 CELERY_ACCEPT_CONTENT = ['pickle', 'json', 'msgpack', 'yaml']
 
 # Application definition
