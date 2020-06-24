@@ -8,7 +8,7 @@ metadata:       #必选，元数据
 spec:         #必选，Pod中容器的详细定义
   containers:      #必选，Pod中容器列表
   - name: semf      #必选，容器名称
-    image: registry.yingzi.com:8500/yingzi/semf:v1.0.0    #必选，容器的镜像名称
+    image: registry.yingzi.com:8500/yingzi/semf:v1.0.1    #必选，容器的镜像名称
     imagePullPolicy: Always #获取镜像的策略 Always表示下载镜像 IfnotPresent表示优先使用本地镜像，否则下载镜像，Nerver表示仅使用本地镜像
     ports:       #需要暴露的端口库号列表
     - name: semfport     #端口号名称
@@ -16,5 +16,5 @@ spec:         #必选，Pod中容器的详细定义
       # hostPort: int    #容器所在主机需要监听的端口号，默认与Container相同
       protocol: TCP     #端口协议，支持TCP和UDP，默认TCP
     command: ['uwsgi']
-    args: ['--ini', './semf/uwsgi.ini']
+    args: ['--ini', './uwsgi.ini']
   restartPolicy: OnFailure #Pod的重启策略，Always表示一旦不管以何种方式终止运行，kubelet都将重启，OnFailure表示只有Pod以非0退出码退出才重启，Nerver表示不再重启该Pod
