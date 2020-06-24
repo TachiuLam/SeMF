@@ -45,8 +45,8 @@
 
 	<xblock>
 		<div class="UserTable">
-			<button class="layui-btn " data-type="statuschoice"><i class="layui-icon layui-icon-senior"></i>批量变更</button>
-            <button class="layui-btn " ><i class="layui-icon ">&#xe601;</i>漏洞派发</button>
+			<button class="layui-btn " data-type="statuschoice" id="1"><i class="layui-icon layui-icon-senior"></i>批量变更</button>
+            <button class="layui-btn " data-type="statuschoice" id="2"><i class="layui-icon ">&#xe601;</i>漏洞派发</button>
 		</div>
 	</xblock>
 	
@@ -119,12 +119,14 @@ layui.use('table', function(){
     	}
     	if(list.length === 0){
             layer.confirm('请先选择要操作的漏洞');
-        }else{
+        } else if(this.id === '1'){
     	    $.post("{% url 'vulnlistfix' %}",{'vuln_id_list':JSON.stringify(list),'csrfmiddlewaretoken': csrf},function(res){
 	    	url = "{% url 'vulnlistfixid' 'key' %}";
 	    	url = url.replace(/key/,res.v_id);
 	    	x_admin_show('状态变更',url,600);
     	});
+        } else if(this.id === '2'){
+    	    layer.confirm('功能开发中');
         }
     }
   	,reload: function(){
