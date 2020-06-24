@@ -25,7 +25,7 @@ SECRET_KEY = '5o@#+%b-%j_-47tzgdy6-e#hz+cu%*^#0$^%(2*ie!7++=&a)%'
 ALGORITHM = 'HS256'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 REGEX_URL = '{url}'  # url作严格匹配
@@ -151,10 +151,14 @@ WSGI_APPLICATION = 'SeMF.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'SeMF',
-        'USER': 'root',
-        'PASSWORD': '1qaz@WSX',
-        'HOST': '172.19.130.20',
+        # 'NAME': 'SeMF',
+        # 'USER': 'root',
+        # 'PASSWORD': '1qaz@WSX',
+        # 'HOST': '172.19.130.20',
+        'NAME': 'defectdojo',
+        'USER': 'defectdojo',
+        'PASSWORD': 'l8f3JJOhFor',
+        'HOST': '172.18.10.36',
         'PORT': '3306',
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES' ",
