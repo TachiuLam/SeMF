@@ -85,7 +85,7 @@ CELERY_ACCEPT_CONTENT = ['pickle', 'json', 'msgpack', 'yaml']
 # Application definition
 
 INSTALLED_APPS = [
-    "simpleui",  # admin后台UI库
+    # "simpleui",  # admin后台UI库
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

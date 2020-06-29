@@ -194,6 +194,7 @@ def vulntablelist(request):
         dic['vuln_info'] = escape(vuln_item.vuln_info)
         dic['vuln_name'] = escape(vuln_item.vuln_name)
         dic['vuln_type'] = escape(vuln_item.vuln_type)
+        dic['asset_description'] = escape(vuln_item.vuln_asset.asset_description)
         dic['leave'] = escape(VULN_LEAVE[vuln_item.leave])
         dic['fix_status'] = escape(VULN_STATUS[vuln_item.fix_status])
         dic['update_data'] = escape(vuln_item.update_data)
