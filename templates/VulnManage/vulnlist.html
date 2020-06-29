@@ -16,7 +16,7 @@
 		<div class='layui-col-md6'>
 	       <form class="layui-form layui-col-md12 x-so">
 				<input class="layui-input" placeholder="资产关联" name="key" id="id_key">
-                <input class="layui-input" placeholder="漏洞名称" name="v_key" id="v_key">
+                <input class="layui-input" placeholder="漏洞名称" name="v_key" id="id_v_key">
 				<div class="layui-input-inline">
 		           <select name="contrller" id ='id_leave'>
 		              <option value="">威胁等级</option>
@@ -45,8 +45,8 @@
 
 	<xblock>
 		<div class="UserTable">
-			<button class="layui-btn " data-type="statuschoice"><i class="layui-icon layui-icon-senior"></i>批量变更</button>
-            <button class="layui-btn " ><i class="layui-icon ">&#xe601;</i>漏洞派发</button>
+			<button class="layui-btn " data-type="statuschoice" id="1"><i class="layui-icon layui-icon-senior"></i>批量变更</button>
+            <button class="layui-btn " data-type="statuschoice" id="2"><i class="layui-icon ">&#xe601;</i>漏洞派发</button>
 		</div>
 	</xblock>
 	
@@ -69,6 +69,7 @@ layui.use('table', function(){
       ,{field:'vuln_name', title: '漏洞名称', sort: true}
       ,{field:'vuln_info', title: '验证信息', sort: true}
       ,{field:'asset', title: '关联资产', event:'Asset'}
+      ,{field:'asset_description', title: '资产介绍', sort: true}
       ,{field:'vuln_type', title: '漏洞分类', sort: true}
       ,{field:'leave', title: '威胁等级',sort: true}
       ,{field:'fix_status', title: '修复状态',sort: true}
@@ -119,12 +120,14 @@ layui.use('table', function(){
     	}
     	if(list.length === 0){
             layer.confirm('请先选择要操作的漏洞');
-        }else{
+        } else if(this.id === '1'){
     	    $.post("{% url 'vulnlistfix' %}",{'vuln_id_list':JSON.stringify(list),'csrfmiddlewaretoken': csrf},function(res){
 	    	url = "{% url 'vulnlistfixid' 'key' %}";
 	    	url = url.replace(/key/,res.v_id);
 	    	x_admin_show('状态变更',url,600);
     	});
+        } else if(this.id === '2'){
+    	    layer.confirm('功能开发中');
         }
     }
   	,reload: function(){
@@ -135,6 +138,7 @@ layui.use('table', function(){
         }
         ,where: {
 	    	key: $("#id_key").val()
+            ,v_key: $("#id_v_key").val()
 	    	,leave: $("#id_leave option:selected").val()
 	    	,fix_status: $("#id_vuln_type option:selected").val()
         }
