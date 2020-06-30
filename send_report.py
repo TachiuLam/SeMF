@@ -25,7 +25,7 @@ def send_report(url, token, filename=None):
 
 
 if __name__ == '__main__':
-    d_url = 'http://172.19.130.20:8000/api/upload/'
+    d_url = 'http://semf.yingzi.com/api/upload/'
     r_token = "Token eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJzaXRlIjoia" \
               "HR0cDovL2xvY2FsaG9zdDo4MDAwIn0.11V46DHb5LHsdqVbKuO6d79qZZQGwOeDMakSFfK_aj8"
     file_path = '/data/ftp/'
