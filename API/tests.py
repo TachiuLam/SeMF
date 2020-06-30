@@ -44,9 +44,9 @@ if __name__ == '__main__':
     #     print(res.text)
         # r = RSAS.report_main(f)
         # print(r)
-    # f2 = r'C:\Users\lintechao\Downloads\728_扫描【172.18.129.25】_2020_06_15_xls.zip'
-    # res = rsas_api_test(url='http://127.0.0.1:8000/api/upload/', file=f2)
-    # print(res.text)
+    f2 = r'C:\Users\lintechao\Downloads\740_server_2020_06_30_xls.zip'
+    res = rsas_api_test(url='http://127.0.0.1:8000/api/upload/', file=f2)
+    print(res.text)
 
     # token鉴权测试
     # u = 'root'
@@ -57,15 +57,16 @@ if __name__ == '__main__':
     # d = JWT.decode_jwt(r)
     # print(d)
 
-    k = ['111','222']
-    key = Cache.write_onetime_cache(k)
-    print(key)
-    r = Cache.read_from_cache(key)
-    print(r,type(r))
-    for each in r:
-        print(each)
+    # k = ['111','222']
+    # key = Cache.write_onetime_cache(k)
+    # print(key)
+    # r = Cache.read_from_cache(key)
+    # print(r,type(r))
+    # for each in r:
+    #     print(each)
 
     ii = '["520200611279"]'
     ii = eval(ii)
     print(ii, type(ii))
+
 

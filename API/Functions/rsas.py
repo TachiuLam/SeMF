@@ -13,6 +13,19 @@ import zipfile
 
 class RSAS:
     """处理绿盟极光扫描器报告/.xls格式"""
+    @staticmethod
+    def report_type(file_name):
+        """
+        根据上传的报告文件名判断报告类型【服务器/办公设备/容器等】
+        :param file_name:
+        :return: 漏洞报告类型
+        """
+        report_type = {'server': 5, 'office': 6, 'docker': 7}
+        for key in report_type:
+            if key in str(file_name):
+                return report_type.get(key)
+            else:
+                return report_type.get('server')
 
     @classmethod
     def unzip_file(cls, zip_src, dst_dir):
@@ -156,9 +169,10 @@ class RSAS:
         return {'result': '无漏洞信息'}
 
     @classmethod
-    def report_main(cls, filename):
+    def report_main(cls, filename, report_type):
         """
         单个IP报告处理主程序
+        :param report_type: 漏洞报告类型
         :param filename: 单个ip.xls的绝对路径+文件名
         :return: return {'ip': asset_key, 'port': port_result, 'vulnerability': vuln_result}
         """
@@ -175,7 +189,7 @@ class RSAS:
 
         asset_name = asset_key = asset_description = host_info.get('Unnamed: 1').get(
             1)  # 获取ip地址,Unnamed: 1所在列的第二个键（不包含首行）
-        asset_type_id = 5  # 服务器
+        asset_type_id = report_type  # 服务器
         asset_score = str(host_info.get('Unnamed: 2').get(1))  # 获取主机风险值,Unnamed: 1所在列的第二个键（不包含首行）
         # asset_type = AssetType.objects.get(id=asset_type_id).name   # 根据asset_type_id获取对应的资产类型名称：如，服务器
         # print('类型名字：' + asset_type)
