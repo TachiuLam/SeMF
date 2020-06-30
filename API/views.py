@@ -24,13 +24,15 @@ def report_upload(request):
             file = request.FILES.get('file', None)
             # 保存报告
             if file and file.name.endswith('.zip'):  # 只接收.zip后缀文件
-                with open(MEDIA_API + '/' + 'rsas.zip', 'wb+') as dst:  # 打开特定的文件进行二进制的写操作
+                with open(MEDIA_API + '/' + file.name, 'wb+') as dst:  # 打开特定的文件进行二进制的写操作
                     for chunk in file.chunks():  # 分块写入文件
                         dst.write(chunk)
                 # 处理报告
+                # 按文件名判断漏洞报告类型，服务器/办公设备/容器等
+                report_type = RSAS.report_type(dst.name)
                 file_list = RSAS.unzip_file(dst.name, MEDIA_API)
                 for f in file_list:
-                    RSAS.report_main(f)
+                    RSAS.report_main(f, report_type)
                 # 清空文件夹
                 shutil.rmtree(MEDIA_API)
                 os.mkdir(MEDIA_API)
