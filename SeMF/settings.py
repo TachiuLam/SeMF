@@ -221,3 +221,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'collectstatic')
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
+
+# 指定simple ui 从本地加载静态文件
+SIMPLEUI_STATIC_OFFLINE = True
+# 不开启分析提交
+SIMPLEUI_ANALYSIS = False
