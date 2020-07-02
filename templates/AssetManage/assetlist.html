@@ -175,12 +175,16 @@ layui.use('table', function(){
 	 	for(var i=0;i<data.length;i++){
 	 		list[i] = data[i].asset_id
 	 	}
-	    $.post("{% url 'assetuseraction' %}",{'asset_id_list':JSON.stringify(list),'csrfmiddlewaretoken': csrf},function(res){
-	    	url = "{% url 'assetuserdo' 'key' %}";
-	    	url = url.replace(/key/,res.assetuser_id);
-	    	x_admin_show('资产指定',url,600);
-    	});
-	 }
+	 	if(list.length === 0){
+            layer.confirm('请先选择要操作的资产');
+        } else{
+	        $.post("{% url 'assetuseraction' %}",{'asset_id_list':JSON.stringify(list),'csrfmiddlewaretoken': csrf},function(res){
+	    	    url = "{% url 'assetuserdo' 'key' %}";
+	    	    url = url.replace(/key/,res.assetuser_id);
+	    	    x_admin_show('资产指定',url,600);
+    	        });
+	        }
+	 	}
 	,scanchoice: function(){ //获取选中数据
 	    var checkStatus = table.checkStatus('testReload')
 	    ,data = checkStatus.data

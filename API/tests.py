@@ -5,6 +5,7 @@ from SeMF.redis import Cache
 from AssetManage.models import AssetUser
 from VulnManage.models import Vulnerability_scan
 from API.Functions.api_auth import JWT
+from django.contrib.auth.models import User
 
 
 # Create your tests here.
@@ -38,15 +39,15 @@ if __name__ == '__main__':
     # Vulnerability_scan.objects.filter(vuln_asset_id=14).delete()
     # Vulnerability_scan.objects.filter(vuln_asset_id=1).delete()
 
-    fl = RSAS.end_with(file1)
+    # fl = RSAS.end_with(file1)
     # for f in fl:
     #     res = rsas_api_test(url='http://127.0.0.1:8000/api/upload/', file=f)
     #     print(res.text)
         # r = RSAS.report_main(f)
         # print(r)
-    f2 = r'C:\Users\lintechao\Downloads\740_server_2020_06_30_xls.zip'
-    res = rsas_api_test(url='http://127.0.0.1:8000/api/upload/', file=f2)
-    print(res.text)
+    # f2 = r'C:\Users\lintechao\Downloads\740_server_2020_06_30_xls.zip'
+    # res = rsas_api_test(url='http://127.0.0.1:8000/api/upload/', file=f2)
+    # print(res.text)
 
     # token鉴权测试
     # u = 'root'
@@ -64,7 +65,9 @@ if __name__ == '__main__':
     # print(r,type(r))
     # for each in r:
     #     print(each)
-
+    user_email = 'lintechao@yingzi.com'
+    user = User.objects.filter(email=user_email).first()
+    print(user)
     ii = '["520200611279"]'
     ii = eval(ii)
     print(ii, type(ii))
