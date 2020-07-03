@@ -17,15 +17,14 @@
 	       <form class="layui-form layui-col-md12 x-so">
 				<input class="layui-input" placeholder="资产名称" name="name" id="id_name">
 				<input class="layui-input" placeholder="资产标识" name="key" id="id_key">
-				<!--  
 				<div class="layui-input-inline">
 		           <select name="contrller" id ='id_area'>
-		              <option value="">所属区域</option>
+		              <option value="">所属项目</option>
 		              {% for item in area %}
 		              	<option value="{{ item.id }}">{{ item.name }}</option>
 		              {% endfor %}
 		            </select>
-		        </div>-->
+		        </div>
 		        <div class="layui-input-inline">
 		            <select name="contrller" id ='id_asset_type'>
 		              <option value="">资产类型</option>
@@ -82,6 +81,7 @@ layui.use('table', function(){
       ,{field:'asset_key', title: '资产标识', sort: true, event:'Asset'}
       ,{field:'asset_type', title: '资产分类', sort: true}
       ,{field:'asset_status', title: '资产状态',sort: true}
+      ,{field:'asset_area', title: '所属项目',sort: true}
       ,{field:'asset_inuse', title: '认领状态'}
       //,{field:'asset_score', title: '风险估值',sort: true}
       ,{field:'user_email', title: '管理人员'}
@@ -206,7 +206,7 @@ layui.use('table', function(){
         	name: $('#id_name').val()
 	    	,key: $("#id_key").val()
 	    	,type: $("#id_asset_type option:selected").val()
-	    	//,area: $("#id_area option:selected").val()
+	    	,area: $("#id_area option:selected").val()
         }
       });
     }

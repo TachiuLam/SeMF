@@ -319,19 +319,22 @@ def assettablelist(request):
         type_get = models.AssetType.objects.filter(parent__isnull=False)
     else:
         type_get = models.AssetType.objects.filter(id=asset_type)
-    '''
+    # 所属项目
     area = request.POST.get('area')
     if not area:
-        area_get = Area.objects.filter(parent__isnull=True)
-    else:
-        area_get = Area.objects.filter(id =area )'''
+        area = None
+    # if not area:
+    #     area_get = Area.objects.filter(parent__isnull=True)
+    # else:
+    #     area_get = Area.objects.filter(id=area)
+
     # 超管和安全团队默认查看所有资产
     if user.is_superuser or (Profile.objects.filter(user=user).first() in MANAGE_TEAM):
         assetlist = models.Asset.objects.filter(
             asset_name__icontains=name,
             asset_key__icontains=key,
             asset_type__in=type_get,
-            # asset_area__in=area_get,
+            asset_area=area,
         ).order_by('-asset_score', '-asset_updatetime')
     else:
         # 判断用户所在项目组
@@ -348,7 +351,7 @@ def assettablelist(request):
             asset_name__icontains=name,
             asset_key__icontains=key,
             asset_type__in=type_get,
-            asset_area=user_area_id,       # 控制查看所属项目
+            asset_area=user_area_id,  # 控制查看所属项目
         )
     total = assetlist.count()
     assetlist = paging(assetlist, rows, page)
@@ -370,6 +373,7 @@ def assettablelist(request):
         dic['user_email'] = escape(asset_item.user_email)
         dic['asset_score'] = escape(asset_item.asset_score)
         dic['asset_updatetime'] = escape(asset_item.asset_updatetime)
+        dic['asset_area'] = escape(asset_item.asset_area)
         data.append(dic)
     resultdict['code'] = 0
     resultdict['msg'] = "用户列表"
