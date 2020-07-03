@@ -8,6 +8,8 @@ from django.http import JsonResponse
 import time
 from django.utils.html import escape
 from SeMF.redis import Cache
+from SeMF.settings import MANAGE_TEAM
+from RBAC.models import Profile
 
 # Create your views here.
 
@@ -134,10 +136,13 @@ def vulncreate(request, asset_id):
 @login_required
 def vulndetails(request, vuln_id):
     user = request.user
-    if user.is_superuser:
+    if user.is_superuser or (Profile.objects.filter(user=user).first() in MANAGE_TEAM):
         vuln = get_object_or_404(models.Vulnerability_scan, vuln_id=vuln_id)
     else:
-        vuln = get_object_or_404(models.Vulnerability_scan, vuln_asset__asset_user=user, vuln_id=vuln_id)
+        user_area = Profile.objects.filter(user=user).values('area').first()
+        user_area_id = user_area.get('area')
+        vuln = get_object_or_404(models.Vulnerability_scan, vuln_asset__asset_area=user_area_id, vuln_id=vuln_id)
+        # vuln = get_object_or_404(models.Vulnerability_scan, vuln_asset__asset_user=user, vuln_id=vuln_id)
     return render(request, 'VulnManage/vulndetails.html', {'vuln': vuln})
 
 
@@ -167,7 +172,7 @@ def vulntablelist(request):
     if not fix_status:
         fix_status = ''
 
-    if user.is_superuser:
+    if user.is_superuser or (Profile.objects.filter(user=user).first() in MANAGE_TEAM):
         vuln_list = models.Vulnerability_scan.objects.filter(
             vuln_asset__asset_key__icontains=key,
             vuln_name__icontains=v_key,
@@ -176,8 +181,10 @@ def vulntablelist(request):
             leave__gte=1,
         ).order_by('-fix_status', '-leave')
     else:
+        user_area = Profile.objects.filter(user=user).values('area').first()
+        user_area_id = user_area.get('area')
         vuln_list = models.Vulnerability_scan.objects.filter(
-            vuln_asset__asset_user=user,
+            vuln_asset__asset_area=user_area_id,    # 根据项目ID进行筛选
             vuln_asset__asset_key__icontains=key,
             vuln_name__icontains=v_key,
             leave__icontains=leave,

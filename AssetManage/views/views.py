@@ -7,9 +7,10 @@ from .. import models, forms
 from django.contrib.auth.models import User
 from SeMFSetting.views import paging
 from django.http import JsonResponse
-from RBAC.models import Area
-import json, time, random
+from RBAC.models import Area, Profile
+import json, time
 from django.utils.html import escape
+from SeMF.settings import MANAGE_TEAM
 
 # Create your views here.
 ASSET_STATUS = {
@@ -324,8 +325,8 @@ def assettablelist(request):
         area_get = Area.objects.filter(parent__isnull=True)
     else:
         area_get = Area.objects.filter(id =area )'''
-
-    if user.is_superuser:
+    # 超管和安全团队默认查看所有资产
+    if user.is_superuser or (Profile.objects.filter(user=user).first() in MANAGE_TEAM):
         assetlist = models.Asset.objects.filter(
             asset_name__icontains=name,
             asset_key__icontains=key,
@@ -333,16 +334,21 @@ def assettablelist(request):
             # asset_area__in=area_get,
         ).order_by('-asset_score', '-asset_updatetime')
     else:
-        assetlist = user.asset_to_user.all().order_by('-asset_score', '-asset_updatetime')
-        user_child_list = user.user_parent.all()
-        for user_child in user_child_list:
-            child_asset_list = user_child.asset_to_user.all().order_by('-asset_score', '-asset_updatetime')
-            assetlist = assetlist | child_asset_list
-        assetlist.filter(
+        # 判断用户所在项目组
+        user_area = Profile.objects.filter(user=user).values('area').first()
+        if not user_area:
+            return JsonResponse(None)
+        user_area_id = user_area.get('area')
+        # assetlist = user.area_for_asset.all().order_by('-asset_score', '-asset_updatetime')
+        # user_child_list = user.user_parent.all()
+        # for user_child in user_child_list:
+        #     child_asset_list = user_child.asset_to_user.all().order_by('-asset_score', '-asset_updatetime')
+        #     assetlist = assetlist | child_asset_list
+        assetlist = models.Asset.objects.filter(
             asset_name__icontains=name,
             asset_key__icontains=key,
             asset_type__in=type_get,
-            # asset_area__in=area_get,
+            asset_area=user_area_id,       # 控制查看所属项目
         )
     total = assetlist.count()
     assetlist = paging(assetlist, rows, page)

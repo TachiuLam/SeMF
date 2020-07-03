@@ -37,6 +37,9 @@ SAFE_URL = [
     '/api/',  # 默认不需登陆，验证接口使用装饰器
 ]
 
+# 设置管理员团队
+MANAGE_TEAM = ['安全']
+
 # 设置网站根地址
 WEB_URL = 'http://localhost:8000'
 
