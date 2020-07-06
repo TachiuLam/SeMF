@@ -198,7 +198,7 @@ AUTH_LDAP_SERVER_URI = 'ldap://corp.yingzi.com:389'
 AUTH_LDAP_BIND_DN = 'uid=test04,ou=corp,dc=corp,dc=yingzi,dc=com'  # read only ldap user
 AUTH_LDAP_BIND_PASSWORD = '1qaz@WSXwaf1'
 AUTH_LDAP_USER_SEARCH = LDAPSearch('ou=corp,%s' % base_dn, ldap.SCOPE_SUBTREE, "(uid=%(user)s)")
-AUTH_LDAP_ALWAYS_UPDATE_USER = False  # Default is True,是否登录后从ldap同步用户，不进行同步，因为下游的用户表是什么样的不能确定，只能确定它也使用邮箱前缀
+# AUTH_LDAP_ALWAYS_UPDATE_USER = False  # Default is True,是否登录后从ldap同步用户，不进行同步，因为下游的用户表是什么样的不能确定，只能确定它也使用邮箱前缀
 # 下游系统不从ldap同步group staff/superuser相关，但需要从ldap验证用户是否离职
 # AUTH_LDAP_GROUP_SEARCH = LDAPSearch('ou=corp,dc=corp,dc=yingzi,dc=com', ldap.SCOPE_SUBTREE, "(objectClass=posixGroup)")
 # AUTH_LDAP_GROUP_TYPE = PosixGroupType(name_attr="cn")
@@ -211,6 +211,12 @@ AUTH_LDAP_GROUP_CACHE_TIMEOUT = 600
 AUTH_LDAP_CONNECTION_OPTIONS = {
     ldap.OPT_DEBUG_LEVEL: 1,
     ldap.OPT_REFERRALS: 0,
+}
+# 当ldap用户登录时，从ldap的用户属性对应写到django的user数据库，键为django的属性，值为ldap用户的属性
+AUTH_LDAP_USER_ATTR_MAP = {
+    "first_name": "givenName",
+    "last_name": "sn",
+    "email": "mail"
 }
 
 # Password validation
