@@ -194,7 +194,7 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',  # 同时打开本地认证，因为下游系统的权限和组关系需要用到
 )
 base_dn = 'dc=corp,dc=yingzi,dc=com'
-AUTH_LDAP_SERVER_URI = 'ldap://ldap.ssotest.net'
+AUTH_LDAP_SERVER_URI = 'ldap://corp.yingzi.com'
 AUTH_LDAP_BIND_DN = 'uid=test04,ou=corp,dc=corp,dc=yingzi,dc=com'  # read only ldap user
 AUTH_LDAP_BIND_PASSWORD = '1qaz@WSXwaf1'
 AUTH_LDAP_USER_SEARCH = LDAPSearch('ou=corp,%s' % base_dn, ldap.SCOPE_SUBTREE, "(uid=%(user)s)")
