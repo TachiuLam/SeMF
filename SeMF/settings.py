@@ -197,15 +197,15 @@ base_dn = 'dc=corp,dc=yingzi,dc=com'
 AUTH_LDAP_SERVER_URI = 'ldap://corp.yingzi.com'
 AUTH_LDAP_BIND_DN = 'uid=test04,ou=corp,dc=corp,dc=yingzi,dc=com'  # read only ldap user
 AUTH_LDAP_BIND_PASSWORD = '1qaz@WSXwaf1'
-AUTH_LDAP_USER_SEARCH = LDAPSearch('ou=corp,%s' % base_dn, ldap.SCOPE_SUBTREE, "(uid=%(user)s)")
-AUTH_LDAP_ALWAYS_UPDATE_USER = False  # Default is True,是否登录后从ldap同步用户，不进行同步，因为下游的用户表是什么样的不能确定，只能确定它也使用邮箱前缀
+# AUTH_LDAP_USER_SEARCH = LDAPSearch('ou=corp,%s' % base_dn, ldap.SCOPE_SUBTREE, "(uid=%(user)s)")
+# AUTH_LDAP_ALWAYS_UPDATE_USER = False  # Default is True,是否登录后从ldap同步用户，不进行同步，因为下游的用户表是什么样的不能确定，只能确定它也使用邮箱前缀
 # 下游系统不从ldap同步group staff/superuser相关，但需要从ldap验证用户是否离职
 # AUTH_LDAP_GROUP_SEARCH = LDAPSearch('ou=corp,dc=corp,dc=yingzi,dc=com', ldap.SCOPE_SUBTREE, "(objectClass=posixGroup)")
 # AUTH_LDAP_GROUP_TYPE = PosixGroupType(name_attr="cn")
 # AUTH_LDAP_REQUIRE_GROUP = u"cn=员工,ou=Group,dc=ldap,dc=ssotest,dc=net"
 # AUTH_LDAP_DENY_GROUP = u"cn=黑名单,ou=Group,dc=ldap,dc=ssotest,dc=net"
-AUTH_LDAP_FIND_GROUP_PERMS = True  # django从ldap的组权限中获取权限,这种方式，django自身不创建组，每次请求都调用ldap，下游子系统，我们并不需要让他同步ldap里的"员工","管理员"这种表，所以不用mirror_groups
-AUTH_LDAP_CACHE_GROUPS = True  # 如打开FIND_GROUP_PERMS后，才生效，对组关系进行缓存，不用每次请求都调用ldap
+# AUTH_LDAP_FIND_GROUP_PERMS = True  # django从ldap的组权限中获取权限,这种方式，django自身不创建组，每次请求都调用ldap，下游子系统，我们并不需要让他同步ldap里的"员工","管理员"这种表，所以不用mirror_groups
+# AUTH_LDAP_CACHE_GROUPS = True  # 如打开FIND_GROUP_PERMS后，才生效，对组关系进行缓存，不用每次请求都调用ldap
 AUTH_LDAP_GROUP_CACHE_TIMEOUT = 600
 
 # Password validation
