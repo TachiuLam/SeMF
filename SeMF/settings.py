@@ -208,6 +208,11 @@ AUTH_LDAP_ALWAYS_UPDATE_USER = False  # Default is True,是否登录后从ldap�
 # AUTH_LDAP_CACHE_GROUPS = True  # 如打开FIND_GROUP_PERMS后，才生效，对组关系进行缓存，不用每次请求都调用ldap
 AUTH_LDAP_GROUP_CACHE_TIMEOUT = 600
 
+AUTH_LDAP_CONNECTION_OPTIONS = {
+    ldap.OPT_DEBUG_LEVEL: 1,
+    ldap.OPT_REFERRALS: 0,
+}
+
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
 
