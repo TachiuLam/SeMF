@@ -197,7 +197,7 @@ base_dn = 'dc=corp,dc=yingzi,dc=com'
 AUTH_LDAP_SERVER_URI = 'ldap://corp.yingzi.com:389'
 AUTH_LDAP_BIND_DN = 'uid=test04,ou=corp,dc=corp,dc=yingzi,dc=com'  # read only ldap user
 AUTH_LDAP_BIND_PASSWORD = '1qaz@WSXwaf1'
-# AUTH_LDAP_USER_SEARCH = LDAPSearch('ou=corp,%s' % base_dn, ldap.SCOPE_SUBTREE, "(uid=%(user)s)")
+AUTH_LDAP_USER_SEARCH = LDAPSearch('ou=corp,%s' % base_dn, ldap.SCOPE_SUBTREE, "(uid=%(user)s)")
 AUTH_LDAP_ALWAYS_UPDATE_USER = False  # Default is True,是否登录后从ldap同步用户，不进行同步，因为下游的用户表是什么样的不能确定，只能确定它也使用邮箱前缀
 # 下游系统不从ldap同步group staff/superuser相关，但需要从ldap验证用户是否离职
 # AUTH_LDAP_GROUP_SEARCH = LDAPSearch('ou=corp,dc=corp,dc=yingzi,dc=com', ldap.SCOPE_SUBTREE, "(objectClass=posixGroup)")
