@@ -1,52 +1,66 @@
-#coding:utf-8
+# coding:utf-8
 
 '''
 Created on 2018年5月18日
 
 @author: yuguanc
 '''
-from django.shortcuts import render,get_object_or_404
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_protect
-from .. import models,forms
-
-@login_required
-@csrf_protect
-def osinfpupdate(request,os_id):
-    user = request.user
-    error =''
-    if user.is_superuser:
-        osinfo = get_object_or_404(models.OS_Info,id=os_id)
-    else:
-        osinfo = get_object_or_404(models.OS_Info,asset__asset_user = user,id=os_id)
-    if request.method == 'POST':
-        form = forms.OS_Info_form(request.POST,instance =osinfo)
-        if form.is_valid():
-            form.save()
-            error='信息已更新'
-        else:
-            error = '请检查输入'
-    else:
-        form = forms.OS_Info_form(instance =osinfo)
-    return render(request,'formupdate.html',{'form':form,'post_url':'assetosinfoupdate','argu':os_id,'error':error})
+from .. import models, forms
+from RBAC.service.is_admin import get_user_area
 
 
 @login_required
 @csrf_protect
-def internetinfpupdate(request,internet_id):
+def osinfpupdate(request, os_id):
     user = request.user
-    error =''
+    error = ''
     if user.is_superuser:
-        internetinfo = get_object_or_404(models.Internet_Info,id=internet_id)
+        osinfo = get_object_or_404(models.OS_Info, id=os_id)
     else:
-        internetinfo = get_object_or_404(models.Internet_Info,asset__asset_user = user,id=internet_id)
+        res = get_user_area(user)
+        is_admin, user_area_list = res.get('is_admin'), res.get('user_area_list')
+        if is_admin:
+            osinfo = get_object_or_404(models.OS_Info, id=os_id)
+        else:
+            osinfo = get_object_or_404(models.OS_Info, asset__asset_area__in=user_area_list, id=os_id)
     if request.method == 'POST':
-        form = forms.Internet_Info_form(request.POST,instance =internetinfo)
+        form = forms.OS_Info_form(request.POST, instance=osinfo)
         if form.is_valid():
             form.save()
-            error='信息已更新'
+            error = '信息已更新'
         else:
             error = '请检查输入'
     else:
-        form = forms.Internet_Info_form(instance =internetinfo)
-    return render(request,'formupdate.html',{'form':form,'post_url':'assetinternetinfoupdate','argu':internet_id,'error':error})
+        form = forms.OS_Info_form(instance=osinfo)
+    return render(request, 'formupdate.html',
+                  {'form': form, 'post_url': 'assetosinfoupdate', 'argu': os_id, 'error': error})
+
+
+@login_required
+@csrf_protect
+def internetinfpupdate(request, internet_id):
+    user = request.user
+    error = ''
+    if user.is_superuser:
+        internetinfo = get_object_or_404(models.Internet_Info, id=internet_id)
+    else:
+        res = get_user_area(user)
+        is_admin, user_area_list = res.get('is_admin'), res.get('user_area_list')
+        if is_admin:
+            internetinfo = get_object_or_404(models.Internet_Info, id=internet_id)
+        else:
+            internetinfo = get_object_or_404(models.Internet_Info, asset__asset_area__in=user_area_list, id=internet_id)
+    if request.method == 'POST':
+        form = forms.Internet_Info_form(request.POST, instance=internetinfo)
+        if form.is_valid():
+            form.save()
+            error = '信息已更新'
+        else:
+            error = '请检查输入'
+    else:
+        form = forms.Internet_Info_form(instance=internetinfo)
+    return render(request, 'formupdate.html',
+                  {'form': form, 'post_url': 'assetinternetinfoupdate', 'argu': internet_id, 'error': error})

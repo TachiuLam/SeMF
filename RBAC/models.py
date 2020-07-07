@@ -114,8 +114,9 @@ class Profile(models.Model):
     parent_email = models.EmailField('上级邮箱', null=True, blank=True)
     parent = models.ForeignKey(User, verbose_name='上级汇报', related_name='user_parent', null=True, blank=True,
                                on_delete=models.CASCADE)
-    area = models.ForeignKey(Area, verbose_name='所属项目', related_name='user_area', null=True, on_delete=models.CASCADE,
-                             limit_choices_to={'parent__isnull': True})
+    # area = models.ForeignKey(Area, verbose_name='所属项目', related_name='user_area', null=True, on_delete=models.CASCADE,
+    #                          limit_choices_to={'parent__isnull': True})
+    area = models.ManyToManyField(Area, verbose_name='所属项目', related_name='user_area')
 
     roles = models.ManyToManyField(Role, verbose_name=u'所属角色', related_name='user_role')
 

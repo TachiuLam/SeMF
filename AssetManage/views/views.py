@@ -7,10 +7,10 @@ from .. import models, forms
 from django.contrib.auth.models import User
 from SeMFSetting.views import paging
 from django.http import JsonResponse
-from RBAC.models import Area, Profile
+from RBAC.models import Area
+from RBAC.service.is_admin import get_user_area
 import json, time
 from django.utils.html import escape
-from SeMF.settings import MANAGE_TEAM
 
 # Create your views here.
 ASSET_STATUS = {
@@ -254,7 +254,12 @@ def assetupdate(request, asset_id):
     if user.is_superuser:
         asset = get_object_or_404(models.Asset, asset_id=asset_id)
     else:
-        asset = get_object_or_404(models.Asset, asset_user=user, asset_id=asset_id)
+        res = get_user_area(user)
+        is_admin, user_area_list = res.get('is_admin'), res.get('user_area_list')
+        if is_admin:
+            asset = get_object_or_404(models.Asset, asset_id=asset_id)
+        else:
+            asset = get_object_or_404(models.Asset, asset_user=user, asset_id=asset_id)
     if request.method == 'POST':
         form = forms.Asset_create_form(request.POST, instance=asset)
         if form.is_valid():
@@ -282,9 +287,15 @@ def assetdelete(request):
                 asset = get_object_or_404(models.Asset, asset_id=asset_id)
                 asset.asset_status = '2'
             else:
-                asset = get_object_or_404(models.Asset, asset_user=user, asset_id=asset_id)
-                asset.asset_inuse = False
-                asset.asset_user.remove(user)
+                res = get_user_area(user)
+                is_admin, user_area_list = res.get('is_admin'), res.get('user_area_list')
+                if is_admin:
+                    asset = get_object_or_404(models.Asset, asset_id=asset_id)
+                    asset.asset_status = '2'
+                else:
+                    asset = get_object_or_404(models.Asset, asset_user=user, asset_id=asset_id)
+                    asset.asset_inuse = False
+                    asset.asset_user.remove(user)
             asset.save()
     else:
         error = '参数错误'
@@ -323,13 +334,9 @@ def assettablelist(request):
     area = request.POST.get('area')
     if not area:
         area = None
-    # if not area:
-    #     area_get = Area.objects.filter(parent__isnull=True)
-    # else:
-    #     area_get = Area.objects.filter(id=area)
 
-    # 超管和安全团队默认查看所有资产
-    if user.is_superuser or (Profile.objects.filter(user=user).first() in MANAGE_TEAM):
+    # 超管默认查看所有资产
+    if user.is_superuser:
         assetlist = models.Asset.objects.filter(
             asset_name__icontains=name,
             asset_key__icontains=key,
@@ -337,22 +344,28 @@ def assettablelist(request):
             asset_area=area,
         ).order_by('-asset_score', '-asset_updatetime')
     else:
-        # 判断用户所在项目组
-        user_area = Profile.objects.filter(user=user).values('area').first()
-        if not user_area:
+        # 获取用户所在项目组所有
+        res = get_user_area(user)
+        is_admin, user_area_list = res.get('is_admin'), res.get('user_area_list')
+        # 为空则无任何资产查询权限
+        if not user_area_list:
             return JsonResponse(None)
-        user_area_id = user_area.get('area')
-        # assetlist = user.area_for_asset.all().order_by('-asset_score', '-asset_updatetime')
-        # user_child_list = user.user_parent.all()
-        # for user_child in user_child_list:
-        #     child_asset_list = user_child.asset_to_user.all().order_by('-asset_score', '-asset_updatetime')
-        #     assetlist = assetlist | child_asset_list
-        assetlist = models.Asset.objects.filter(
-            asset_name__icontains=name,
-            asset_key__icontains=key,
-            asset_type__in=type_get,
-            asset_area=user_area_id,  # 控制查看所属项目
-        )
+
+        if is_admin:
+            assetlist = models.Asset.objects.filter(
+                asset_name__icontains=name,
+                asset_key__icontains=key,
+                asset_type__in=type_get,
+                asset_area=area,
+            ).order_by('-asset_score', '-asset_updatetime')
+        else:
+            assetlist = models.Asset.objects.filter(
+                asset_name__icontains=name,
+                asset_key__icontains=key,
+                asset_type__in=type_get,
+                asset_area__in=user_area_list,  # 控制查看所属项目
+            ).order_by('-asset_score', '-asset_updatetime')
+
     total = assetlist.count()
     assetlist = paging(assetlist, rows, page)
     data = []

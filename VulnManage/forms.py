@@ -77,3 +77,13 @@ class Vulnlist_action_form(ModelForm):
             'fix_status': widgets.Select(attrs={'class': 'form-control'}),
             'fix_action': widgets.Textarea(attrs={'class': 'form-control', 'placeholder': '处理记录，如忽略，请说明原因'}),
         }
+
+
+class Vulnlist_action_form2(ModelForm):
+    class Meta:
+        model = models.VulnlistFix2
+        fields = ['fix_status', 'fix_action']
+        widgets = {
+            'fix_status': widgets.Select(attrs={'class': 'form-control'}),
+            'fix_action': widgets.Textarea(attrs={'class': 'form-control', 'placeholder': '处理记录，如忽略，请说明原因'}),
+        }
