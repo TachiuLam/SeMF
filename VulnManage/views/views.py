@@ -206,7 +206,8 @@ def vulntablelist(request):
         res = get_user_area(user)
         is_admin, user_area_list = res.get('is_admin'), res.get('user_area_list')
         if not user_area_list:
-            return JsonResponse(None)
+            # 随便加个字符串，保证数据库查不到，逻辑有点烂！
+            user_area_list.append('no allow')
 
         if is_admin:
             vuln_list = models.Vulnerability_scan.objects.filter(

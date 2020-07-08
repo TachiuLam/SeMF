@@ -349,7 +349,8 @@ def assettablelist(request):
         is_admin, user_area_list = res.get('is_admin'), res.get('user_area_list')
         # 为空则无任何资产查询权限
         if not user_area_list:
-            return JsonResponse(None)
+            # 随便加个字符串，保证数据库查不到，逻辑有点烂！
+            user_area_list.append('no allow')
 
         if is_admin:
             assetlist = models.Asset.objects.filter(
