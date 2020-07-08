@@ -6,6 +6,9 @@ from AssetManage.models import AssetUser
 from VulnManage.models import Vulnerability_scan
 from API.Functions.api_auth import JWT
 from django.contrib.auth.models import User
+from ldap3 import Server, Connection, ALL, SUBTREE, ServerPool,ALL_ATTRIBUTES
+from ldap3 import Server, Connection, ALL, SUBTREE, ServerPool
+import random
 
 
 # Create your tests here.
@@ -65,11 +68,79 @@ if __name__ == '__main__':
     # print(r,type(r))
     # for each in r:
     #     print(each)
-    user_email = 'lintechao@yingzi.com'
-    user = User.objects.filter(email=user_email).first()
-    print(user)
-    ii = '["520200611279"]'
-    ii = eval(ii)
-    print(ii, type(ii))
+    # user_email = 'lintechao@yingzi.com'
+    # user = User.objects.filter(email=user_email).first()
+    # print(user)
+    # ii = '["520200611279"]'
+    # ii = eval(ii)
+    # print(ii, type(ii))
 
 
+
+    LDAP_SERVER_POOL = ["corp.yingzi.com:389"]
+    ADMIN_DN = "test04"
+    ADMIN_PASSWORD = "1qaz@WSXwaf1"
+    SEARCH_BASE = "ou=corp,dc=corp,dc=yingzi,dc=com"
+
+
+    def ldap_auth(username, password):
+        ldap_server_pool = ServerPool(LDAP_SERVER_POOL)
+        conn = Connection(ldap_server_pool, user=ADMIN_DN, password=ADMIN_PASSWORD,
+                          check_names=True, lazy=False, raise_exceptions=False)
+
+        conn.open()
+        conn.bind()
+
+        res = conn.search(
+            search_base=SEARCH_BASE,
+            search_filter='(sAMAccountName={})'.format(username),
+            search_scope=SUBTREE,
+            attributes=['cn', 'givenName', 'mail', 'sAMAccountName'],
+            paged_size=5
+        )
+
+        if res:
+            entry = conn.response[0]
+            dn = entry['dn']
+            attr_dict = entry['attributes']
+
+            # check password by dn
+            try:
+                conn2 = Connection(ldap_server_pool, user=dn, password=password, check_names=True, lazy=False,
+                                   raise_exceptions=False)
+                conn2.bind()
+                if conn2.result["description"] == "success":
+                    return {'auth_res': True, 'mail': attr_dict["mail"], 'sName': attr_dict["sAMAccountName"],
+                            'gName': attr_dict["givenName"]}
+                else:
+                    return {'auth_res': False}
+            except Exception as e:
+                print(e)
+                return {'auth_res': False}
+        else:
+            return {'auth_res': False}
+
+    username = 'lintechao'
+    passwd = 'Iandi1562618'
+    # username = 'test04'
+    # passwd = '1qaz@WSXwaf1'
+    res = ldap_auth(username, passwd)
+    print(res)
+
+    test = None or '1'
+    print(test)
+
+
+
+    # def generate_password(code_len=16):
+    #     all_lowercase = 'abcdefghijklmnopqrstuvwxyz'
+    #     all_uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    #     all_numbers = '0123456789'
+    #     all_punctuations = r'!@#$%^&*'
+    #     all_password = all_lowercase + all_uppercase + all_numbers + all_punctuations
+    #     code = ''
+    #     for _ in range(code_len):
+    #         index = random.randint(0, len(all_password) - 1)
+    #         code += all_password[index]
+    #     return code
+    # print(generate_password(16))

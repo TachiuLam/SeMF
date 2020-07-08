@@ -12,8 +12,6 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
-import ldap
-from django_auth_ldap.config import LDAPSearch, PosixGroupType
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -189,35 +187,10 @@ CUBES_REDIS_TIMEOUT = 60 * 60
 NEVER_REDIS_TIMEOUT = 365 * 24 * 60 * 60
 
 # LDAP 认证
-AUTHENTICATION_BACKENDS = (
-    'django_auth_ldap.backend.LDAPBackend',  # 配置为先使用LDAP认证，如通过认证则不再使用后面的认证方式
-    'django.contrib.auth.backends.ModelBackend',  # 同时打开本地认证，因为下游系统的权限和组关系需要用到
-)
-base_dn = 'dc=corp,dc=yingzi,dc=com'
-AUTH_LDAP_SERVER_URI = 'ldap://corp.yingzi.com:389'
-AUTH_LDAP_BIND_DN = 'uid=test04,ou=users,dc=corp,dc=yingzi,dc=com'  # read only ldap user
-AUTH_LDAP_BIND_PASSWORD = '1qaz@WSXwaf1'
-AUTH_LDAP_USER_SEARCH = LDAPSearch('ou=users,%s' % base_dn, ldap.SCOPE_SUBTREE, "(uid=%(user)s)")
-# AUTH_LDAP_ALWAYS_UPDATE_USER = False  # Default is True,是否登录后从ldap同步用户，不进行同步，因为下游的用户表是什么样的不能确定，只能确定它也使用邮箱前缀
-# 下游系统不从ldap同步group staff/superuser相关，但需要从ldap验证用户是否离职
-# AUTH_LDAP_GROUP_SEARCH = LDAPSearch('ou=corp,dc=corp,dc=yingzi,dc=com', ldap.SCOPE_SUBTREE, "(objectClass=posixGroup)")
-# AUTH_LDAP_GROUP_TYPE = PosixGroupType(name_attr="cn")
-# AUTH_LDAP_REQUIRE_GROUP = u"cn=员工,ou=Group,dc=ldap,dc=ssotest,dc=net"
-# AUTH_LDAP_DENY_GROUP = u"cn=黑名单,ou=Group,dc=ldap,dc=ssotest,dc=net"
-# AUTH_LDAP_FIND_GROUP_PERMS = True  # django从ldap的组权限中获取权限,这种方式，django自身不创建组，每次请求都调用ldap，下游子系统，我们并不需要让他同步ldap里的"员工","管理员"这种表，所以不用mirror_groups
-# AUTH_LDAP_CACHE_GROUPS = True  # 如打开FIND_GROUP_PERMS后，才生效，对组关系进行缓存，不用每次请求都调用ldap
-AUTH_LDAP_GROUP_CACHE_TIMEOUT = 600
-
-AUTH_LDAP_CONNECTION_OPTIONS = {
-    ldap.OPT_DEBUG_LEVEL: 1,
-    ldap.OPT_REFERRALS: 0,
-}
-# 当ldap用户登录时，从ldap的用户属性对应写到django的user数据库，键为django的属性，值为ldap用户的属性
-AUTH_LDAP_USER_ATTR_MAP = {
-    "first_name": "givenName",
-    "last_name": "sn",
-    "email": "mail"
-}
+LDAP_SERVER_POOL = ["corp.yingzi.com:389"]
+ADMIN_DN = "test04"
+ADMIN_PASSWORD = "1qaz@WSXwaf1"
+SEARCH_BASE = "ou=corp,dc=corp,dc=yingzi,dc=com"
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators

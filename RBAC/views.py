@@ -20,6 +20,7 @@ from AssetManage.models import Asset
 from VulnManage.models import Vulnerability, Vulnerability_scan
 from .service.init_permission import init_permission
 from django.utils.html import escape
+from RBAC.service.ldap_auth import ldap_auth, generate_password
 
 REAUEST_STATUS = {
     '0': '待审批',
@@ -202,7 +203,6 @@ def resetpasswd(request, argu='resetpsd'):
 @csrf_protect
 def changeuserinfo(request):
     user = request.user
-    error = ''
     if request.method == 'POST':
         form = forms.UserInfoForm(request.POST, instance=user.profile)
         if form.is_valid():
@@ -230,7 +230,6 @@ def userinfo(request):
 @login_required
 @csrf_protect
 def changepsd(request):
-    error = ''
     if request.method == 'POST':
         form = forms.ChangPasswdForm(request.POST)
         if form.is_valid():
@@ -272,34 +271,54 @@ def logout(request):
 
 @csrf_protect
 def login(request):
-    error = ''
     if request.method == 'POST':
         form = forms.SigninForm(request.POST)
         if form.is_valid():
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
-            user_get = User.objects.filter(username=username).first()
-            if user_get:
-                if user_get.profile.lock_time > timezone.now():
-                    error = u'账号已锁定,' + str(user_get.profile.lock_time.strftime("%Y-%m-%d %H:%M")) + '后可尝试'
+            # 先进行ldap认证
+            ldap_auth_res = ldap_auth(username=username, password=password)
+            if ldap_auth_res.get('auth_res'):
+                # 判断ldap用户是否已在本地创建
+                user_get = User.objects.filter(username=username).first()
+                # 若未创建，新建用户，增加本机随机密码
+                if not user_get:
+                    User.objects.create(username=username, email=ldap_auth_res.get('mail'),
+                                        password=generate_password(16))
+                    user_get = User.objects.filter(username=username).first()
                 else:
-                    user = auth.authenticate(username=username, password=password)
-                    if user:
-                        user.profile.error_count = 0
-                        user.save()
-                        auth.login(request, user)
-                        # 这里需要加入权限初始化
-                        init_permission(request, user)
-                        return HttpResponseRedirect('/user/')
-                    else:
-                        user_get.profile.error_count += 1
-                        if user_get.profile.error_count >= 5:
-                            user_get.profile.error_count = 0
-                            user_get.profile.lock_time = timezone.now() + datetime.timedelta(minutes=10)
-                        user_get.save()
-                        error = '登陆失败,已错误登录' + str(user_get.profile.error_count) + '次,5次后账号锁定',
+                    # 更新密码错误累计次数
+                    user_get.profile.error_count = 0
+                    user_get.save()
+                # 添加此行才可认证
+                auth.login(request, user_get)
+                # 这里需要加入权限初始化
+                init_permission(request, user_get)
+                return HttpResponseRedirect('/user/')
+            # 本地账号认证
             else:
-                error = '请检查用户信息'
+                user_get = User.objects.filter(username=username).first()
+                if user_get:
+                    if user_get.profile.lock_time > timezone.now():
+                        error = u'账号已锁定,' + str(user_get.profile.lock_time.strftime("%Y-%m-%d %H:%M")) + '后可尝试'
+                    else:
+                        user = auth.authenticate(username=username, password=password)
+                        if user:
+                            user.profile.error_count = 0
+                            user.save()
+                            auth.login(request, user)
+                            # 这里需要加入权限初始化
+                            init_permission(request, user)
+                            return HttpResponseRedirect('/user/')
+                        else:
+                            user_get.profile.error_count += 1
+                            if user_get.profile.error_count >= 5:
+                                user_get.profile.error_count = 0
+                                user_get.profile.lock_time = timezone.now() + datetime.timedelta(minutes=10)
+                            user_get.save()
+                            error = '登陆失败,已错误登录' + str(user_get.profile.error_count) + '次,5次后账号锁定',
+                else:
+                    error = '请检查用户信息'
         else:
             error = u'请检查输入'
         return render(request, 'RBAC/login.html', {'form': form, 'error': error})
@@ -315,7 +334,6 @@ def login(request):
 @csrf_protect
 def userlist(request):
     user = request.user
-    error = ''
     if user.is_superuser:
         area = models.Area.objects.filter(parent__isnull=True)
         city = models.Area.objects.filter(parent__isnull=False)
@@ -350,7 +368,7 @@ def userlisttable(request):
     if user.is_superuser:
         user_list = User.objects.filter(
             email__icontains=email,
-                                        # profile__area__in=area_get,
+            # profile__area__in=area_get,
             is_active__in=is_active
         ).order_by('-is_superuser', '-date_joined')
         total = user_list.count()
@@ -391,7 +409,6 @@ def userlisttable(request):
 @csrf_protect
 def userregistaction(request):
     user = request.user
-    error = ''
     if user.is_superuser:
         regist_id = request.POST.get('request_id')
         action = request.POST.get('action')
@@ -424,7 +441,6 @@ def userregistaction(request):
 @login_required
 def userregistlist(request):
     user = request.user
-    error = ''
     if user.is_superuser:
         area = models.Area.objects.filter(parent__isnull=True)
         return render(request, 'RBAC/userregistlist.html', {'area': area})
@@ -438,7 +454,6 @@ def userregistlist(request):
 def userregisttable(request):
     user = request.user
     resultdict = {}
-    error = ''
     page = request.POST.get('page')
     rows = request.POST.get('limit')
 
@@ -543,7 +558,6 @@ def user_add(request):
 @csrf_protect
 def user_request_cancle(request):
     user = request.user
-    error = ''
     if user.is_superuser:
         regist_id_list = request.POST.get('regist_id_list')
         regist_id_list = json.loads(regist_id_list)
@@ -564,7 +578,6 @@ def user_request_cancle(request):
 @csrf_protect
 def user_disactivate(request):
     user = request.user
-    error = ''
     if user.is_superuser:
         user_list = request.POST.get('user_list')
         user_list = json.loads(user_list)
