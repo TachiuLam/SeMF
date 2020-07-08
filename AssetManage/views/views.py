@@ -347,9 +347,6 @@ def assettablelist(request):
         # 获取用户所在项目组所有
         res = get_user_area(user)
         is_admin, user_area_list = res.get('is_admin'), res.get('user_area_list')
-        # 为空则无任何资产查询权限
-        if not user_area_list:
-            return JsonResponse(None)
 
         if is_admin:
             assetlist = models.Asset.objects.filter(
@@ -359,6 +356,11 @@ def assettablelist(request):
                 asset_area=area,
             ).order_by('-asset_score', '-asset_updatetime')
         else:
+            # 为空则无任何资产查询权限
+            if not user_area_list:
+                # 随便加个字符串，保证数据库查不到，逻辑有点烂！
+                user_area_list.append('no allow')
+
             assetlist = models.Asset.objects.filter(
                 asset_name__icontains=name,
                 asset_key__icontains=key,

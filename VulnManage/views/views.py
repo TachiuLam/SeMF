@@ -205,8 +205,6 @@ def vulntablelist(request):
         # 获取用户所在项目组所有
         res = get_user_area(user)
         is_admin, user_area_list = res.get('is_admin'), res.get('user_area_list')
-        if not user_area_list:
-            return JsonResponse(None)
 
         if is_admin:
             vuln_list = models.Vulnerability_scan.objects.filter(
@@ -217,6 +215,10 @@ def vulntablelist(request):
                 leave__gte=1,
             ).order_by('-fix_status', '-leave')
         else:
+            if not user_area_list:
+                # 随便加个字符串，保证数据库查不到，逻辑有点烂！
+                user_area_list.append('no allow')
+
             vuln_list = models.Vulnerability_scan.objects.filter(
                 vuln_asset__asset_area__in=user_area_list,  # 根据项目ID进行筛选
                 vuln_asset__asset_key__icontains=key,
