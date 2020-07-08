@@ -37,6 +37,9 @@ SAFE_URL = [
     '/api/',  # 默认不需登陆，验证接口使用装饰器
 ]
 
+# 设置管理员团队
+MANAGE_TEAM = ['安全']
+
 # 设置网站根地址
 WEB_URL = 'http://localhost:8000'
 
@@ -183,6 +186,12 @@ REDIS_TIMEOUT = 7 * 24 * 60 * 60
 CUBES_REDIS_TIMEOUT = 60 * 60
 NEVER_REDIS_TIMEOUT = 365 * 24 * 60 * 60
 
+# LDAP 认证
+LDAP_SERVER_POOL = ["corp.yingzi.com:389"]
+ADMIN_DN = "yz_semf"
+ADMIN_PASSWORD = "9ik44DENWa8"
+SEARCH_BASE = "ou=corp,dc=corp,dc=yingzi,dc=com"
+
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
 
@@ -221,3 +230,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'collectstatic')
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
+
+# 指定simple ui 从本地加载静态文件
+SIMPLEUI_STATIC_OFFLINE = True
+# 不开启分析提交
+SIMPLEUI_ANALYSIS = False

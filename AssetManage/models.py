@@ -77,7 +77,7 @@ class Asset(models.Model):
 
     user_email = models.EmailField('联系人邮箱', null=True, blank=True)
 
-    asset_area = models.ForeignKey(Area, related_name='area_for_asset', verbose_name='所属环境', on_delete=models.CASCADE,
+    asset_area = models.ForeignKey(Area, related_name='area_for_asset', verbose_name='所属项目', on_delete=models.CASCADE,
                                    null=True, blank=True)
     asset_type = models.ForeignKey(AssetType, related_name='type_for_asset', verbose_name='资产类型',
                                    on_delete=models.CASCADE, null=True, limit_choices_to={'parent__isnull': False})

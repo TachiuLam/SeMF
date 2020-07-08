@@ -8,6 +8,7 @@ from django.http import JsonResponse
 import time
 from django.utils.html import escape
 from SeMF.redis import Cache
+from RBAC.service.is_admin import get_user_area
 
 # Create your views here.
 
@@ -23,7 +24,7 @@ VULN_STATUS = {
     '1': '已修复',
     '2': '待修复',
     '3': '漏洞重现',
-    '4': '复查中',
+    '4': '修复中',
 }
 
 
@@ -34,18 +35,30 @@ def vuln_change_status(request, vuln_id):
     error = ''
     if user.is_superuser:
         vuln = get_object_or_404(models.Vulnerability_scan, vuln_id=vuln_id)
+        is_admin = True
     else:
-        vuln = get_object_or_404(models.Vulnerability_scan, vuln_asset__asset_user=user, vuln_id=vuln_id)
+        res = get_user_area(user)
+        is_admin, user_area_list = res.get('is_admin'), res.get('user_area_list')
+        if is_admin:
+            vuln = get_object_or_404(models.Vulnerability_scan, vuln_id=vuln_id)
+        else:
+            vuln = get_object_or_404(models.Vulnerability_scan, vuln_asset__asset_area__in=user_area_list,
+                                     vuln_id=vuln_id)
+
     if vuln:
         if request.method == 'POST':
             form = forms.Vuln_action_form(request.POST, instance=vuln)
             if form.is_valid():
-                form.save()
-                error = '更改成功'
+                if not is_admin and (form.cleaned_data['fix_status'] in ['1', '3']):
+                    error = '仅允许更改为"待修复"，"修复中"，"已忽略"'
+                else:
+                    form.save()
+                    error = '更改成功'
             else:
                 error = '请检查参数'
         else:
             form = forms.Vuln_action_form(instance=vuln)
+
     else:
         error = '请检查参数'
     return render(request, 'formupdate.html', {'form': form, 'post_url': 'vulnfix', 'argu': vuln_id, 'error': error})
@@ -56,7 +69,8 @@ def vuln_change_status(request, vuln_id):
 def vuln_update(request, vuln_id):
     user = request.user
     error = ''
-    if user.is_superuser:
+    # 超管和管理员组具备权限
+    if user.is_superuser or get_user_area(user).get('is_admin'):
         vuln = get_object_or_404(models.Vulnerability_scan, vuln_id=vuln_id)
         if vuln:
             if request.method == 'POST':
@@ -83,7 +97,12 @@ def vulncreate(request, asset_id):
     if user.is_superuser:
         asset = get_object_or_404(models.Asset, asset_id=asset_id)
     else:
-        asset = get_object_or_404(models.Asset, asset_user=user, asset_id=asset_id)
+        res = get_user_area(user)
+        is_admin, user_area_list = res.get('is_admin'), res.get('user_area_list')
+        if is_admin:
+            asset = get_object_or_404(models.Asset, asset_id=asset_id)
+        else:
+            asset = get_object_or_404(models.Asset, asset_area__in=user_area_list, asset_id=asset_id)
     if request.method == 'POST':
         form = forms.Vuln_edit_form(request.POST)
         if form.is_valid():
@@ -137,7 +156,14 @@ def vulndetails(request, vuln_id):
     if user.is_superuser:
         vuln = get_object_or_404(models.Vulnerability_scan, vuln_id=vuln_id)
     else:
-        vuln = get_object_or_404(models.Vulnerability_scan, vuln_asset__asset_user=user, vuln_id=vuln_id)
+        res = get_user_area(user)
+        is_admin, user_area_list = res.get('is_admin'), res.get('user_area_list')
+        if is_admin:
+            vuln = get_object_or_404(models.Vulnerability_scan, vuln_id=vuln_id)
+        else:
+            vuln = get_object_or_404(models.Vulnerability_scan, vuln_asset__asset_area__in=user_area_list,
+                                     vuln_id=vuln_id)
+        # vuln = get_object_or_404(models.Vulnerability_scan, vuln_asset__asset_user=user, vuln_id=vuln_id)
     return render(request, 'VulnManage/vulndetails.html', {'vuln': vuln})
 
 
@@ -176,14 +202,29 @@ def vulntablelist(request):
             leave__gte=1,
         ).order_by('-fix_status', '-leave')
     else:
-        vuln_list = models.Vulnerability_scan.objects.filter(
-            vuln_asset__asset_user=user,
-            vuln_asset__asset_key__icontains=key,
-            vuln_name__icontains=v_key,
-            leave__icontains=leave,
-            fix_status__icontains=fix_status,
-            leave__gte=1,
-        ).order_by('-fix_status', '-leave')
+        # 获取用户所在项目组所有
+        res = get_user_area(user)
+        is_admin, user_area_list = res.get('is_admin'), res.get('user_area_list')
+        if not user_area_list:
+            return JsonResponse(None)
+
+        if is_admin:
+            vuln_list = models.Vulnerability_scan.objects.filter(
+                vuln_asset__asset_key__icontains=key,
+                vuln_name__icontains=v_key,
+                leave__icontains=leave,
+                fix_status__icontains=fix_status,
+                leave__gte=1,
+            ).order_by('-fix_status', '-leave')
+        else:
+            vuln_list = models.Vulnerability_scan.objects.filter(
+                vuln_asset__asset_area__in=user_area_list,  # 根据项目ID进行筛选
+                vuln_asset__asset_key__icontains=key,
+                vuln_name__icontains=v_key,
+                leave__icontains=leave,
+                fix_status__icontains=fix_status,
+                leave__gte=1,
+            ).order_by('-fix_status', '-leave')
 
     total = vuln_list.count()
     vuln_list = paging(vuln_list, rows, page)
@@ -222,10 +263,18 @@ def vulnlist_change_status(request):
 @login_required
 @csrf_protect
 def vulnlist_change_status_id(request, v_id):
+    user = request.user
+    if user.is_superuser:
+        is_admin = True
+    else:
+        is_admin = get_user_area(user).get('is_admin')
     vulnlist = get_object_or_404(models.VulnlistFix, id=1)
     error = ''
     if request.method == 'POST':
-        form = forms.Vulnlist_action_form(request.POST, instance=vulnlist)
+        if is_admin:
+            form = forms.Vulnlist_action_form(request.POST, instance=vulnlist)
+        else:
+            form = forms.Vulnlist_action_form2(request.POST, instance=vulnlist)
         if form.is_valid():
             fix_status = form.cleaned_data['fix_status']
             form.save()
@@ -234,6 +283,10 @@ def vulnlist_change_status_id(request, v_id):
         else:
             error = '请检查输入'
     else:
-        form = forms.Vulnlist_action_form(instance=vulnlist)
+        if is_admin:
+            form = forms.Vulnlist_action_form(instance=vulnlist)
+        else:
+            form = forms.Vulnlist_action_form2(instance=vulnlist)
+
     return render(request, 'formupdate.html',
                   {'form': form, 'post_url': 'vulnlistfixid', 'argu': v_id, 'error': error})

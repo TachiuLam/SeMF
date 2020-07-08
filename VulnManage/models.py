@@ -16,7 +16,12 @@ VULN_STATUS = (
     ('1', '已修复'),
     ('2', '待修复'),
     ('3', '漏洞重现'),
-    ('4', '复查中'),
+    ('4', '修复中'),
+)
+VULN_STATUS2 = (
+    ('0', '已忽略'),
+    ('2', '待修复'),
+    ('4', '修复中'),
 )
 
 
@@ -83,5 +88,13 @@ class Vulnerability_scan(models.Model):
 class VulnlistFix(models.Model):
     fix_action = models.TextField('处理记录', null=True)
     fix_status = models.CharField('修复状态', max_length=30, choices=VULN_STATUS)
+    asset_list = models.TextField('漏洞列表')
+    request_updatetime = models.DateField('更新时间', auto_now=True)
+
+
+# 普通用户状态变更模型，不保存数据，主要用于表单提交
+class VulnlistFix2(models.Model):
+    fix_action = models.TextField('处理记录', null=True)
+    fix_status = models.CharField('修复状态', max_length=30, choices=VULN_STATUS2)
     asset_list = models.TextField('漏洞列表')
     request_updatetime = models.DateField('更新时间', auto_now=True)

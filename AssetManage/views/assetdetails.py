@@ -13,6 +13,7 @@ from SeMFSetting.views import paging
 from VulnManage.views.views import VULN_LEAVE, VULN_STATUS
 from django.db.models import Count
 from django.utils.html import escape
+from RBAC.service.is_admin import get_user_area
 
 ASSET_STATUS = {
     '0': '使用中',
@@ -24,10 +25,19 @@ ASSET_STATUS = {
 @login_required
 def assetdetailsview(request, asset_id):
     user = request.user
+    # 超管和管理员团队默认查看所有资产
     if user.is_superuser:
         asset = get_object_or_404(models.Asset, asset_id=asset_id)
     else:
-        asset = get_object_or_404(models.Asset, asset_user=user, asset_id=asset_id)
+        # 获取用户所在项目组所有
+        res = get_user_area(user)
+        is_admin, user_area_list = res.get('is_admin'), res.get('user_area_list')
+
+        if is_admin:
+            asset = get_object_or_404(models.Asset, asset_id=asset_id)
+        else:
+            asset = get_object_or_404(models.Asset, asset_area__in=user_area_list, asset_id=asset_id)     # 根据用户所属项目进行筛选
+            # asset = get_object_or_404(models.Asset, asset_user=user, asset_id=asset_id)   # 原始逻辑：根据归属用户筛选
 
     vuln_all = asset.vuln_for_asset.all()
     vuln_count = vuln_all.count()
@@ -80,10 +90,20 @@ def asset_ports(request, asset_id):
     # page = request.GET.get('page')
     # rows = request.GET.get('limit')
 
+    # if user.is_superuser:
+    #     asset = get_object_or_404(models.Asset, asset_id=asset_id)
+    # else:
+    #     asset = get_object_or_404(models.Asset, asset_user=user, asset_id=asset_id)
     if user.is_superuser:
         asset = get_object_or_404(models.Asset, asset_id=asset_id)
     else:
-        asset = get_object_or_404(models.Asset, asset_user=user, asset_id=asset_id)
+        res = get_user_area(user)
+        is_admin, user_area_list = res.get('is_admin'), res.get('user_area_list')
+        if is_admin:
+            asset = get_object_or_404(models.Asset, asset_id=asset_id)
+        else:
+            asset = get_object_or_404(models.Asset, asset_area__in=user_area_list, asset_id=asset_id)  # 根据用户所属项目进行筛选
+
     port_list = asset.port_for_asset.all().order_by('-updatetime')
     total = port_list.count()
     # port_list = paging(port_list,rows,page)
@@ -112,10 +132,22 @@ def asset_vuln(request, asset_id):
     page = request.GET.get('page')
     rows = request.GET.get('limit')
 
+    # if user.is_superuser:
+    #     asset = get_object_or_404(models.Asset, asset_id=asset_id)
+    # else:
+    #     asset = get_object_or_404(models.Asset, asset_user=user, asset_id=asset_id)
+
     if user.is_superuser:
         asset = get_object_or_404(models.Asset, asset_id=asset_id)
     else:
-        asset = get_object_or_404(models.Asset, asset_user=user, asset_id=asset_id)
+        # 获取用户所在项目组所有
+        res = get_user_area(user)
+        is_admin, user_area_list = res.get('is_admin'), res.get('user_area_list')
+        if is_admin:
+            asset = get_object_or_404(models.Asset, asset_id=asset_id)
+        else:
+            asset = get_object_or_404(models.Asset, asset_area__in=user_area_list, asset_id=asset_id)     # 根据用户所属项目进行筛选
+
     vuln_list = asset.vuln_for_asset.all().order_by('-fix_status', '-leave')
     total = vuln_list.count()
     vuln_list = paging(vuln_list, rows, page)
@@ -150,7 +182,14 @@ def asset_plugin(request, asset_id):
     if user.is_superuser:
         asset = get_object_or_404(models.Asset, asset_id=asset_id)
     else:
-        asset = get_object_or_404(models.Asset, asset_user=user, asset_id=asset_id)
+        # 获取用户所在项目组所有
+        res = get_user_area(user)
+        is_admin, user_area_list = res.get('is_admin'), res.get('user_area_list')
+        if is_admin:
+            asset = get_object_or_404(models.Asset, asset_user=user, asset_id=asset_id)
+        else:
+            asset = get_object_or_404(models.Asset, asset_area__in=user_area_list, asset_id=asset_id)  # 根据用户所属项目进行筛选
+        # asset = get_object_or_404(models.Asset, asset_user=user, asset_id=asset_id)
     plugin_list = asset.plugin_for_asset.all().order_by('-updatetime')
     total = plugin_list.count()
     # plugin_list = paging(plugin_list,rows,page)
@@ -178,10 +217,20 @@ def asset_file(request, asset_id):
     # page = request.GET.get('page')
     # rows = request.GET.get('limit')
 
+    # if user.is_superuser:
+    #     asset = get_object_or_404(models.Asset, asset_id=asset_id)
+    # else:
+    #     asset = get_object_or_404(models.Asset, asset_user=user, asset_id=asset_id)
     if user.is_superuser:
         asset = get_object_or_404(models.Asset, asset_id=asset_id)
     else:
-        asset = get_object_or_404(models.Asset, asset_user=user, asset_id=asset_id)
+        # 获取用户所在项目组所有
+        res = get_user_area(user)
+        is_admin, user_area_list = res.get('is_admin'), res.get('user_area_list')
+        if is_admin:
+            asset = get_object_or_404(models.Asset, asset_id=asset_id)
+        else:
+            asset = get_object_or_404(models.Asset, asset_area__in=user_area_list, asset_id=asset_id)  # 根据用户所属项目进行筛选
     file_list = asset.file_for_asset.all().order_by('-updatetime')
     total = file_list.count()
     # file_list = paging(file_list,rows,page)
@@ -209,10 +258,20 @@ def asset_asset(request, asset_id):
     # page = request.GET.get('page')
     # rows = request.GET.get('limit')
 
+    # if user.is_superuser:
+    #     asset = get_object_or_404(models.Asset, asset_id=asset_id)
+    # else:
+    #     asset = get_object_or_404(models.Asset, asset_user=user, asset_id=asset_id)
     if user.is_superuser:
         asset = get_object_or_404(models.Asset, asset_id=asset_id)
     else:
-        asset = get_object_or_404(models.Asset, asset_user=user, asset_id=asset_id)
+        # 获取用户所在项目组所有
+        res = get_user_area(user)
+        is_admin, user_area_list = res.get('is_admin'), res.get('user_area_list')
+        if is_admin:
+            asset = get_object_or_404(models.Asset, asset_id=asset_id)
+        else:
+            asset = get_object_or_404(models.Asset, asset_area__in=user_area_list, asset_id=asset_id)  # 根据用户所属项目进行筛选
     assetconnect_list = asset.asset_connect.all().order_by('-asset_updatetime')
     total = assetconnect_list.count()
     # assetconnect_list = paging(assetconnect_list,rows,page)
