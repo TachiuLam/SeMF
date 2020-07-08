@@ -188,8 +188,8 @@ NEVER_REDIS_TIMEOUT = 365 * 24 * 60 * 60
 
 # LDAP 认证
 LDAP_SERVER_POOL = ["corp.yingzi.com:389"]
-ADMIN_DN = "test04"
-ADMIN_PASSWORD = "1qaz@WSXwaf1"
+ADMIN_DN = "yz_semf"
+ADMIN_PASSWORD = "9ik44DENWa8"
 SEARCH_BASE = "ou=corp,dc=corp,dc=yingzi,dc=com"
 
 # Password validation

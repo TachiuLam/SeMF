@@ -78,9 +78,12 @@ if __name__ == '__main__':
 
 
     LDAP_SERVER_POOL = ["corp.yingzi.com:389"]
-    ADMIN_DN = "test04"
-    ADMIN_PASSWORD = "1qaz@WSXwaf1"
+    # ADMIN_DN = "test04"
+    # ADMIN_PASSWORD = "1qaz@WSXwaf1"
     SEARCH_BASE = "ou=corp,dc=corp,dc=yingzi,dc=com"
+    ADMIN_DN = "yz_semf"
+    ADMIN_PASSWORD = "9ik44DENWa8"
+    # # SEARCH_BASE = "ou=corp,dc=corp,dc=yingzi,dc=com"
 
 
     def ldap_auth(username, password):
@@ -113,11 +116,13 @@ if __name__ == '__main__':
                     return {'auth_res': True, 'mail': attr_dict["mail"], 'sName': attr_dict["sAMAccountName"],
                             'gName': attr_dict["givenName"]}
                 else:
+                    print(111)
                     return {'auth_res': False}
             except Exception as e:
                 print(e)
                 return {'auth_res': False}
         else:
+            print(222)
             return {'auth_res': False}
 
     username = 'lintechao'
