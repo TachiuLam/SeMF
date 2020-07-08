@@ -103,11 +103,11 @@ class UserResetpsd(models.Model):
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     user_num = models.CharField(u'员工编号', max_length=50, null=True, blank=True)
-    title = models.CharField(u'职位名称', max_length=50)
+    title = models.CharField(u'职位名称', max_length=50,null=True, blank=True)
 
     telephone = models.CharField(u'座机号码', max_length=50, null=True, blank=True)
-    mobilephone = models.CharField(u'手机号码', max_length=50)
-    description = models.TextField(u'用户简介')
+    mobilephone = models.CharField(u'手机号码', max_length=50, null=True, blank=True)
+    description = models.TextField(u'用户简介',null=True, blank=True)
     error_count = models.IntegerField(u'错误登陆', default=0)
     lock_time = models.DateTimeField(u'锁定时间', default=timezone.now)
 
