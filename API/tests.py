@@ -6,10 +6,10 @@ from AssetManage.models import AssetUser
 from VulnManage.models import Vulnerability_scan
 from API.Functions.api_auth import JWT
 from django.contrib.auth.models import User
-from ldap3 import Server, Connection, ALL, SUBTREE, ServerPool,ALL_ATTRIBUTES
+from ldap3 import Server, Connection, ALL, SUBTREE, ServerPool, ALL_ATTRIBUTES
 from ldap3 import Server, Connection, ALL, SUBTREE, ServerPool
 import random
-
+import json
 
 # Create your tests here.
 
@@ -46,11 +46,16 @@ if __name__ == '__main__':
     # for f in fl:
     #     res = rsas_api_test(url='http://127.0.0.1:8000/api/upload/', file=f)
     #     print(res.text)
-        # r = RSAS.report_main(f)
-        # print(r)
+    # r = RSAS.report_main(f)
+    # print(r)
     # f2 = r'C:\Users\lintechao\Downloads\740_server_2020_06_30_xls.zip'
     # res = rsas_api_test(url='http://127.0.0.1:8000/api/upload/', file=f2)
     # print(res.text)
+
+    # 资产类型判断测试
+    filename = '746_office_2020_07_09_xls.zip'
+    asset_type = RSAS.report_type(filename)
+    print(asset_type)
 
     # token鉴权测试
     # u = 'root'
@@ -75,16 +80,15 @@ if __name__ == '__main__':
     # ii = eval(ii)
     # print(ii, type(ii))
 
-
-
     LDAP_SERVER_POOL = ["corp.yingzi.com:389"]
     # ADMIN_DN = "test04"
     # ADMIN_PASSWORD = "1qaz@WSXwaf1"
     SEARCH_BASE = "ou=corp,dc=corp,dc=yingzi,dc=com"
     ADMIN_DN = "yz_semf"
     ADMIN_PASSWORD = "9ik44DENWa8"
-    # # SEARCH_BASE = "ou=corp,dc=corp,dc=yingzi,dc=com"
 
+
+    # # SEARCH_BASE = "ou=corp,dc=corp,dc=yingzi,dc=com"
 
     def ldap_auth(username, password):
         ldap_server_pool = ServerPool(LDAP_SERVER_POOL)
@@ -125,17 +129,16 @@ if __name__ == '__main__':
             print(222)
             return {'auth_res': False}
 
+
     username = 'lintechao'
     passwd = 'Iandi1562618'
     # username = 'test04'
     # passwd = '1qaz@WSXwaf1'
-    res = ldap_auth(username, passwd)
-    print(res)
+    # res = ldap_auth(username, passwd)
+    # print(res)
 
     test = None or '1'
     print(test)
-
-
 
     # def generate_password(code_len=16):
     #     all_lowercase = 'abcdefghijklmnopqrstuvwxyz'
@@ -149,3 +152,27 @@ if __name__ == '__main__':
     #         code += all_password[index]
     #     return code
     # print(generate_password(16))
+
+    # 告警平台钉钉推送测试
+    url = 'http://ywalert.yingzi.com/api/v1/alert/event/unified'
+    headers = {"Content-Type": "application/json;charset=utf-8"}
+
+    body = {
+        "secret": "iZTqtwig7bejKRmU",
+        "source": "prometheus",
+        "trigger": 1,
+        "error_type": "default",
+        "content": "主机 127.0.0.1 cpu负载超过80%",
+        "grade": "重要",
+        "title": "主机监控",
+        "date": "",
+        "hostgroup": "",
+        "hostname": "linlinlin",
+        "hostip": "127.0.0.1",
+        "customized": 1,
+        "tools": "normal",
+        "user": "*lintechao",
+        "reportuser": "*lintechao"
+    }
+    # res = requests.post(url=url, data=json.dumps(body), headers=headers)
+    # print(res.status_code, res.text)

@@ -88,7 +88,6 @@ class Vulnerability_scan(models.Model):
 class VulnlistFix(models.Model):
     fix_action = models.TextField('处理记录', null=True)
     fix_status = models.CharField('修复状态', max_length=30, choices=VULN_STATUS)
-    asset_list = models.TextField('漏洞列表')
     request_updatetime = models.DateField('更新时间', auto_now=True)
 
 
@@ -96,5 +95,11 @@ class VulnlistFix(models.Model):
 class VulnlistFix2(models.Model):
     fix_action = models.TextField('处理记录', null=True)
     fix_status = models.CharField('修复状态', max_length=30, choices=VULN_STATUS2)
-    asset_list = models.TextField('漏洞列表')
+    request_updatetime = models.DateField('更新时间', auto_now=True)
+
+
+# 新增漏洞派发模型，不保存数据，主要用于表单提交
+class VulnlistAssign(models.Model):
+    assign_user = models.CharField('分派人员', max_length=30)
+    assign_notes = models.TextField('派发备注', max_length=90, null=True, blank=True)
     request_updatetime = models.DateField('更新时间', auto_now=True)
