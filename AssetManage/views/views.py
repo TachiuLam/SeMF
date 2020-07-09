@@ -30,8 +30,7 @@ REQUEST_STATUS = {
 @csrf_protect
 def asset_request_list_action(request):
     user = request.user
-    error = ''
-    if user.is_superuser:
+    if user.is_superuser or (get_user_area(user).get('is_admin')):
         request_id_list = request.POST.get('request_id_list')
         request_id_list = json.loads(request_id_list)
         action = request.POST.get('action')
@@ -72,8 +71,7 @@ def asset_request_list_action(request):
 @csrf_protect
 def assetrequestaction(request):
     user = request.user
-    error = ''
-    if user.is_superuser:
+    if user.is_superuser or (get_user_area(user).get('is_admin')):
         request_id = request.POST.get('request_id')
         action = request.POST.get('action')
         requestlist = get_object_or_404(models.AssetRequest, id=request_id)
@@ -117,7 +115,7 @@ def assetreqeustlist(request):
     if not status:
         status = ''
 
-    if user.is_superuser:
+    if user.is_superuser or (get_user_area(user).get('is_admin')):
         request_list = models.AssetRequest.objects.filter(request_user__email__icontains=email,
                                                           asset_request_status__icontains=status).order_by(
             'asset_request_status', 'request_starttime')
@@ -161,7 +159,6 @@ def assetrequestview(request):
 @csrf_protect
 def asset_request(request):
     user = request.user
-    error = ''
     if request.method == 'POST':
         form = forms.AssetRequest_edit_form(request.POST)
         if form.is_valid():
@@ -171,7 +168,7 @@ def asset_request(request):
                 asset_type = form.cleaned_data['asset_type']
                 request_action = form.cleaned_data['request_action']
                 request_reason = form.cleaned_data['request_reason']
-                asset_request = models.AssetRequest.objects.get_or_create(
+                models.AssetRequest.objects.get_or_create(
                     asset_key=asset_key,
                     asset_type=asset_type,
                     request_action=request_action,
@@ -193,7 +190,6 @@ def asset_request(request):
 @csrf_protect
 def asset_create(request):
     user = request.user
-    error = ''
     if request.method == 'POST':
         form = forms.Asset_create_form(request.POST)
         if form.is_valid():
