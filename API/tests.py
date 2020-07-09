@@ -48,7 +48,7 @@ if __name__ == '__main__':
     #     print(res.text)
     # r = RSAS.report_main(f)
     # print(r)
-    f2 = r'C:\Users\lintechao\Downloads\747_office_2020_07_09_xls.zip'
+    f2 = r'C:\Users\lintechao\Downloads\746_office_2020_07_09_xls.zip'
     res = rsas_api_test(url='http://127.0.0.1:8000/api/upload/', file=f2)
     print(res.text)
 

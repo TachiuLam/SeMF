@@ -215,7 +215,7 @@ class RSAS:
                 return {'ip': None, 'id': None}
         else:  # IP已存在的情况,需要查找到资产对应的id，并更新资产类型
             num_id = Asset.objects.get(asset_key=asset_key).id
-            Asset.objects.filter(asset_key=asset_key).update(asset_type=asset_type_id)
+            Asset.objects.filter(asset_key=asset_key).update(asset_type_id=asset_type_id)
         # 更新端口
         port_result = cls.port_update(num_id, filename)
         # 导入漏洞，后续逻辑需要细化
