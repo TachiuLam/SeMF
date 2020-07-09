@@ -38,7 +38,7 @@ if __name__ == '__main__':
     # print(r1.text)
 
     # windows测试
-    file1 = r'C:\Users\lintechao\Downloads\711_2020扫描1.0.2_2020_05_09_xls'
+    file1 = r'C:\Users\lintechao\Downloads\746_office_2020_07_09_xls.zip'
     # Vulnerability_scan.objects.filter(vuln_asset_id=14).delete()
     # Vulnerability_scan.objects.filter(vuln_asset_id=1).delete()
 
@@ -48,9 +48,9 @@ if __name__ == '__main__':
     #     print(res.text)
     # r = RSAS.report_main(f)
     # print(r)
-    # f2 = r'C:\Users\lintechao\Downloads\740_server_2020_06_30_xls.zip'
-    # res = rsas_api_test(url='http://127.0.0.1:8000/api/upload/', file=f2)
-    # print(res.text)
+    f2 = r'C:\Users\lintechao\Downloads\747_office_2020_07_09_xls.zip'
+    res = rsas_api_test(url='http://127.0.0.1:8000/api/upload/', file=f2)
+    print(res.text)
 
     # 资产类型判断测试
     filename = '746_office_2020_07_09_xls.zip'
