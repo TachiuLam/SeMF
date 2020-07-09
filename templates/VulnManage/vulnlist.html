@@ -125,9 +125,13 @@ layui.use('table', function(){
 	    	url = "{% url 'vulnlistfixid' 'key' %}";
 	    	url = url.replace(/key/,res.v_id);
 	    	x_admin_show('状态变更',url,600);
-    	});
+    	    });
         } else if(this.id === '2'){
-    	    layer.confirm('功能开发中');
+            $.post("{% url 'vulnlistfix' %}",{'vuln_id_list':JSON.stringify(list),'csrfmiddlewaretoken': csrf},function(res){
+	    	url = "{% url 'vulnassign' 'key' %}";
+	    	url = url.replace(/key/,res.v_id);
+	    	x_admin_show('漏洞派发',url,600);
+            });
         }
     }
   	,reload: function(){

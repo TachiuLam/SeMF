@@ -24,8 +24,8 @@ class RSAS:
         for key in report_type:
             if key in str(file_name):
                 return report_type.get(key)
-            else:
-                return report_type.get('server')
+        # 默认为 server
+        return report_type.get('server')
 
     @classmethod
     def unzip_file(cls, zip_src, dst_dir):
@@ -213,8 +213,11 @@ class RSAS:
                 print(error)
                 pass
                 return {'ip': None, 'id': None}
-        else:  # IP已存在的情况,需要查找到资产对应的id
-            num_id = Asset.objects.get(asset_key=asset_key).id
+        else:  # IP已存在的情况,需要查找到资产对应的id，并更新资产类型
+            asset = Asset.objects.get(asset_key=asset_key)
+            num_id = asset.id
+            asset.asset_type = asset_type_id
+            asset.save()
         # 更新端口
         port_result = cls.port_update(num_id, filename)
         # 导入漏洞，后续逻辑需要细化

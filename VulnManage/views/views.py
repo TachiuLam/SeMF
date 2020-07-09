@@ -292,3 +292,34 @@ def vulnlist_change_status_id(request, v_id):
 
     return render(request, 'formupdate.html',
                   {'form': form, 'post_url': 'vulnlistfixid', 'argu': v_id, 'error': error})
+
+
+@login_required
+@csrf_protect
+def vulnlist_assign(request, v_id):
+    user = request.user
+    if user.is_superuser:
+        is_admin = True
+    else:
+        is_admin = get_user_area(user).get('is_admin')
+    vulnlist = get_object_or_404(models.VulnlistFix, id=1)
+    error = ''
+    if request.method == 'POST':
+        if is_admin:
+            form = forms.Vulnlist_assign(request.POST, instance=vulnlist)
+        else:
+            form = forms.Vulnlist_assign(request.POST, instance=vulnlist)
+        if form.is_valid():
+            form.save()
+            error = '操作成功'
+        else:
+            error = '请检查输入'
+    else:
+        if is_admin:
+            form = forms.Vulnlist_assign(instance=vulnlist)
+        else:
+            form = forms.Vulnlist_assign(instance=vulnlist)
+
+    return render(request, 'formupdate.html',
+                  {'form': form, 'post_url': 'vulnlistfixid', 'argu': v_id, 'error': error})
+
