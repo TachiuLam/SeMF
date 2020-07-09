@@ -17,7 +17,6 @@ from django.http import JsonResponse
 @csrf_protect
 def task_action(request):
     user = request.user
-    error = ''
     asset_id_list = request.POST.get('asset_id_list')
     asset_id_list = json.loads(asset_id_list)
     if len(asset_id_list) == 0:

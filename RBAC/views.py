@@ -21,6 +21,7 @@ from VulnManage.models import Vulnerability, Vulnerability_scan
 from .service.init_permission import init_permission
 from django.utils.html import escape
 from RBAC.service.ldap_auth import ldap_auth, generate_password
+from RBAC.service.is_admin import get_user_area
 
 REAUEST_STATUS = {
     '0': '待审批',
@@ -334,7 +335,7 @@ def login(request):
 @csrf_protect
 def userlist(request):
     user = request.user
-    if user.is_superuser:
+    if user.is_superuser or (get_user_area(user).get('is_admin')):
         area = models.Area.objects.filter(parent__isnull=True)
         city = models.Area.objects.filter(parent__isnull=False)
         return render(request, 'RBAC/userlist.html', {'area': area, 'city': city})
@@ -348,7 +349,6 @@ def userlist(request):
 def userlisttable(request):
     user = request.user
     resultdict = {}
-    error = ''
     page = request.POST.get('page')
     rows = request.POST.get('limit')
     email = request.POST.get('email')
@@ -365,10 +365,10 @@ def userlisttable(request):
         is_active = ['True', 'False']
     else:
         is_active = [is_active]
-    if user.is_superuser:
+    if user.is_superuser or (get_user_area(user).get('is_admin')):
         user_list = User.objects.filter(
             email__icontains=email,
-            # profile__area__in=area_get,
+            profile__area__in=area_get,
             is_active__in=is_active
         ).order_by('-is_superuser', '-date_joined')
         total = user_list.count()
@@ -409,7 +409,7 @@ def userlisttable(request):
 @csrf_protect
 def userregistaction(request):
     user = request.user
-    if user.is_superuser:
+    if user.is_superuser or (get_user_area(user).get('is_admin')):
         regist_id = request.POST.get('request_id')
         action = request.POST.get('action')
         userregist = get_object_or_404(models.UserRequest, id=regist_id)
@@ -441,7 +441,7 @@ def userregistaction(request):
 @login_required
 def userregistlist(request):
     user = request.user
-    if user.is_superuser:
+    if user.is_superuser or (get_user_area(user).get('is_admin')):
         area = models.Area.objects.filter(parent__isnull=True)
         return render(request, 'RBAC/userregistlist.html', {'area': area})
     else:
@@ -474,7 +474,7 @@ def userregisttable(request):
     else:
         is_check = [is_check]
 
-    if user.is_superuser:
+    if user.is_superuser or (get_user_area(user).get('is_admin')):
         userrequest_list = models.UserRequest.objects.filter(email__icontains=email, status__icontains=status,
                                                              is_use__in=is_use, is_check__in=is_check).order_by(
             'is_check', 'is_use', '-updatetime')
@@ -515,7 +515,7 @@ def userregisttable(request):
 def user_add(request):
     user = request.user
     error = ''
-    if user.is_superuser:
+    if user.is_superuser or (get_user_area(user).get('is_admin')):
         if request.method == 'POST':
             form = forms.UserRequestForm(request.POST)
             if form.is_valid():
@@ -558,7 +558,7 @@ def user_add(request):
 @csrf_protect
 def user_request_cancle(request):
     user = request.user
-    if user.is_superuser:
+    if user.is_superuser or (get_user_area(user).get('is_admin')):
         regist_id_list = request.POST.get('regist_id_list')
         regist_id_list = json.loads(regist_id_list)
         action = request.POST.get('action')
@@ -578,7 +578,7 @@ def user_request_cancle(request):
 @csrf_protect
 def user_disactivate(request):
     user = request.user
-    if user.is_superuser:
+    if user.is_superuser or (get_user_area(user).get('is_admin')):
         user_list = request.POST.get('user_list')
         user_list = json.loads(user_list)
         action = request.POST.get('action')

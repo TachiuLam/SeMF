@@ -10,6 +10,7 @@ from .. import models,forms
 from TaskManage.views.Scantasks import sys_action,web_action
 import time
 from django.utils.html import escape
+from RBAC.service.is_admin import get_user_area
 
 
 TASK_STATUS={
@@ -26,9 +27,8 @@ TASK_STATUS={
 @csrf_protect
 def taskrequestaction(request,task_id,action):
     user = request.user
-    error=''
     
-    if user.is_superuser:
+    if user.is_superuser or (get_user_area(user).get('is_admin')):
         task = get_object_or_404(models.Task,task_id=task_id)
         if action =='access':
             task.task_status = '1'
@@ -53,7 +53,7 @@ def taskrequestaction(request,task_id,action):
 @login_required
 def taskdetails(request,task_id):
     user = request.user
-    if user.is_superuser:
+    if user.is_superuser or (get_user_area(user).get('is_admin')):
         task = get_object_or_404(models.Task,task_id=task_id)
     else:
         task = get_object_or_404(models.Task,task_user=user,task_id=task_id)
@@ -75,7 +75,7 @@ def taskrequesttablelist(request):
     page = request.POST.get('page')
     rows = request.POST.get('limit')
     
-    if user.is_superuser:
+    if user.is_superuser or (get_user_area(user).get('is_admin')):
         task_list = models.Task.objects.filter(task_status=0).order_by('task_starttime')
         total = task_list.count()
         task_list = paging(task_list,rows,page)
@@ -101,7 +101,7 @@ def taskrequesttablelist(request):
 @login_required
 def task_action(request,task_id,action):
     user = request.user
-    if user.is_superuser:
+    if user.is_superuser or (get_user_area(user).get('is_admin')):
         task =models.Task.objects.exclude(task_status=0).filter(task_status__lt=4,task_id = task_id).first()
     else:
         task = user.task_for_user.exclude(task_status=0).filter(task_status__lt=4,request_status='1',task_id = task_id).first()
@@ -129,7 +129,7 @@ def task_action(request,task_id,action):
 def TaskSync(request):
     user = request.user
     error = ''
-    if user.is_superuser:
+    if user.is_superuser or (get_user_area(user).get('is_admin')):
         if request.method == 'POST':
             form = forms.TaskSyncForm(request.POST,request.FILES)
             if form.is_valid():
@@ -209,7 +209,7 @@ def tasktablelist(request):
         taskstatus = [taskstatus]
         
     
-    if user.is_superuser:
+    if user.is_superuser or (get_user_area(user).get('is_admin')):
         task_list = models.Task.objects.filter(
             task_name__icontains = name,
             task_type__icontains = key,
