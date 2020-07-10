@@ -189,7 +189,7 @@ class RSAS:
 
         asset_name = asset_key = asset_description = host_info.get('Unnamed: 1').get(
             1)  # 获取ip地址,Unnamed: 1所在列的第二个键（不包含首行）
-        asset_type_id = report_type  # 服务器
+        asset_type_id = report_type  # 资产类型
         asset_score = str(host_info.get('Unnamed: 2').get(1))  # 获取主机风险值,Unnamed: 1所在列的第二个键（不包含首行）
         # asset_type = AssetType.objects.get(id=asset_type_id).name   # 根据asset_type_id获取对应的资产类型名称：如，服务器
         # print('类型名字：' + asset_type)
@@ -204,6 +204,7 @@ class RSAS:
                     asset_type_id=asset_type_id,
                     asset_key=asset_key,
                     asset_score=asset_score,
+                    asset_area=13,      # 默认归类到安全组项目
                     # asset_description=asset_description,
                 )
                 # asset_create : (<Asset: asset_key>, True)
