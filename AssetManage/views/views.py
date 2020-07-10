@@ -328,16 +328,17 @@ def assettablelist(request):
         type_get = models.AssetType.objects.filter(id=asset_type)
     # 所属项目
     area = request.POST.get('area')
-    if not area:
-        area = None
-
+    if not area:    # 获取所有项目
+        area_get = Area.objects.filter()
+    else:
+        area_get = Area.objects.filter(id=area)
     # 超管默认查看所有资产
     if user.is_superuser:
         assetlist = models.Asset.objects.filter(
             asset_name__icontains=name,
             asset_key__icontains=key,
             asset_type__in=type_get,
-            asset_area=area,
+            asset_area__in=area_get,
         ).order_by('-asset_score', '-asset_updatetime')
     else:
         # 获取用户所在项目组所有
@@ -349,19 +350,23 @@ def assettablelist(request):
                 asset_name__icontains=name,
                 asset_key__icontains=key,
                 asset_type__in=type_get,
-                asset_area=area,
+                asset_area__in=area_get,
             ).order_by('-asset_score', '-asset_updatetime')
         else:
-            # 为空则无任何资产查询权限
-            if not user_area_list:
-                # 随便加个字符串，保证数据库查不到，逻辑有点烂！
-                user_area_list.append('no allow')
+            # 普通用户只能查询属于该项目组的资产
+            # 若未选择项目，则查看所有已归属项目内资产
+            if not area:
+                area_get = user_area_list
+            elif int(area) in user_area_list:
+                area_get = area_get
+            else:
+                area_get = []
 
             assetlist = models.Asset.objects.filter(
                 asset_name__icontains=name,
                 asset_key__icontains=key,
                 asset_type__in=type_get,
-                asset_area__in=user_area_list,  # 控制查看所属项目
+                asset_area__in=area_get,  # 控制查看所属项目
             ).order_by('-asset_score', '-asset_updatetime')
 
     total = assetlist.count()
