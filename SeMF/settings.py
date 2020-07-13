@@ -183,7 +183,7 @@ CACHES = {
     },
 }
 REDIS_TIMEOUT = 7 * 24 * 60 * 60
-CUBES_REDIS_TIMEOUT = 60 * 60
+CUBES_REDIS_TIMEOUT = 1 * 50 * 60
 NEVER_REDIS_TIMEOUT = 365 * 24 * 60 * 60
 
 # LDAP 认证
@@ -191,6 +191,11 @@ LDAP_SERVER_POOL = ["corp.yingzi.com:389"]
 ADMIN_DN = "yz_semf"
 ADMIN_PASSWORD = "9ik44DENWa8"
 SEARCH_BASE = "ou=corp,dc=corp,dc=yingzi,dc=com"
+
+# 钉钉H5微应用
+AGENT_ID = "825883923"
+APP_KEY = 'dingkpdsu0ojcv1dvsqw'
+APP_SECRET = 'd-RnJoghM9MDULNobwsl4j64DWV5-_xAMzk8RrrWAABsYGg8Saj9ZVC4VctoC4_Y'
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators

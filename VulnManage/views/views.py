@@ -302,24 +302,25 @@ def vulnlist_assign(request, v_id):
         is_admin = True
     else:
         is_admin = get_user_area(user).get('is_admin')
-    vulnlist = get_object_or_404(models.VulnlistFix, id=1)
     error = ''
     if request.method == 'POST':
         if is_admin:
-            form = forms.Vulnlist_assign(request.POST, instance=vulnlist)
+            form = forms.Vulnlist_assign(request.POST)
+            if form.is_valid():
+                if form.cleaned_data['assign_user'] in ['lintechao']:
+                    error = '操作成功'
+                else:
+                    error = '用户不合法'
+            else:
+                error = '请检查输入'
         else:
-            form = forms.Vulnlist_assign(request.POST, instance=vulnlist)
-        if form.is_valid():
-            form.save()
-            error = '操作成功'
-        else:
-            error = '请检查输入'
+            # form = forms.Vulnlist_assign(request.POST)
+            error = '权限错误'
+            form = forms.Vulnlist_assign()
+
     else:
-        if is_admin:
-            form = forms.Vulnlist_assign(instance=vulnlist)
-        else:
-            form = forms.Vulnlist_assign(instance=vulnlist)
+        form = forms.Vulnlist_assign()
 
     return render(request, 'formupdate.html',
-                  {'form': form, 'post_url': 'vulnlistfixid', 'argu': v_id, 'error': error})
+                  {'form': form, 'post_url': 'vulnassign', 'argu': v_id, 'error': error})
 

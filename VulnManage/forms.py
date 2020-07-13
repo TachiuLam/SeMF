@@ -94,7 +94,7 @@ class Vulnlist_assign(ModelForm):
         model = models.VulnlistAssign
         fields = ['assign_user', 'assign_notes']
         widgets = {
-            'assign_user': widgets.SelectMultiple(attrs={'class': 'form-control'}),
+            'assign_user': widgets.TextInput(attrs={'class': 'form-control', 'placeholder': '分配人员'}),
             'assign_notes': widgets.Textarea(attrs={'class': 'form-control', 'placeholder': '漏洞派发备注'}),
         }
 
