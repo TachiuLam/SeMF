@@ -31,8 +31,8 @@ app.conf.update(
     enable_utc=True,
     CELERYBEAT_SCHEDULE={
 
-        'sum-refresh-cache': {
-            'task': 'SeMF.refresh_cache',
+        'refresh-cache': {
+            'task': 'API.tasks.refresh_cache',
             'schedule':  timedelta(seconds=30),
             # 'args': (5, 6)
         },
@@ -46,16 +46,18 @@ app.conf.update(
 )
 
 
-@app.task
-def refresh_cache():
-    token = DinkTalk.get_assess_token()
-    # res = DinkTalk.save_user_list(assess_token=token)
-    msg = {"msgtype": "text", "text": {"content": "定时推送测试233——by tachiulam"}}
-    info = DinkTalk.corp_conversation(assess_token=token,
-                                      user_name_list=['lintechao'],
-                                      msg=msg)
+# @app.task
+# def refresh_cache():
+#     token = DinkTalk.get_assess_token()
+#     # res = DinkTalk.save_user_list(assess_token=token)
+#     msg = {"msgtype": "text", "text": {"content": "定时推送测试233——by tachiulam"}}
+#     info = DinkTalk.corp_conversation(assess_token=token,
+#                                       user_name_list=['lintechao'],
+#                                       msg=msg)
+#     print(info)
 
 # @app.task(bind=True)
 # def debug_task(self):
 #     print('Request: {0!r}'.format(self.request))
+
 

@@ -10,6 +10,7 @@ from ldap3 import Server, Connection, ALL, SUBTREE, ServerPool, ALL_ATTRIBUTES
 from ldap3 import Server, Connection, ALL, SUBTREE, ServerPool
 import random
 import json
+from SeMF.celery import refresh_cache
 
 # Create your tests here.
 
@@ -176,3 +177,4 @@ if __name__ == '__main__':
     }
     # res = requests.post(url=url, data=json.dumps(body), headers=headers)
     # print(res.status_code, res.text)
+

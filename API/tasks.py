@@ -11,13 +11,13 @@ from celery.utils.log import get_task_logger
 logger = get_task_logger(__name__)
 
 
-# @shared_task
-# def refresh_cache():
-#     token = DinkTalk.get_assess_token()
-#     res = DinkTalk.save_user_list(assess_token=token)
-#     msg = {"msgtype": "text", "text": {"content": "定时推送测试——by tachiulam"}}
-#     info = DinkTalk.corp_conversation(assess_token=token,
-#                                       user_name_list=['lintechao'],
-#                                       msg=msg)
-#     print(info)
+@shared_task
+def refresh_cache():
+    token = DinkTalk.get_assess_token()
+    # res = DinkTalk.save_user_list(assess_token=token)
+    msg = {"msgtype": "text", "text": {"content": "定时推送测试322——by tachiulam"}}
+    info = DinkTalk.corp_conversation(assess_token=token,
+                                      user_name_list=['lintechao'],
+                                      msg=msg)
+    print(info)
 
