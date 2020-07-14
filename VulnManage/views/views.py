@@ -8,7 +8,7 @@ from django.http import JsonResponse
 import time
 from django.utils.html import escape
 from SeMF.redis import Cache
-from RBAC.service.is_admin import get_user_area
+from RBAC.service.user_process import get_user_area, username_list_identify
 
 # Create your views here.
 
@@ -307,10 +307,9 @@ def vulnlist_assign(request, v_id):
         if is_admin:
             form = forms.Vulnlist_assign(request.POST)
             if form.is_valid():
-                if form.cleaned_data['assign_user'] in ['lintechao']:
-                    error = '操作成功'
-                else:
-                    error = '用户不合法'
+                error = username_list_identify(form.cleaned_data['assign_user']).get('result')
+                if error == 0:      # 进行钉钉漏洞派发，待添加
+                    error = '漏洞已派发'
             else:
                 error = '请检查输入'
         else:

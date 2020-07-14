@@ -14,7 +14,7 @@ from .Functions.publicfunction import datelist
 from django.utils import timezone
 from django.db import connection
 from datetime import timedelta
-from RBAC.service.is_admin import get_user_area
+from RBAC.service.user_process import get_user_area
 
 
 @login_required

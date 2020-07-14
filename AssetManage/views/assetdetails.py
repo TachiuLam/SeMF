@@ -13,7 +13,7 @@ from SeMFSetting.views import paging
 from VulnManage.views.views import VULN_LEAVE, VULN_STATUS
 from django.db.models import Count
 from django.utils.html import escape
-from RBAC.service.is_admin import get_user_area
+from RBAC.service.user_process import get_user_area
 
 ASSET_STATUS = {
     '0': '使用中',

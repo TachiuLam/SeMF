@@ -14,7 +14,7 @@ from django.http import JsonResponse
 from SeMFSetting.views import paging
 from django.db.models import Q
 from django.utils.html import escape
-from RBAC.service.is_admin import get_user_area
+from RBAC.service.user_process import get_user_area
 
 REQUEST_STATUS = {
     '0': '待审批',

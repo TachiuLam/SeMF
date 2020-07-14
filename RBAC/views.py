@@ -21,7 +21,7 @@ from VulnManage.models import Vulnerability, Vulnerability_scan
 from .service.init_permission import init_permission
 from django.utils.html import escape
 from RBAC.service.ldap_auth import ldap_auth, generate_password
-from RBAC.service.is_admin import get_user_area
+from RBAC.service.user_process import get_user_area
 
 REAUEST_STATUS = {
     '0': '待审批',

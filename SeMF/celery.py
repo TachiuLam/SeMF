@@ -10,7 +10,6 @@ import os
 from celery import Celery, platforms
 from django.conf import settings
 from celery.schedules import crontab
-from API.Functions.dinktalk import DinkTalk
 from datetime import timedelta
 
 # set the default Django settings module for the 'celery' program.
@@ -31,33 +30,22 @@ app.conf.update(
     enable_utc=True,
     CELERYBEAT_SCHEDULE={
 
-        'refresh-cache': {
-            'task': 'API.tasks.refresh_cache',
-            'schedule':  timedelta(seconds=30),
-            # 'args': (5, 6)
-        },
-        # 每天04：30执行钉钉通讯录缓存刷新
         # 'refresh-cache': {
-        #     'task': 'SeMF.refresh_cache',
-        #     # 'schedule': crontab(hour=4, minute=30),
-        #     'schedule': crontab(minute=3),
-        # }
+        #     'task': 'API.tasks.refresh_cache',
+        #     'schedule':  timedelta(seconds=30),
+        #     # 'args': (5, 6)
+        # },
+        # 每天04：30执行钉钉通讯录缓存刷新
+        'refresh-cache': {
+            'task': 'SeMF.refresh_cache',
+            'schedule': crontab(hour=4, minute=30),
+            # 'schedule': crontab(minute=3),
+        }
     }
 )
 
 
-# @app.task
-# def refresh_cache():
-#     token = DinkTalk.get_assess_token()
-#     # res = DinkTalk.save_user_list(assess_token=token)
-#     msg = {"msgtype": "text", "text": {"content": "定时推送测试233——by tachiulam"}}
-#     info = DinkTalk.corp_conversation(assess_token=token,
-#                                       user_name_list=['lintechao'],
-#                                       msg=msg)
-#     print(info)
-
 # @app.task(bind=True)
 # def debug_task(self):
 #     print('Request: {0!r}'.format(self.request))
-
 

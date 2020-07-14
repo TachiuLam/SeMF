@@ -10,7 +10,6 @@ from ldap3 import Server, Connection, ALL, SUBTREE, ServerPool, ALL_ATTRIBUTES
 from ldap3 import Server, Connection, ALL, SUBTREE, ServerPool
 import random
 import json
-from SeMF.celery import refresh_cache
 
 # Create your tests here.
 
@@ -50,13 +49,13 @@ if __name__ == '__main__':
     # r = RSAS.report_main(f)
     # print(r)
     f2 = r'C:\Users\lintechao\Downloads\746_office_2020_07_09_xls.zip'
-    res = rsas_api_test(url='http://127.0.0.1:8000/api/upload/', file=f2)
-    print(res.text)
-
-    # 资产类型判断测试
-    filename = '746_office_2020_07_09_xls.zip'
-    asset_type = RSAS.report_type(filename)
-    print(asset_type)
+    # res = rsas_api_test(url='http://127.0.0.1:8000/api/upload/', file=f2)
+    # print(res.text)
+    #
+    # # 资产类型判断测试
+    # filename = '746_office_2020_07_09_xls.zip'
+    # asset_type = RSAS.report_type(filename)
+    # print(asset_type)
 
     # token鉴权测试
     # u = 'root'
@@ -177,4 +176,8 @@ if __name__ == '__main__':
     }
     # res = requests.post(url=url, data=json.dumps(body), headers=headers)
     # print(res.status_code, res.text)
+
+    numl = '林特超； 林小超'
+    a = numl.replace(' ', '').split('；')
+    print(a)
 
