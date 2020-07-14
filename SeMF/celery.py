@@ -11,6 +11,7 @@ from celery import Celery, platforms
 from django.conf import settings
 from celery.schedules import crontab
 from API.Functions.dinktalk import DinkTalk
+from datetime import timedelta
 
 # set the default Django settings module for the 'celery' program.
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'SeMF.settings')
@@ -30,17 +31,17 @@ app.conf.update(
     enable_utc=True,
     CELERYBEAT_SCHEDULE={
 
-        # 'sum-task': {
-        #     'task': 'deploy.tasks.add',
-        #     'schedule':  timedelta(seconds=20),
-        #     'args': (5, 6)
-        # }
-        # 每天04：30执行钉钉通讯录缓存刷新
-        'refresh-cache': {
+        'sum-refresh-cache': {
             'task': 'SeMF.refresh_cache',
-            # 'schedule': crontab(hour=4, minute=30),
-            'schedule': crontab(minute=3),
-        }
+            'schedule':  timedelta(seconds=30),
+            # 'args': (5, 6)
+        },
+        # 每天04：30执行钉钉通讯录缓存刷新
+        # 'refresh-cache': {
+        #     'task': 'SeMF.refresh_cache',
+        #     # 'schedule': crontab(hour=4, minute=30),
+        #     'schedule': crontab(minute=3),
+        # }
     }
 )
 
