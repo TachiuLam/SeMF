@@ -44,11 +44,12 @@ app.conf.update(
     }
 )
 
+
 @app.task
 def refresh_cache():
     token = DinkTalk.get_assess_token()
-    res = DinkTalk.save_user_list(assess_token=token)
-    msg = {"msgtype": "text", "text": {"content": "定时推送测试——by tachiulam"}}
+    # res = DinkTalk.save_user_list(assess_token=token)
+    msg = {"msgtype": "text", "text": {"content": "定时推送测试233——by tachiulam"}}
     info = DinkTalk.corp_conversation(assess_token=token,
                                       user_name_list=['lintechao'],
                                       msg=msg)
