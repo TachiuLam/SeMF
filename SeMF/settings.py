@@ -82,7 +82,7 @@ SERVER_EMAIL = 'lintechao@yingzi.com'
 DEFAULT_FROM_EMAIL = '安全管控平台<Se@outlook.com>'
 
 # 设置队列存储
-BROKER_URL = 'amqp://semf:1qaz@WSX@172.19.130.20/vhost'  # 设置与rabbitmq一致
+BROKER_URL = 'amqp://semf:1qaz@WSX@172.19.130.20/semf'  # 设置与rabbitmq一致
 # BROKER_URL = 'amqp://172.19.130.20/semf'
 CELERY_ACCEPT_CONTENT = ['pickle', 'json', 'msgpack', 'yaml']
 
