@@ -8,20 +8,10 @@ import json
 from SeMF.settings import APP_KEY, APP_SECRET, AGENT_ID
 from SeMF.redis import Cache
 from API import tasks
-# from RBAC.service.user_process import han_to_pinyin
-from pypinyin import lazy_pinyin
+from RBAC.service import user_process
 
 
 class DinkTalk:
-
-    @staticmethod
-    def han_to_pinyin(name):
-        """将汉字转换为拼音，用于用户名转换"""
-        en_name = ''
-        en_name_list = lazy_pinyin(name)
-        for each in en_name_list:
-            en_name += each
-        return en_name
 
     @staticmethod
     def get_assess_token(app_key=APP_KEY, app_secret=APP_SECRET):
@@ -77,7 +67,7 @@ class DinkTalk:
         res = json.loads(res.content)
         user_info = {}
         if res.get('errmsg') == 'ok':
-            user_info['name'] = cls.han_to_pinyin(res.get('name'))  # 姓名拼音，用作缓存key
+            user_info['name'] = user_process.han_to_pinyin(res.get('name'))  # 姓名拼音，用作缓存key
             user_info['userid'] = res.get('userid')
             user_info['avatar'] = res.get('avatar')  # 钉钉头像
 
@@ -92,7 +82,7 @@ class DinkTalk:
         data = {}
         userid_list = []
         for name in user_name_list:
-            user_info = Cache.read_from_cache(key=name)
+            user_info = Cache.read_from_cache(key=user_process.han_to_pinyin(name))
             # 第一次缓存查询不到，查询钉钉接口，更新缓存
             if not user_info:
                 # cls.save_user_list(assess_token=assess_token)
@@ -116,21 +106,21 @@ class DinkTalk:
         # # res = {'errcode': 0, 'task_id': 232719853185, 'request_id': '3x1qbs76ef3k'}
         # return res
         # 异步推送
-        # tasks.send_conversation.delay(url, data)
-        tasks.send_conversation(url, data)
+        tasks.send_conversation.delay(url, data)
+        # tasks.send_conversation(url, data)
         return {'errcode': 0, 'result': '漏洞已派发'}
 
 
 if __name__ == '__main__':
     from API.Functions.dingtalk_msg import DingTalkMsg
-    token = DinkTalk.get_assess_token()
-    # info = DinkTalk.get_user_info(token, userid='191152606026429443')
-    msg = {"msgtype": "text", "text": {"content": "推送测试2020/07/15——by tachiulam"}}
-    # msg = DingTalkMsg.vuln_assign_msg
-    info = DinkTalk.corp_conversation(assess_token=token,
-                                      user_name_list=['lintechao'],
-                                      msg=msg)
-    print(info)
+    # token = DinkTalk.get_assess_token()
+    # # info = DinkTalk.get_user_info(token, userid='191152606026429443')
+    # msg = {"msgtype": "text", "text": {"content": "推送测试2020/07/15——by tachiulam"}}
+    # # msg = DingTalkMsg.vuln_assign_msg
+    # info = DinkTalk.corp_conversation(assess_token=token,
+    #                                   user_name_list=['lintechao'],
+    #                                   msg=msg)
+    # print(info)
     # user_l = DinkTalk.get_user_list(token)
     # idd = DinkTalk.get_user_id_list(token, '244605159')
 

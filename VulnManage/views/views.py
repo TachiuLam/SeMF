@@ -9,7 +9,8 @@ import time
 from django.utils.html import escape
 from SeMF.redis import Cache
 from RBAC.service.user_process import get_user_area, username_list_identify
-from API.Functions.dinktalk import DinkTalk, DingTalkMsg
+
+
 # Create your views here.
 
 VULN_LEAVE = {
@@ -311,15 +312,9 @@ def vulnlist_assign(request, v_id):
                 res = username_list_identify(form.cleaned_data['assign_user'])
                 error = res.get('result')
                 username_list = res.get('username_list')
-                # print(username_list)
-                if error == 0:  # 进行钉钉漏洞派发，待添加
-                    vuln = get_object_or_404(models.Vulnerability_scan, vuln_id=v_id)
-                    msg = DingTalkMsg.assign_msg(vuln)
-                    token = DinkTalk.get_assess_token()
-                    error = DinkTalk.corp_conversation(assess_token=token,
-                                                       user_name_list=username_list,
-                                                       msg=msg).get('result')
-                    # error = '漏洞已派发'
+                if error == 0:  # 进行钉钉漏洞派发
+                    error = tasks.vulnlist_assign(v_id, username_list).get('result')
+
             else:
                 error = '请检查输入'
         else:
