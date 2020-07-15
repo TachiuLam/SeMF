@@ -55,4 +55,4 @@ def username_list_identify(username_list):
         # 该功能待需要再添加
 
     # 所有用户均合法，返回正确码
-    return {'result': 0}
+    return {'result': 0, 'username_list': username_list}
