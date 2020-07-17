@@ -15,8 +15,6 @@ urlpatterns = [
     path('user/fix/<str:vuln_id>/', views.vuln_change_status, name='vulnfix'),
     path('user/details/<str:vuln_id>/', views.vulndetails, name='vulndetails'),
 
-    path('user/assign/<str:v_id>', views.vulnlist_assign, name='vulnassign'),
-
     path('cnvd/', cnvdviews.cnvdvuln_view, name='cnvdvulnview'),
     path('cnvd/list/', cnvdviews.cnvdvulntablelist, name='cnvdvulnlist'),
     path('cnvd/update/<str:cnvdvuln_id>', cnvdviews.cnvdvuln_update, name='cnvdvulnupdate'),
@@ -25,4 +23,5 @@ urlpatterns = [
 
     path('manage/create/<str:asset_id>/', views.vulncreate, name='vulncreate'),
     path('manage/update/<str:vuln_id>/', views.vuln_update, name='vulnupdate'),
+    path('manege/assign/<str:v_id>', views.vulnlist_assign, name='vulnassign'),
 ]
