@@ -23,5 +23,5 @@ urlpatterns = [
 
     path('manage/create/<str:asset_id>/', views.vulncreate, name='vulncreate'),
     path('manage/update/<str:vuln_id>/', views.vuln_update, name='vulnupdate'),
-    path('manege/assign/<str:v_id>', views.vulnlist_assign, name='vulnassign'),
+    path('manage/assign/<str:v_id>', views.vulnlist_assign, name='vulnassign'),
 ]
