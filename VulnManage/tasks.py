@@ -67,6 +67,7 @@ def parse_cnvdxml(filepath):
             vuln.update_data = update_data
             vuln.save()
         except Exception as e:
+            print(e)
             pass
     data_manage = {
         'notice_title': '漏洞库更新通知',
@@ -88,12 +89,14 @@ def vulnlist_save_status(v_id, fix_status):
     return True
 
 
-def vulnlist_assign(v_id, username_list):
+def vulnlist_assign(v_id, user, username_list):
     vuln_id_list = eval(Cache.read_from_cache(v_id))
     token = dinktalk.DinkTalk.get_assess_token()
 
     msg = dingtalk_msg.DingTalkMsg.assign_msg(vuln_id_list)
-    error = dinktalk.DinkTalk.corp_conversation(assess_token=token,
+    error = dinktalk.DinkTalk.corp_conversation(user=user,
+                                                vuln=vuln_id_list,
+                                                assess_token=token,
                                                 user_name_list=username_list,
                                                 msg=msg)
     return error

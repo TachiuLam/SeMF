@@ -10,7 +10,6 @@ from django.utils.html import escape
 from SeMF.redis import Cache
 from RBAC.service.user_process import get_user_area, username_list_identify
 
-
 # Create your views here.
 
 VULN_LEAVE = {
@@ -313,8 +312,7 @@ def vulnlist_assign(request, v_id):
                 error = res.get('result')
                 username_list = res.get('username_list')
                 if error == 0:  # 进行钉钉漏洞派发
-                    error = tasks.vulnlist_assign(v_id, username_list).get('result')
-
+                    error = tasks.vulnlist_assign(v_id, user, username_list).get('result')
             else:
                 error = '请检查输入'
         else:
