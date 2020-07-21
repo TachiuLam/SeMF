@@ -10,6 +10,9 @@ from ldap3 import Server, Connection, ALL, SUBTREE, ServerPool, ALL_ATTRIBUTES
 from ldap3 import Server, Connection, ALL, SUBTREE, ServerPool
 import random
 import json
+import time
+import jwt
+from SeMF.settings import APP_SECRET, ALGORITHM, APP_KEY
 
 # Create your tests here.
 
@@ -180,4 +183,10 @@ if __name__ == '__main__':
     numl = '林特超； 林小超'
     a = numl.replace(' ', '').split('；')
     print(a)
-
+    print(int(time.time() * 1000))
+    def get_union_id(code, app_key, app_secret, algorithm):
+        """服务端通过临时授权码获取授权用户的个人信息，临时授权码只能使用一次。"""
+        timestamp = str(int(time.time() * 1000))
+        signature = jwt.encode({'timestamp': timestamp}, app_secret, algorithm=algorithm)
+        print(signature)
+    get_union_id(1,APP_KEY, APP_SECRET, ALGORITHM)

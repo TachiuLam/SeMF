@@ -13,32 +13,48 @@ from RBAC.service import user_process
 
 class DinkTalk:
 
-    @staticmethod
-    def get_assess_token(app_key=APP_KEY, app_secret=APP_SECRET):
-        """获取assess_token，进行缓存（钉钉默认7200秒失效，缓存时间小于该值）"""
-        assess_token = Cache.read_from_cache('access_token')
-        if not assess_token:
-            url = 'https://oapi.dingtalk.com/gettoken?appkey={}&appsecret={}'.format(app_key, app_secret)
-            res = requests.get(url)
-            assess_token = json.loads(res.content).get('access_token')
-            Cache.write_onetime_cache(value=assess_token, key='access_token')
-        return assess_token
+    @classmethod
+    def get_user_info_by_code(cls, code, access_token):
+        """服务端通过临时授权码获取授权用户的个人信息，临时授权码只能使用一次。"""
+        url = 'https://oapi.dingtalk.com/user/getuserinfo?access_token={}&code={}'.format(access_token, code)
+        res = requests.get(url)
+        res = json.loads(res.content)
+        if res.get('errcode') == 0:
+            user_id = res.get('userid')
+            user_name = Cache.read_from_cache(key=user_id)
+            if not user_name:
+                user_name = cls.get_user_info(access_token, user_name).get('name')
+            return user_name
+        else:
+            return None
+
 
     @staticmethod
-    def get_user_id_list(assess_token, dep_id):
+    def get_access_token(app_key=APP_KEY, app_secret=APP_SECRET):
+        """access_token，进行缓存（钉钉默认7200秒失效，缓存时间小于该值）"""
+        access_token = Cache.read_from_cache('access_token')
+        if not access_token:
+            url = 'https://oapi.dingtalk.com/gettoken?appkey={}&appsecret={}'.format(app_key, app_secret)
+            res = requests.get(url)
+            access_token = json.loads(res.content).get('access_token')
+            Cache.write_onetime_cache(value=access_token, key='access_token')
+        return access_token
+
+    @staticmethod
+    def get_user_id_list(access_token, dep_id):
         """根据部门ID获取该部门内所有员工id"""
-        url = 'https://oapi.dingtalk.com/user/getDeptMember?access_token={}&deptId={}'.format(assess_token, dep_id)
+        url = 'https://oapi.dingtalk.com/user/getDeptMember?access_token={}&deptId={}'.format(access_token, dep_id)
         res = requests.get(url)
         res = json.loads(res.content)
         user_id_list = res.get('userIds')
         return user_id_list
 
     @classmethod
-    def save_user_list(cls, assess_token):
+    def save_user_list(cls, access_token):
         """获取所有部门id，并根据部门id，获取所有部门下员工id，去重后保存所有员工信息到缓存中，键为用户名拼音"""
         # department_list = Cache.read_from_cache('department')
         # if not department_list:
-        url = 'https://oapi.dingtalk.com/department/list?access_token={}'.format(assess_token)
+        url = 'https://oapi.dingtalk.com/department/list?access_token={}'.format(access_token)
         res = requests.get(url)
         res = json.loads(res.content)
         department_list = []
@@ -49,20 +65,23 @@ class DinkTalk:
             department_list.append(each.get('id'))
             # # 对所有部门id进行缓存，减少查询时间
             # Cache.write_onetime_cache(value=department_list, key='department', key_time_id=2)   # 默认缓存一周
-            user_list.extend(cls.get_user_id_list(assess_token, each.get('id')))
+            user_list.extend(cls.get_user_id_list(access_token, each.get('id')))
             user_list = list(set(user_list))
 
         for each_id in user_list:
-            user_info = cls.get_user_info(assess_token, each_id)
+            user_info = cls.get_user_info(access_token, each_id)
             if user_info:
+                # 用户名拼音作为缓存key
                 Cache.write_onetime_cache(value=user_info, key=user_info.get('name'), key_time_id=2)
+                # 用户userid作为缓存key
+                Cache.write_onetime_cache(value=user_info.get('name'), key=user_info.get('userid'), key_time_id=2)
                 user_name_list.append(user_info.get('name'))
         return user_name_list
 
     @classmethod
-    def get_user_info(cls, assess_token, userid):
+    def get_user_info(cls, access_token, userid):
         """从钉钉接口获取用户详细信息，并返回用户名拼音、id、头像等信息"""
-        url = 'https://oapi.dingtalk.com/user/get?access_token={}&userid={}'.format(assess_token, userid)
+        url = 'https://oapi.dingtalk.com/user/get?access_token={}&userid={}'.format(access_token, userid)
         res = requests.get(url)
         res = json.loads(res.content)
         user_info = {}
@@ -74,18 +93,18 @@ class DinkTalk:
         return user_info
 
     @classmethod
-    def corp_conversation(cls, user, vuln, assess_token, msg, user_name_list, agent_id=AGENT_ID, dept_id_list=None,
+    def corp_conversation(cls, user, vuln, access_token, msg, user_name_list, agent_id=AGENT_ID, dept_id_list=None,
                           to_all_user=False):
         """工作通知推送，参数说明见文档https://ding-doc.dingtalk.com/doc#/serverapi2/pgoxpy/e2262dad"""
         url = 'https://oapi.dingtalk.com/topapi/message/corpconversation/asyncsend_v2?access_token={}'.format(
-            assess_token)
+            access_token)
         data = {}
         userid_list = []
         for name in user_name_list:
             user_info = Cache.read_from_cache(key=user_process.han_to_pinyin(name))
-            # 第一次缓存查询不到，查询钉钉接口，更新缓存
+            # 缓存查询不到，用户不存在
             if not user_info:
-                # cls.save_user_list(assess_token=assess_token)
+                # cls.save_user_list(access_token=access_token)
                 # 用户不存在, 钉钉接口不会判断不存在的用户，强制中断派发请求
                 return {'errcode': -1, 'result': '用户{}不存在'.format(name)}
             userid_list.append(user_info.get('userid'))
@@ -117,7 +136,7 @@ if __name__ == '__main__':
     # # info = DinkTalk.get_user_info(token, userid='191152606026429443')
     # msg = {"msgtype": "text", "text": {"content": "推送测试2020/07/15——by tachiulam"}}
     # # msg = DingTalkMsg.vuln_assign_msg
-    # info = DinkTalk.corp_conversation(assess_token=token,
+    # info = DinkTalk.corp_conversation(access_token=token,
     #                                   user_name_list=['lintechao'],
     #                                   msg=msg)
     # print(info)

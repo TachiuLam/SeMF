@@ -91,12 +91,12 @@ def vulnlist_save_status(v_id, fix_status):
 
 def vulnlist_assign(v_id, user, username_list):
     vuln_id_list = eval(Cache.read_from_cache(v_id))
-    token = dinktalk.DinkTalk.get_assess_token()
+    token = dinktalk.DinkTalk.get_access_token()
 
     msg = dingtalk_msg.DingTalkMsg.assign_msg(vuln_id_list)
     error = dinktalk.DinkTalk.corp_conversation(user=user,
                                                 vuln=vuln_id_list,
-                                                assess_token=token,
+                                                access_token=token,
                                                 user_name_list=username_list,
                                                 msg=msg)
     return error

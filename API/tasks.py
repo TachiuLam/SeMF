@@ -18,8 +18,8 @@ logger = get_task_logger(__name__)
 @shared_task
 def refresh_cache():
     """定时任务：更新钉钉通讯录缓存"""
-    token = dinktalk.DinkTalk.get_assess_token()
-    dinktalk.DinkTalk.save_user_list(assess_token=token)
+    token = dinktalk.DinkTalk.get_access_token()
+    dinktalk.DinkTalk.save_user_list(access_token=token)
     # msg = {"msgtype": "text", "text": {"content": "定时推送测试322——by tachiulam"}}
     # info = DinkTalk.corp_conversation(assess_token=token,
     #                                   user_name_list=['lintechao'],
