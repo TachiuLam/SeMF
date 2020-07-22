@@ -161,8 +161,8 @@ class DinkTalk:
         # # res = {'errcode': 0, 'task_id': 232719853185, 'request_id': '3x1qbs76ef3k'}
         # return res
         # 异步推送
-        tasks.send_conversation(url, data, user, user_name_list, vuln)
-        # tasks.send_conversation.delay(url, data, user, user_name_list, vuln)
+        # tasks.send_conversation(url, data, user, user_name_list, vuln)
+        tasks.send_conversation.delay(url, data, user, user_name_list, vuln)
         return {'errcode': 0, 'result': '漏洞已派发'}
 
 
