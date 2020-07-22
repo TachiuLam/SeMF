@@ -55,4 +55,5 @@ def api_info(request):
 
 @csrf_exempt
 def ding_vuln_detail(request):
-    return HttpResponse("dingtalk redirect success")
+    code = request.GET.get('code')
+    return HttpResponse("dingtalk redirect success" + '\n' + str(code))
