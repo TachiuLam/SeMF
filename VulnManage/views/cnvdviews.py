@@ -15,7 +15,7 @@ from ..tasks import parse_cnvdxml
 from SeMF.settings import MEDIA_ROOT
 import os
 from django.utils.html import escape
-from RBAC.service.is_admin import get_user_area
+from RBAC.service.user_process import get_user_area
 
 
 @login_required

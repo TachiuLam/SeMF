@@ -10,6 +10,8 @@ from celery import shared_task
 from NoticeManage.views import notice_add
 from django.contrib.auth.models import User
 from SeMF.redis import Cache
+from API.Functions import dinktalk
+from API.Functions import dingtalk_msg
 
 
 @shared_task
@@ -65,6 +67,7 @@ def parse_cnvdxml(filepath):
             vuln.update_data = update_data
             vuln.save()
         except Exception as e:
+            print(e)
             pass
     data_manage = {
         'notice_title': '漏洞库更新通知',
@@ -78,9 +81,22 @@ def parse_cnvdxml(filepath):
 
 
 def vulnlist_save_status(v_id, fix_status):
-    vuln_id_list = eval(Cache.read_from_cache(v_id))
+    vuln_id_list = eval(Cache.get_value(v_id))
     for each in vuln_id_list:
         vuln = Vulnerability_scan.objects.filter(vuln_id=each).first()
         vuln.fix_status = fix_status
         vuln.save()
     return True
+
+
+def vulnlist_assign(v_id, user, username_list):
+    vuln_id_list = eval(Cache.get_value(v_id))
+    token = dinktalk.DinkTalk.get_access_token()
+
+    msg = dingtalk_msg.DingTalkMsg.assign_msg(vuln_id_list)
+    error = dinktalk.DinkTalk.corp_conversation(user=user,
+                                                vuln=vuln_id_list,
+                                                access_token=token,
+                                                user_name_list=username_list,
+                                                msg=msg)
+    return error

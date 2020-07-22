@@ -10,7 +10,7 @@ from django.views.decorators.csrf import csrf_protect
 from .. import models, forms
 from django.http import JsonResponse
 import uuid
-from RBAC.service.is_admin import get_user_area
+from RBAC.service.user_process import get_user_area
 
 
 @login_required

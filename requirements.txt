@@ -13,4 +13,5 @@ xlrd==1.2.0
 django-redis==4.10.0
 uwsgi
 ldap3==2.7
+pypinyin==0.38.1
 

@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 from SeMFSetting.views import paging
 from django.http import JsonResponse
 from RBAC.models import Area
-from RBAC.service.is_admin import get_user_area
+from RBAC.service.user_process import get_user_area
 import json, time
 from django.utils.html import escape
 

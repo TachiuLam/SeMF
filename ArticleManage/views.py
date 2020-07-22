@@ -14,7 +14,7 @@ from django.contrib.auth.models import User
 import time
 import uuid
 from django.utils.html import escape
-from RBAC.service.is_admin import get_user_area
+from RBAC.service.user_process import get_user_area
 
 ARTICLE_STATUS = {
     '0': '新建',

@@ -10,6 +10,10 @@ from ldap3 import Server, Connection, ALL, SUBTREE, ServerPool, ALL_ATTRIBUTES
 from ldap3 import Server, Connection, ALL, SUBTREE, ServerPool
 import random
 import json
+import time
+import jwt
+from SeMF.settings import APP_SECRET, ALGORITHM, APP_KEY
+import datetime
 
 # Create your tests here.
 
@@ -49,22 +53,25 @@ if __name__ == '__main__':
     # r = RSAS.report_main(f)
     # print(r)
     f2 = r'C:\Users\lintechao\Downloads\746_office_2020_07_09_xls.zip'
-    res = rsas_api_test(url='http://127.0.0.1:8000/api/upload/', file=f2)
-    print(res.text)
-
-    # 资产类型判断测试
-    filename = '746_office_2020_07_09_xls.zip'
-    asset_type = RSAS.report_type(filename)
-    print(asset_type)
+    # res = rsas_api_test(url='http://127.0.0.1:8000/api/upload/', file=f2)
+    # print(res.text)
+    #
+    # # 资产类型判断测试
+    # filename = '746_office_2020_07_09_xls.zip'
+    # asset_type = RSAS.report_type(filename)
+    # print(asset_type)
 
     # token鉴权测试
-    # u = 'root'
-    # r = JWT.generate_jwt(u)
-    # print(r)
+    u = 'root'
+    tt = time.ctime()
+    print(type(tt))
+    r = JWT.generate_jwt(u)
+    print(r)
     # print(type(r))
     # # r= r+b'kjahkhdkashd'
-    # d = JWT.decode_jwt(r)
-    # print(d)
+    r = 'Token eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImxpbnRlY2hhbyIsInNpdGUiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAifQ.UY0IYz7CrwcI-jrVznruQkMOjHmmQ5Y3mlY8U6YHxsE'
+    d = JWT.decode_jwt(r)
+    print(d)
 
     # k = ['111','222']
     # key = Cache.write_onetime_cache(k)
@@ -176,3 +183,9 @@ if __name__ == '__main__':
     }
     # res = requests.post(url=url, data=json.dumps(body), headers=headers)
     # print(res.status_code, res.text)
+
+    numl = '林特超； 林小超'
+    a = numl.replace(' ', '').split('；')
+    print(a)
+    print(int(time.time() * 1000))
+

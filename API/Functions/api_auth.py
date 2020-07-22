@@ -5,6 +5,7 @@
 # PyCharm
 from SeMF.settings import SECRET_KEY, WEB_URL, ALGORITHM
 import jwt
+import time
 
 
 class JWT:
@@ -12,7 +13,7 @@ class JWT:
     @staticmethod
     def generate_jwt(user):
         """生成jwt"""
-        encoded_jwt = jwt.encode({'username': str(user), 'site': WEB_URL}, SECRET_KEY,
+        encoded_jwt = jwt.encode({'username': str(user), 'site': WEB_URL, 'timestamp': time.ctime()}, SECRET_KEY,
                                  algorithm=ALGORITHM)
         return 'Token ' + bytes.decode(encoded_jwt)
 

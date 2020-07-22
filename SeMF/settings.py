@@ -81,7 +81,8 @@ SERVER_EMAIL = 'lintechao@yingzi.com'
 DEFAULT_FROM_EMAIL = '安全管控平台<Se@outlook.com>'
 
 # 设置队列存储
-BROKER_URL = 'amqp://semf:1qaz@WSX@rabbitmq/vhost'  # 设置与rabbitmq一致
+BROKER_URL = 'amqp://semf:1qaz@WSX@172.19.130.20/semf'  # 设置与rabbitmq一致
+# BROKER_URL = 'amqp://172.19.130.20/semf'
 CELERY_ACCEPT_CONTENT = ['pickle', 'json', 'msgpack', 'yaml']
 
 # Application definition
@@ -182,7 +183,7 @@ CACHES = {
     },
 }
 REDIS_TIMEOUT = 7 * 24 * 60 * 60
-CUBES_REDIS_TIMEOUT = 60 * 60
+CUBES_REDIS_TIMEOUT = 1 * 50 * 60
 NEVER_REDIS_TIMEOUT = 365 * 24 * 60 * 60
 
 # LDAP 认证
@@ -190,6 +191,15 @@ LDAP_SERVER_POOL = ["corp.yingzi.com:389"]
 ADMIN_DN = "yz_semf"
 ADMIN_PASSWORD = "9ik44DENWa8"
 SEARCH_BASE = "ou=corp,dc=corp,dc=yingzi,dc=com"
+
+# 钉钉H5微应用
+AGENT_ID = "825883923"
+APP_KEY = 'dingkpdsu0ojcv1dvsqw'
+APP_SECRET = 'd-RnJoghM9MDULNobwsl4j64DWV5-_xAMzk8RrrWAABsYGg8Saj9ZVC4VctoC4_Y'
+# 钉钉第三方免登
+AUTH_APP_ID = 'dingoab5rfj5eecmn00yvr'
+AUTH_APP_SECRET = 'AU0zCu5-E4clzz21nI4OCUX4t2k1GMsGb3bor4VWjesj5HIxWHRZ4Fpc2dgKFFQH'
+REDIRECT_URL = 'http://semf-dingtalk.test.yingzi.com/api/dingtalk/'
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators

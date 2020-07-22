@@ -8,7 +8,7 @@ from django.http import JsonResponse
 import time
 from django.utils.html import escape
 from SeMF.redis import Cache
-from RBAC.service.is_admin import get_user_area
+from RBAC.service.user_process import get_user_area, username_list_identify
 
 # Create your views here.
 
@@ -255,7 +255,7 @@ def vulntablelist(request):
 @csrf_protect
 def vulnlist_change_status(request):
     vuln_id_list = request.POST.get('vuln_id_list')
-    vuln_id_list_key = Cache.write_onetime_cache(vuln_id_list)
+    vuln_id_list_key = Cache.set_value(vuln_id_list)
     models.VulnlistFix.objects.get_or_create(
         id=1,
     )
@@ -302,24 +302,26 @@ def vulnlist_assign(request, v_id):
         is_admin = True
     else:
         is_admin = get_user_area(user).get('is_admin')
-    vulnlist = get_object_or_404(models.VulnlistFix, id=1)
     error = ''
     if request.method == 'POST':
         if is_admin:
-            form = forms.Vulnlist_assign(request.POST, instance=vulnlist)
+            form = forms.Vulnlist_assign(request.POST)
+            if form.is_valid():
+
+                res = username_list_identify(form.cleaned_data['assign_user'])
+                error = res.get('result')
+                username_list = res.get('username_list')
+                if error == 0:  # 进行钉钉漏洞派发
+                    error = tasks.vulnlist_assign(v_id, user, username_list).get('result')
+            else:
+                error = '请检查输入'
         else:
-            form = forms.Vulnlist_assign(request.POST, instance=vulnlist)
-        if form.is_valid():
-            form.save()
-            error = '操作成功'
-        else:
-            error = '请检查输入'
+            # form = forms.Vulnlist_assign(request.POST)
+            error = '权限错误'
+            form = forms.Vulnlist_assign()
+
     else:
-        if is_admin:
-            form = forms.Vulnlist_assign(instance=vulnlist)
-        else:
-            form = forms.Vulnlist_assign(instance=vulnlist)
+        form = forms.Vulnlist_assign()
 
     return render(request, 'formupdate.html',
-                  {'form': form, 'post_url': 'vulnlistfixid', 'argu': v_id, 'error': error})
-
+                  {'form': form, 'post_url': 'vulnassign', 'argu': v_id, 'error': error})

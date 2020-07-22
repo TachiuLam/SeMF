@@ -10,7 +10,7 @@ from .. import models,forms
 from TaskManage.views.Scantasks import sys_action,web_action
 import time
 from django.utils.html import escape
-from RBAC.service.is_admin import get_user_area
+from RBAC.service.user_process import get_user_area
 
 
 TASK_STATUS={

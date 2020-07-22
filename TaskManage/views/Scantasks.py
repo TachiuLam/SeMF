@@ -12,7 +12,7 @@ from ..Functions import nessus, awvs
 from AssetManage.models import Asset
 import time
 from ..tasks import save_scan_vulns, save_awvs_vulns
-from RBAC.service.is_admin import get_user_area
+from RBAC.service.user_process import get_user_area
 
 
 @login_required
