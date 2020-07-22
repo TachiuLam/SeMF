@@ -255,7 +255,7 @@ def vulntablelist(request):
 @csrf_protect
 def vulnlist_change_status(request):
     vuln_id_list = request.POST.get('vuln_id_list')
-    vuln_id_list_key = Cache.write_onetime_cache(vuln_id_list)
+    vuln_id_list_key = Cache.set_value(vuln_id_list)
     models.VulnlistFix.objects.get_or_create(
         id=1,
     )

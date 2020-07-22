@@ -5,6 +5,8 @@
 
 from django.shortcuts import get_object_or_404
 from VulnManage.models import Vulnerability_scan
+from .dinktalk import DinkTalk
+from SeMF.settings import APP_ID, REDIRECT_URL
 
 
 class DingTalkMsg:
@@ -25,17 +27,13 @@ class DingTalkMsg:
                 "markdown": messeage,
                 "btn_orientation": "0",
                 "btn_json_list": [
-                    {
-                        "title": "受理",
-                        "action_url": "http://127.0.0.1/vuln/user/details/"
-                    },
-                    {
-                        "title": "全部受理",
-                        "action_url": "https://www.tmall.com"
-                    },
+                    # {
+                    #     "title": "受理",
+                    #     "action_url": "http://127.0.0.1/vuln/user/details/"
+                    # },
                     {
                         "title": "漏洞详情",
-                        "action_url": "http://127.0.0.1/vuln/user/details/"
+                        "action_url": DinkTalk.auth_url(APP_ID, REDIRECT_URL)
                     },
                 ]
             }

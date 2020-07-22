@@ -5,6 +5,11 @@
 
 import requests
 import json
+import time
+import hashlib
+import hmac
+import base64
+from urllib import parse
 from SeMF.settings import APP_KEY, APP_SECRET, AGENT_ID
 from SeMF.redis import Cache
 from API import tasks
@@ -13,31 +18,62 @@ from RBAC.service import user_process
 
 class DinkTalk:
 
+    @staticmethod
+    def auth_url(app_id, redirect_url):
+        """构造获取临时授权码的跳转链接"""
+        data = {
+            "appid": app_id,
+            "redirect_uri": redirect_url,
+            "response_type": "code",
+            "scope": "snsapi_auth",
+            "state": "STATE"
+        }
+        auth_url = F'''https://oapi.dingtalk.com/connect/oauth2/sns_authorize?{parse.urlencode(data)}'''
+        return auth_url
+
     @classmethod
-    def get_user_info_by_code(cls, code, access_token):
-        """服务端通过临时授权码获取授权用户的个人信息，临时授权码只能使用一次。"""
-        url = 'https://oapi.dingtalk.com/user/getuserinfo?access_token={}&code={}'.format(access_token, code)
-        res = requests.get(url)
+    def get_user_name_by_code(cls, code, access_token, access_key, app_secret):
+        """服务端通过临时授权码获取授权用户的个人信息，临时授权码只能使用一次。缓存用户信息"""
+        timestamp = str((int(round(time.time() * 1000))))
+        # 构造签名
+        signature = base64.b64encode(
+            hmac.new(app_secret.encode('utf-8'), timestamp.encode('utf-8'), digestmod=hashlib.sha256).digest())
+        data = {'tmp_auth_code': code}
+        url = 'https://oapi.dingtalk.com/sns/getuserinfo_bycode?accessKey={}&timestamp={}&signature={}'.format(
+            access_key, timestamp, signature)
+        res = requests.post(url=url, data=data)
         res = json.loads(res.content)
-        if res.get('errcode') == 0:
-            user_id = res.get('userid')
-            user_name = Cache.read_from_cache(key=user_id)
+
+        if res.get('errcode') == 0:     # 避免user_info为空时出现异常
+            unionid = res.get('user_info').get('unionid')
+            user_id = cls.get_userid_by_unionid(access_token, unionid)
+            # 根据user_id从缓存读取用户名
+            user_name = Cache.get_value(key=user_id)
+            # 缓存中不存在对应值，通过接口获取
             if not user_name:
-                user_name = cls.get_user_info(access_token, user_name).get('name')
+                user_name = cls.get_user_info(access_token, user_id).get('name')
             return user_name
         else:
             return None
 
+    @staticmethod
+    def get_userid_by_unionid(access_token, unionid):
+        """根据unionid获取用户userid"""
+        url = 'https://oapi.dingtalk.com/user/getUseridByUnionid?access_token={}&unionid={}'.format(access_token,
+                                                                                                    unionid)
+        res = requests.get(url)
+        res = json.loads(res.content)
+        return res.get('userid')
 
     @staticmethod
     def get_access_token(app_key=APP_KEY, app_secret=APP_SECRET):
         """access_token，进行缓存（钉钉默认7200秒失效，缓存时间小于该值）"""
-        access_token = Cache.read_from_cache('access_token')
+        access_token = Cache.get_value('access_token')
         if not access_token:
             url = 'https://oapi.dingtalk.com/gettoken?appkey={}&appsecret={}'.format(app_key, app_secret)
             res = requests.get(url)
             access_token = json.loads(res.content).get('access_token')
-            Cache.write_onetime_cache(value=access_token, key='access_token')
+            Cache.set_value(value=access_token, key='access_token')
         return access_token
 
     @staticmethod
@@ -72,9 +108,9 @@ class DinkTalk:
             user_info = cls.get_user_info(access_token, each_id)
             if user_info:
                 # 用户名拼音作为缓存key
-                Cache.write_onetime_cache(value=user_info, key=user_info.get('name'), key_time_id=2)
+                Cache.set_value(value=user_info, key=user_info.get('name'), key_time_id=2)
                 # 用户userid作为缓存key
-                Cache.write_onetime_cache(value=user_info.get('name'), key=user_info.get('userid'), key_time_id=2)
+                Cache.set_value(value=user_info.get('name'), key=user_info.get('userid'), key_time_id=2)
                 user_name_list.append(user_info.get('name'))
         return user_name_list
 
@@ -101,7 +137,7 @@ class DinkTalk:
         data = {}
         userid_list = []
         for name in user_name_list:
-            user_info = Cache.read_from_cache(key=user_process.han_to_pinyin(name))
+            user_info = Cache.get_value(key=user_process.han_to_pinyin(name))
             # 缓存查询不到，用户不存在
             if not user_info:
                 # cls.save_user_list(access_token=access_token)

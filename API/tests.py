@@ -13,6 +13,7 @@ import json
 import time
 import jwt
 from SeMF.settings import APP_SECRET, ALGORITHM, APP_KEY
+import datetime
 
 # Create your tests here.
 
@@ -61,13 +62,15 @@ if __name__ == '__main__':
     # print(asset_type)
 
     # token鉴权测试
-    # u = 'root'
-    # r = JWT.generate_jwt(u)
-    # print(r)
+    u = 'root'
+    tt = time.ctime()
+    print(type(tt))
+    r = JWT.generate_jwt(u)
+    print(r)
     # print(type(r))
     # # r= r+b'kjahkhdkashd'
-    # d = JWT.decode_jwt(r)
-    # print(d)
+    d = JWT.decode_jwt(r)
+    print(d)
 
     # k = ['111','222']
     # key = Cache.write_onetime_cache(k)
@@ -184,9 +187,4 @@ if __name__ == '__main__':
     a = numl.replace(' ', '').split('；')
     print(a)
     print(int(time.time() * 1000))
-    def get_union_id(code, app_key, app_secret, algorithm):
-        """服务端通过临时授权码获取授权用户的个人信息，临时授权码只能使用一次。"""
-        timestamp = str(int(time.time() * 1000))
-        signature = jwt.encode({'timestamp': timestamp}, app_secret, algorithm=algorithm)
-        print(signature)
-    get_union_id(1,APP_KEY, APP_SECRET, ALGORITHM)
+

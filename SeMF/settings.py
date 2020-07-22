@@ -197,6 +197,9 @@ SEARCH_BASE = "ou=corp,dc=corp,dc=yingzi,dc=com"
 AGENT_ID = "825883923"
 APP_KEY = 'dingkpdsu0ojcv1dvsqw'
 APP_SECRET = 'd-RnJoghM9MDULNobwsl4j64DWV5-_xAMzk8RrrWAABsYGg8Saj9ZVC4VctoC4_Y'
+APP_ID = ''
+REDIRECT_URL = ''       # 钉钉回调域名
+
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators

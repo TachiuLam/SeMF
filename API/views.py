@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
@@ -15,7 +15,7 @@ import os
 @csrf_exempt
 @require_http_methods(['POST'])
 def report_upload(request):
-    """漏洞报告上传"""
+    """漏洞报告上传接口"""
     # print(request.FILES)
     token = request.META.get('HTTP_AUTHORIZATION')
     user = JWT.decode_jwt(token).get('user')
@@ -47,6 +47,12 @@ def report_upload(request):
 
 @login_required()
 def api_info(request):
+    """API文档接口"""
     user = request.user
     token = JWT.generate_jwt(user=user)
     return render(request, 'API/apiinfo.html', {'info': {'token': token}})
+
+
+@csrf_exempt
+def ding_vuln_detail(request):
+    return HttpResponse("dingtalk redirect success")

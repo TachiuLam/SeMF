@@ -49,7 +49,7 @@ def username_list_identify(username_list):
         if not username:
             return {'result': '请输入合法的用户名，多个用户名以中文分号 ；进行分隔'}
         name = han_to_pinyin(username)
-        if not Cache.read_from_cache(key=name):
+        if not Cache.get_value(key=name):
             return {'result': '用户“{}”不存在, 请输入合法的用户名，多个用户名以中文分号 ；进行分隔'.format(username)}     # 返回中文名
         # 进行漏洞项目和派发用户所属项目组匹配，符合才发送
         # 该功能待需要再添加

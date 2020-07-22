@@ -13,7 +13,7 @@ from django.core.cache import cache
 class Cache:
 
     @staticmethod
-    def read_from_cache(key):
+    def get_value(key):
         value = cache.get(key)
         if not value:
             data = None
@@ -22,7 +22,7 @@ class Cache:
         return data
 
     @staticmethod
-    def write_onetime_cache(value, key=None, key_time_id='3'):
+    def set_value(value, key=None, key_time_id='3'):
         """使用该方法缓存，未传入键名和缓存时间，则默认设置"""
         key_time = {'1': NEVER_REDIS_TIMEOUT, '2': REDIS_TIMEOUT, '3': CUBES_REDIS_TIMEOUT}
         if not key:

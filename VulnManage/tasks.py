@@ -81,7 +81,7 @@ def parse_cnvdxml(filepath):
 
 
 def vulnlist_save_status(v_id, fix_status):
-    vuln_id_list = eval(Cache.read_from_cache(v_id))
+    vuln_id_list = eval(Cache.get_value(v_id))
     for each in vuln_id_list:
         vuln = Vulnerability_scan.objects.filter(vuln_id=each).first()
         vuln.fix_status = fix_status
@@ -90,7 +90,7 @@ def vulnlist_save_status(v_id, fix_status):
 
 
 def vulnlist_assign(v_id, user, username_list):
-    vuln_id_list = eval(Cache.read_from_cache(v_id))
+    vuln_id_list = eval(Cache.get_value(v_id))
     token = dinktalk.DinkTalk.get_access_token()
 
     msg = dingtalk_msg.DingTalkMsg.assign_msg(vuln_id_list)
