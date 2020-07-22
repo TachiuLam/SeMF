@@ -19,10 +19,10 @@ from RBAC.service import user_process
 class DinkTalk:
 
     @staticmethod
-    def auth_url(app_id, redirect_url):
+    def auth_url(auth_app_id, redirect_url):
         """构造获取临时授权码的跳转链接"""
         data = {
-            "appid": app_id,
+            "appid": auth_app_id,
             "redirect_uri": redirect_url,
             "response_type": "code",
             "scope": "snsapi_auth",
@@ -32,12 +32,12 @@ class DinkTalk:
         return auth_url
 
     @classmethod
-    def get_user_name_by_code(cls, code, access_token, access_key, app_secret):
+    def get_user_name_by_code(cls, code, access_token, access_key, auth_app_secret):
         """服务端通过临时授权码获取授权用户的个人信息，临时授权码只能使用一次。缓存用户信息"""
         timestamp = str((int(round(time.time() * 1000))))
         # 构造签名
         signature = base64.b64encode(
-            hmac.new(app_secret.encode('utf-8'), timestamp.encode('utf-8'), digestmod=hashlib.sha256).digest())
+            hmac.new(auth_app_secret.encode('utf-8'), timestamp.encode('utf-8'), digestmod=hashlib.sha256).digest())
         data = {'tmp_auth_code': code}
         url = 'https://oapi.dingtalk.com/sns/getuserinfo_bycode?accessKey={}&timestamp={}&signature={}'.format(
             access_key, timestamp, signature)

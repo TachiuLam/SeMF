@@ -6,7 +6,7 @@
 from django.shortcuts import get_object_or_404
 from VulnManage.models import Vulnerability_scan
 from .dinktalk import DinkTalk
-from SeMF.settings import APP_ID, REDIRECT_URL
+from SeMF.settings import AUTH_APP_ID, REDIRECT_URL
 
 
 class DingTalkMsg:
@@ -33,7 +33,7 @@ class DingTalkMsg:
                     # },
                     {
                         "title": "漏洞详情",
-                        "action_url": DinkTalk.auth_url(APP_ID, REDIRECT_URL)
+                        "action_url": DinkTalk.auth_url(AUTH_APP_ID, REDIRECT_URL)
                     },
                 ]
             }
