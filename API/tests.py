@@ -69,6 +69,7 @@ if __name__ == '__main__':
     print(r)
     # print(type(r))
     # # r= r+b'kjahkhdkashd'
+    r = 'Token eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImxpbnRlY2hhbyIsInNpdGUiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAifQ.UY0IYz7CrwcI-jrVznruQkMOjHmmQ5Y3mlY8U6YHxsE'
     d = JWT.decode_jwt(r)
     print(d)
 
