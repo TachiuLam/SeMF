@@ -67,12 +67,12 @@ def ding_vuln_view(request):
     """钉钉漏洞首页"""
     code = request.GET.get('code')
     # 权限判断
-    if not code:
-        return permission_denied(request)
-    access_token = DinkTalk.get_access_token(APP_KEY, APP_SECRET)
-    user_name = DinkTalk.get_user_name_by_code(code, access_token, AUTH_APP_ID, AUTH_APP_SECRET)
-    if not user_name:
-        return permission_denied(request)
+    # if not code:
+    #     return permission_denied(request)
+    # access_token = DinkTalk.get_access_token(APP_KEY, APP_SECRET)
+    # user_name = DinkTalk.get_user_name_by_code(code, access_token, AUTH_APP_ID, AUTH_APP_SECRET)
+    # if not user_name:
+    #     return permission_denied(request)
     user_name = 'lintechao'     # 调试用
     context = {}
     # 构造token返回
@@ -149,8 +149,8 @@ def ding_vuln_token(request):
     token = request.POST.get('token')
     vuln_id = request.POST.get('vuln_id')
     user_name = JWT.decode_jwt(token).get('user')
-    if not user_name:      # 校验token，防止cc攻击，导致缓存空间不足
-        return permission_denied(request)
+    # if not user_name:      # 校验token，防止cc攻击，导致缓存空间不足
+    #     return permission_denied(request)
     v_detail_id = 'yz' + vuln_id
     if not Cache.get_value(key=v_detail_id):
         v_token = JWT.generate_jwt(user=user_name, vuln_id=v_detail_id)
@@ -162,13 +162,13 @@ def ding_vuln_token(request):
 def ding_vuln_detail(request, v_detail_id):
     """钉钉漏洞详情页，根据v_detail_id获取token、vuln_id，返回对应漏洞详情"""
     v_token = Cache.get_value(v_detail_id)
-    if not v_token:
-        return permission_denied(request)
+    # if not v_token:
+    #     return permission_denied(request)
     user_name = JWT.decode_jwt(v_token).get('user')
     vuln_id = JWT.decode_jwt(v_token).get('v_detail_id').split('yz ')[1]
     res = get_user_area(user_name)
     is_admin, user_area_list = res.get('is_admin'), res.get('user_area_list')
-    # is_admin = True  # 调试用
+    is_admin = True  # 调试用
     if is_admin:
         vuln = get_object_or_404(Vulnerability_scan, vuln_id=vuln_id)
     else:
