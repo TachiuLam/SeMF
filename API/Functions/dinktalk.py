@@ -32,7 +32,7 @@ class DinkTalk:
         return auth_url
 
     @classmethod
-    def get_user_name_by_code(cls, code, access_token, access_key, auth_app_secret):
+    def get_user_name_by_code(cls, code, access_token, auth_app_id, auth_app_secret):
         """服务端通过临时授权码获取授权用户的个人信息，临时授权码只能使用一次。缓存用户信息"""
         timestamp = str((int(round(time.time() * 1000))))
         # 构造签名
@@ -40,10 +40,9 @@ class DinkTalk:
             hmac.new(auth_app_secret.encode('utf-8'), timestamp.encode('utf-8'), digestmod=hashlib.sha256).digest())
         data = {'tmp_auth_code': code}
         url = 'https://oapi.dingtalk.com/sns/getuserinfo_bycode?accessKey={}&timestamp={}&signature={}'.format(
-            access_key, timestamp, signature)
+            auth_app_id, timestamp, signature)
         res = requests.post(url=url, data=data)
         res = json.loads(res.content)
-
         if res.get('errcode') == 0:     # 避免user_info为空时出现异常
             unionid = res.get('user_info').get('unionid')
             user_id = cls.get_userid_by_unionid(access_token, unionid)
