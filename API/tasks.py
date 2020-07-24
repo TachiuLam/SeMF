@@ -30,7 +30,6 @@ def refresh_cache():
 def send_conversation(url, data, user, to_user, vuln):
     """异步派发漏洞，派发结果使用notice模块通知"""
     res = requests.post(url=url, data=data)
-    print(res.text)
     res = json.loads(res.content)
     # res = {'errcode': 0, 'task_id': 232719853185, 'request_id': '3x1qbs76ef3k'}
     # 使用notice进行推送，待添加
@@ -38,7 +37,7 @@ def send_conversation(url, data, user, to_user, vuln):
         data_message = {
             'notice_title': '漏洞派发成功',
             'notice_body': '漏洞id：{}；操作人员：{}；派发对象：{}'.format(vuln, user.username, to_user),
-            'notice_url': '/vuln/user/',
+            # 'notice_url': '/vuln/user/',
             'notice_type': 'inform',
         }
         notice_add(user, data_message)
@@ -47,7 +46,7 @@ def send_conversation(url, data, user, to_user, vuln):
         data_message = {
             'notice_title': '漏洞派发失败',
             'notice_body': '漏洞id：{}；操作人员：{}；原因：{}'.format(vuln, user.username, res.get('errmsg')),
-            'notice_url': '/vuln/user/',
+            # 'notice_url': '/vuln/user/',
             'notice_type': 'inform',
         }
         notice_add(user, data_message)

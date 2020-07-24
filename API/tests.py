@@ -204,3 +204,13 @@ if __name__ == '__main__':
     ).exclude(fix_status__icontains='2',).order_by('-fix_status', '-leave')
     print(vuln_list)
     # user_area = Profile.objects.filter(user=user).values('area').all()
+    def test(u, **kwargs):
+        a = {}
+
+        for v, each in kwargs.items():
+            a[v] = each
+        a['a'] = u
+        return a
+
+    res = test(1)
+    print(res)

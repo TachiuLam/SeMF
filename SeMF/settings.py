@@ -200,8 +200,8 @@ APP_SECRET = 'd-RnJoghM9MDULNobwsl4j64DWV5-_xAMzk8RrrWAABsYGg8Saj9ZVC4VctoC4_Y'
 # 钉钉第三方免登
 AUTH_APP_ID = 'dingoab5rfj5eecmn00yvr'
 AUTH_APP_SECRET = 'AU0zCu5-E4clzz21nI4OCUX4t2k1GMsGb3bor4VWjesj5HIxWHRZ4Fpc2dgKFFQH'
-REDIRECT_URL = 'http://semf-dingtalk.test.yingzi.com/api/dingtalk/'
-
+# REDIRECT_URL = 'http://semf-dingtalk.test.yingzi.com/api/dingtalk/'
+REDIRECT_URL = 'http://yingzi.vaiwan.com/api/dingtalk/'
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
 

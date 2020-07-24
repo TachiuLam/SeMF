@@ -11,9 +11,12 @@ import time
 class JWT:
 
     @staticmethod
-    def generate_jwt(user):
-        """生成jwt"""
-        encoded_jwt = jwt.encode({'username': str(user), 'site': WEB_URL, 'timestamp': time.ctime()}, SECRET_KEY,
+    def generate_jwt(user, **kwargs):
+        """生成jwt，可自定义传入参数，如 k=2"""
+        info = {'username': str(user), 'site': WEB_URL, 'timestamp': time.ctime()}
+        for key, value in kwargs.items():
+            info[key] = value
+        encoded_jwt = jwt.encode(info, SECRET_KEY,
                                  algorithm=ALGORITHM)
         return 'Token ' + bytes.decode(encoded_jwt)
 
