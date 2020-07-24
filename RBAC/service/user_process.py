@@ -3,6 +3,7 @@
 # lintechoa@yingzi.com
 # 2020/7/7 14:11
 
+from django.contrib.auth.models import User
 from pypinyin import lazy_pinyin
 from RBAC.models import Area, Profile
 from SeMF.settings import MANAGE_TEAM
@@ -15,8 +16,13 @@ def get_user_area(user):
     :param user: request.user
     :return: {'is_admin': is_admin, 'user_area_list': user_area_list}
     """
-    # 获取用户所在项目组所有
-    user_area = Profile.objects.filter(user=user).values('area').all()
+    # 字符串类型的 user是用户名字字符串，用于钉钉接口
+    if isinstance(user, str):
+        user_id = User.objects.filter(username=user).values('id').first().get('id')
+        user_area = Profile.objects.filter(user_id=user_id).values('area').all()
+    else:       # request.user 对象
+        # 获取用户所在项目组所有
+        user_area = Profile.objects.filter(user=user).values('area').all()
     is_admin = False
     user_area_list = []
     for each in user_area:

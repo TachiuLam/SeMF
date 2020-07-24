@@ -94,7 +94,7 @@ layui.use('table', function(){
     } else if(obj.event === 'status'){
     	url = "{% url 'vulnfix' 'key' %}";
     	url = url.replace(/key/,vuln_id);
-    	x_admin_show('资产详情',url,600);
+    	x_admin_show('状态变更',url,600);
     } else if(obj.event === 'detail'){
     	url = "{% url 'vulndetails' '0' %}";
     	url = url.replace(/0/,vuln_id);

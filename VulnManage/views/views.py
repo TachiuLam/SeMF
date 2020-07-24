@@ -215,10 +215,7 @@ def vulntablelist(request):
                 leave__gte=1,
             ).order_by('-fix_status', '-leave')
         else:
-            if not user_area_list:
-                # 随便加个字符串，保证数据库查不到，逻辑有点烂！
-                user_area_list.append('no allow')
-
+            # user_area_list 则查询不到数据
             vuln_list = models.Vulnerability_scan.objects.filter(
                 vuln_asset__asset_area__in=user_area_list,  # 根据项目ID进行筛选
                 vuln_asset__asset_key__icontains=key,
@@ -237,7 +234,6 @@ def vulntablelist(request):
         dic['vuln_info'] = escape(vuln_item.vuln_info)
         dic['vuln_name'] = escape(vuln_item.vuln_name)
         dic['vuln_type'] = escape(vuln_item.vuln_type)
-        dic['asset_description'] = escape(vuln_item.vuln_asset.asset_description)
         dic['leave'] = escape(VULN_LEAVE[vuln_item.leave])
         dic['fix_status'] = escape(VULN_STATUS[vuln_item.fix_status])
         dic['update_data'] = escape(vuln_item.update_data)
