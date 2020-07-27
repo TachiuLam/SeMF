@@ -14,6 +14,8 @@ from SeMF.settings import APP_KEY, APP_SECRET, AGENT_ID
 from SeMF.redis import Cache
 from API import tasks
 from RBAC.service import user_process
+from API.Functions.save_img import save_img
+from SeMF.settings import STATICFILES_DIRS, STATIC_URL
 
 
 class DinkTalk:
@@ -43,7 +45,7 @@ class DinkTalk:
             auth_app_id, timestamp, signature)
         res = requests.post(url=url, data=data)
         res = json.loads(res.content)
-        if res.get('errcode') == 0:     # 避免user_info为空时出现异常
+        if res.get('errcode') == 0:  # 避免user_info为空时出现异常
             unionid = res.get('user_info').get('unionid')
             user_id = cls.get_userid_by_unionid(access_token, unionid)
             # 根据user_id从缓存读取用户名
@@ -108,6 +110,16 @@ class DinkTalk:
             if user_info:
                 # 用户名拼音作为缓存key
                 Cache.set_value(value=user_info, key=user_info.get('name'), key_time_id=2)
+
+                # 更新用户头像，并缓存本地url
+                file_path = STATICFILES_DIRS[0] + '/images/'
+                file_name = user_info.get('name') + '_avatar.png'
+                # 本地保存钉钉头像
+                save_img(img_url=user_info.get('avatar'), file_name=file_name, file_path=file_path)
+                # 缓存头像本地链接
+                Cache.set_value(value=(STATIC_URL + 'images/' + file_name), key=user_info.get('name') + '_avatar',
+                                key_time_id=2)
+
                 # 用户userid作为缓存key
                 Cache.set_value(value=user_info.get('name'), key=user_info.get('userid'), key_time_id=2)
                 user_name_list.append(user_info.get('name'))
@@ -165,17 +177,3 @@ class DinkTalk:
         return {'errcode': 0, 'result': '漏洞已派发'}
 
 
-if __name__ == '__main__':
-    from API.Functions.dingtalk_msg import DingTalkMsg
-    # token = DinkTalk.get_assess_token()
-    # # info = DinkTalk.get_user_info(token, userid='191152606026429443')
-    # msg = {"msgtype": "text", "text": {"content": "推送测试2020/07/15——by tachiulam"}}
-    # # msg = DingTalkMsg.vuln_assign_msg
-    # info = DinkTalk.corp_conversation(access_token=token,
-    #                                   user_name_list=['lintechao'],
-    #                                   msg=msg)
-    # print(info)
-    # user_l = DinkTalk.get_user_list(token)
-    # idd = DinkTalk.get_user_id_list(token, '244605159')
-
-    # print(DinkTalk.han_to_pinyin(info.get('name')))
