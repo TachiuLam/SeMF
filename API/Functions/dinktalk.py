@@ -45,6 +45,7 @@ class DinkTalk:
             auth_app_id, timestamp, signature)
         res = requests.post(url=url, data=data)
         res = json.loads(res.content)
+        print(res)
         if res.get('errcode') == 0:  # 避免user_info为空时出现异常
             unionid = res.get('user_info').get('unionid')
             user_id = cls.get_userid_by_unionid(access_token, unionid)
