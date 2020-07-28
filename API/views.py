@@ -96,8 +96,8 @@ def ding_vuln_list(request):
     if not token:
         return permission_denied(request)
     user_name_zh = JWT.decode_jwt(token).get('user')
-    if not user_name_zh:
-        return page_not_found(request)
+    # if not user_name_zh:
+    #     return page_not_found(request)
     page = request.POST.get('page')
     rows = request.POST.get('limit')
     user_name = han_to_pinyin(user_name_zh)
