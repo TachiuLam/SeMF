@@ -41,9 +41,11 @@ class DinkTalk:
         signature = base64.b64encode(
             hmac.new(auth_app_secret.encode('utf-8'), timestamp.encode('utf-8'), digestmod=hashlib.sha256).digest())
         data = {'tmp_auth_code': code}
+        headers = {'Content-Type': 'application/json'}
         url = 'https://oapi.dingtalk.com/sns/getuserinfo_bycode?accessKey={}&timestamp={}&signature={}'.format(
             auth_app_id, timestamp, signature)
-        res = requests.post(url=url, data=data)
+        res = requests.post(url=url, data=json.dumps(data), headers=headers)
+        r = res
         res = json.loads(res.content)
         if res.get('errcode') == 0:  # 避免user_info为空时出现异常
             unionid = res.get('user_info').get('unionid')
@@ -57,7 +59,7 @@ class DinkTalk:
                 user_name_zh = Cache.get_value(key=user_name).get('name_zh')
             return user_name_zh
         else:
-            return res
+            return r
             # return None
 
     @staticmethod
