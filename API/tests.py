@@ -229,4 +229,5 @@ if __name__ == '__main__':
 
     # refresh_cache()
     name = Cache.get_value(key='lintechao')
-    print(name)
+    info = Cache.get_value(key='191152606026429443')
+    print(name, info)
