@@ -57,6 +57,8 @@ def report_upload(request):
 @login_required()
 def api_info(request):
     """API文档接口"""
+    from .tasks import refresh_cache
+    refresh_cache()
     user = request.user
     token = JWT.generate_jwt(user=user)
     return render(request, 'API/apiinfo.html', {'info': {'token': token}})
