@@ -227,5 +227,6 @@ if __name__ == '__main__':
     if not a:
         print(22)
 
-    refresh_cache()
+    # refresh_cache()
     name = Cache.get_value(key='lintechao')
+    print(name)
