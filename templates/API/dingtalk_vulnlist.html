@@ -61,6 +61,8 @@
                         if ($(this).text() == '受理人') {
                             $(this).css('color', 'black');
                             //  $('tr').eq(index).css("background-color",BJCOLOR);
+                        } else if ($(this).text() == '未受理') {
+                            $(this).css("color", '#c60e06');
                         } else if ($(this).text()) {
                             $(this).css("color", '#18c611');
                         } else {
