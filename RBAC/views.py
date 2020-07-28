@@ -63,20 +63,20 @@ def dashboard(request):
     context = {}
     user = request.user
     # 钉钉头像获取，使用redis缓存头像保存路径
-    img_url = Cache.get_value(key=(str(user)+'_avatar'))
+    # img_url = Cache.get_value(key=(str(user)+'_avatar'))
     ding_user = Cache.get_value(key=user)
     if not ding_user:       # 不存在的钉钉用户，返回默认头像
         context['avatar'] = STATIC_URL + "images/default_avatar.png"
-    elif img_url:       # 如果缓存内存在用户头像
-        context['avatar'] = img_url
+    # elif img_url:       # 如果缓存内存在用户头像
+    #     context['avatar'] = img_url
     else:       # 从钉钉静态文件地址获取，保存头像，缓存头像本地路径，默认一周，后期增加定时更新头像缓存任务
-        file_path = STATICFILES_DIRS[0] + '/images/'
-        file_name = ding_user.get('name') + '_avatar.png'
+        # file_path = STATICFILES_DIRS[0] + '/images/'
+        # file_name = ding_user.get('name') + '_avatar.png'
         img_url = ding_user.get('avatar')
         # 保存钉钉头像
-        save_img(img_url, file_name, file_path)
+        # save_img(img_url, file_name, file_path)
         # 缓存
-        Cache.set_value(value=(STATIC_URL+'images/'+file_name), key=str(user)+'_avatar', key_time_id=2)
+        # Cache.set_value(value=(STATIC_URL+'images/'+file_name), key=str(user)+'_avatar', key_time_id=2)
         context['avatar'] = img_url
     return render(request, 'Dashboard.html', context)
 
