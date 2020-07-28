@@ -40,11 +40,12 @@ class DinkTalk:
         # 构造签名
         signature = base64.b64encode(
             hmac.new(auth_app_secret.encode('utf-8'), timestamp.encode('utf-8'), digestmod=hashlib.sha256).digest())
+        # urlEncode 签名
+        signature = parse.quote(signature.decode("utf-8"))
         data = {'tmp_auth_code': code}
-        headers = {'Content-Type': 'application/json'}
         url = 'https://oapi.dingtalk.com/sns/getuserinfo_bycode?accessKey={}&timestamp={}&signature={}'.format(
             auth_app_id, timestamp, signature)
-        res = requests.post(url=url, data=json.dumps(data), headers=headers)
+        res = requests.post(url=url, data=json.dumps(data))
         r = res
         res = json.loads(res.content)
         if res.get('errcode') == 0:  # 避免user_info为空时出现异常
