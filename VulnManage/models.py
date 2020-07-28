@@ -17,6 +17,7 @@ VULN_STATUS = (
     ('2', '待修复'),
     ('3', '漏洞重现'),
     ('4', '修复中'),
+    ('5', '已派发'),
 )
 VULN_STATUS2 = (
     ('0', '已忽略'),
@@ -76,6 +77,8 @@ class Vulnerability_scan(models.Model):
     fix_status = models.CharField('修复状态', max_length=30, choices=VULN_STATUS)
     create_data = models.DateTimeField('发现时间', auto_now_add=True)
     update_data = models.DateTimeField('修复时间', auto_now=True)
+    assign_user = models.CharField('派发用户', max_length=100, null=True)
+    process_user = models.CharField('受理人', max_length=30, null=True)
     # vuln_port = models.CharField('漏洞端口', max_length=50, null=True)
 
     vuln_asset = models.ForeignKey(Asset, related_name='vuln_for_asset', on_delete=models.CASCADE)

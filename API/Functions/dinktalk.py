@@ -52,8 +52,10 @@ class DinkTalk:
             user_name = Cache.get_value(key=user_id)
             # 缓存中不存在对应值，通过接口获取
             if not user_name:
-                user_name = cls.get_user_info(access_token, user_id).get('name')
-            return user_name
+                user_name_zh = cls.get_user_info(access_token, user_id).get('name_zh')
+            else:
+                user_name_zh = Cache.get_value(key=user_name).get('name_zh')
+            return user_name_zh
         else:
             return None
 
@@ -112,13 +114,13 @@ class DinkTalk:
                 Cache.set_value(value=user_info, key=user_info.get('name'), key_time_id=2)
 
                 # 更新用户头像，并缓存本地url
-                file_path = STATICFILES_DIRS[0] + '/images/'
-                file_name = user_info.get('name') + '_avatar.png'
-                # 本地保存钉钉头像
-                save_img(img_url=user_info.get('avatar'), file_name=file_name, file_path=file_path)
-                # 缓存头像本地链接
-                Cache.set_value(value=(STATIC_URL + 'images/' + file_name), key=user_info.get('name') + '_avatar',
-                                key_time_id=2)
+                # file_path = STATICFILES_DIRS[0] + '/images/'
+                # file_name = user_info.get('name') + '_avatar.png'
+                # # 本地保存钉钉头像
+                # save_img(img_url=user_info.get('avatar'), file_name=file_name, file_path=file_path)
+                # # 缓存头像本地链接
+                # Cache.set_value(value=(STATIC_URL + 'images/' + file_name), key=user_info.get('name') + '_avatar',
+                #                 key_time_id=2)
 
                 # 用户userid作为缓存key
                 Cache.set_value(value=user_info.get('name'), key=user_info.get('userid'), key_time_id=2)
@@ -134,6 +136,7 @@ class DinkTalk:
         user_info = {}
         if res.get('errmsg') == 'ok':
             user_info['name'] = user_process.han_to_pinyin(res.get('name'))  # 姓名拼音，用作缓存key
+            user_info['name_zh'] = res.get('name')     # 姓名汉字，用于校验钉钉用户和前端展示
             user_info['userid'] = res.get('userid')
             user_info['avatar'] = res.get('avatar')  # 钉钉头像
 

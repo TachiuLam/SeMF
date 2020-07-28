@@ -109,9 +109,9 @@
                     if (list.length === 0) {
                         layer.confirm('请先选择要操作的漏洞');
                     } else if (this.id === '1') {
-                        $.post("{% url 'dingtalk_accept' %}", {
+                        $.post("{% url 'dingtalk_process' %}", {
                             'vuln_id_list': JSON.stringify(list),
-                            {#'token': token#}
+                            'token': token
                         }, function (res) {
                             layer.msg(res.error);
                             setTimeout(function () {

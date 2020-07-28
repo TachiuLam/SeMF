@@ -9,7 +9,7 @@ from SeMF.settings import MEDIA_API, MEDIA_TYPE, APP_KEY, APP_SECRET, AUTH_APP_I
 from SeMF.views import permission_denied
 from SeMF.redis import Cache
 from SeMFSetting.views import paging
-from RBAC.service.user_process import get_user_area
+from RBAC.service.user_process import get_user_area, han_to_pinyin
 from VulnManage.models import Vulnerability_scan
 from VulnManage.views.views import VULN_STATUS, VULN_LEAVE
 from API.Functions.api_auth import JWT
@@ -67,43 +67,41 @@ def ding_vuln_view(request):
     """钉钉漏洞首页"""
     code = request.GET.get('code')
     # 权限判断
-    # if not code:
-    #     return permission_denied(request)
-    # access_token = DinkTalk.get_access_token(APP_KEY, APP_SECRET)
-    # user_name = DinkTalk.get_user_name_by_code(code, access_token, AUTH_APP_ID, AUTH_APP_SECRET)
-    # if not user_name:
-    #     return permission_denied(request)
-    user_name = 'lintechao'     # 调试用
+    if not code:
+        return permission_denied(request)
+    access_token = DinkTalk.get_access_token(APP_KEY, APP_SECRET)
+    user_name_zh = DinkTalk.get_user_name_by_code(code, access_token, AUTH_APP_ID, AUTH_APP_SECRET)
+    if not user_name_zh:
+        return permission_denied(request)
+    user_name_zh = '林特超'     # 调试用
     context = {}
     # 构造token返回
-    token = Cache.get_value(key='tk_' + user_name)
+    token = Cache.get_value(key='tk_' + user_name_zh)
     if not token:
-        token = JWT.generate_jwt('tk_' + user_name)
-        Cache.set_value(token, 'tk_' + user_name, 3)
+        token = JWT.generate_jwt('tk_' + user_name_zh)
+        Cache.set_value(token, 'tk_' + user_name_zh, 3)
     token = token.split('Token ')[1]
     context['token'] = json.dumps(token)
     return render(request, 'API/dingtalk_vulnlist.html', context)
-    # return render(request, 'API/dingtalk_vulnlist.html')
 
 
 @csrf_exempt
 def ding_vuln_list(request):
     """钉钉漏洞数据接口"""
     resultdict = {}
-    # token = request.POST.get('token')
-    # if not code:
-    #     return permission_denied(request)
-    # access_token = DinkTalk.get_access_token(APP_KEY, APP_SECRET)
-    # user_name = DinkTalk.get_user_name_by_code(code, access_token, AUTH_APP_ID, AUTH_APP_SECRET)
-    # if not user_name:
-    #     return permission_denied(request)
-    # user_name = JWT.decode_jwt(token).get('user')
+    token = request.POST.get('token')
+    if not token:
+        return permission_denied(request)
+    user_name_zh = JWT.decode_jwt(token).get('user')
+    if not user_name_zh:
+        return permission_denied(request)
     page = request.POST.get('page')
     rows = request.POST.get('limit')
-    # res = get_user_area(user_name)
-    # is_admin, user_area_list = res.get('is_admin'), res.get('user_area_list')
-    is_admin = True  # 调试用
-    user_area_list = None
+    user_name = han_to_pinyin(user_name_zh)
+    res = get_user_area(user_name)
+    is_admin, user_area_list = res.get('is_admin'), res.get('user_area_list')
+    # is_admin = True  # 调试用
+    # user_area_list = None
     # 返回状态不为“已修复”的漏洞
     if is_admin:
         vuln_list = Vulnerability_scan.objects.exclude(
@@ -127,7 +125,7 @@ def ding_vuln_list(request):
         dic['fix_status'] = escape(VULN_STATUS[vuln_item.fix_status])
         dic['asset'] = escape(vuln_item.vuln_asset.asset_key)
         dic['asset_id'] = escape(vuln_item.vuln_asset.asset_id)
-        dic['assign_user'] = None
+        dic['assign_user'] = vuln_item.process_user
         data.append(dic)
     resultdict['code'] = 0
     resultdict['msg'] = "漏洞列表"
@@ -136,10 +134,58 @@ def ding_vuln_list(request):
     return JsonResponse(resultdict)
 
 
+@require_http_methods(['POST'])
 @csrf_exempt
-def ding_vuln_accept(request):
+def ding_vuln_process(request):
     """钉钉受理接口"""
-    pass
+    token = request.POST.get('token')
+    user_name_zh = JWT.decode_jwt(token).get('user')
+    if not user_name_zh:      # 校验token，防止cc攻击，导致缓存空间不足
+        return permission_denied(request)
+    vuln_id_list = request.POST.get('vuln_id_list')
+
+    if isinstance(vuln_id_list, list):
+        for vuln_id in vuln_id_list:
+            # 判断是否有受理权限 漏洞是否已被受理
+            if not vuln_to_assign(vuln_id, user_name_zh):
+                return {'error': 'No process permission'}
+            elif not vuln_to_process(vuln_id):
+                return {'error': '{} 漏洞已被受理'.format(vuln_id)}
+            vuln = get_object_or_404(Vulnerability_scan, vuln_id=vuln_id)
+            vuln.process_user = user_name_zh
+            vuln.fix_status = '4'   # 修复中
+            return {'error': '已受理'}
+
+    elif isinstance(vuln_id_list, str):
+        # 判断是否有受理权限 漏洞是否已被受理
+        if not vuln_to_assign(vuln_id_list, user_name_zh):
+            return {'error': 'No process permission'}
+        elif not vuln_to_process(vuln_id_list):
+            return {'error': '{} 漏洞已被受理'.format(vuln_id_list)}
+        vuln = get_object_or_404(Vulnerability_scan, vuln_id=vuln_id_list)
+        vuln.process_user = user_name_zh
+        vuln.fix_status = '4'  # 修复中
+        return {'error': '已受理'}
+    return {'error': '未知错误，请联系管理员'}
+
+
+def vuln_to_assign(vuln_id, user_name_zh):
+    """根据漏洞id/id列表，判断用户是否属于漏洞派发人员"""
+    assign_user_list = Vulnerability_scan.objects.filter(vuln_id=vuln_id).values('assign_user')
+    if not assign_user_list:
+        return False
+    assign_user_list = eval(assign_user_list)       # 将字符产列表转换为列表
+    if user_name_zh in assign_user_list:
+        return True
+    return False
+
+
+def vuln_to_process(vuln_id):
+    """判断漏洞是否已被受理"""
+    process_user = Vulnerability_scan.objects.filter(vuln_id=vuln_id).values('process_user')
+    if not process_user:
+        return True
+    return False
 
 
 @require_http_methods(['POST'])
@@ -148,12 +194,12 @@ def ding_vuln_token(request):
     """钉钉漏洞id和token加工形成新v_token"""
     token = request.POST.get('token')
     vuln_id = request.POST.get('vuln_id')
-    user_name = JWT.decode_jwt(token).get('user')
-    # if not user_name:      # 校验token，防止cc攻击，导致缓存空间不足
-    #     return permission_denied(request)
+    user_name_zh = JWT.decode_jwt(token).get('user')
+    if not user_name_zh:      # 校验token，防止cc攻击，导致缓存空间不足
+        return permission_denied(request)
     v_detail_id = 'yz' + vuln_id
     if not Cache.get_value(key=v_detail_id):
-        v_token = JWT.generate_jwt(user=user_name, vuln_id=v_detail_id)
+        v_token = JWT.generate_jwt(user=user_name_zh, vuln_id=v_detail_id)
         v_detail_id = Cache.set_value(v_token, key=v_detail_id, key_time_id=2)
     return JsonResponse({'v_detail_id': v_detail_id})
 
@@ -162,13 +208,15 @@ def ding_vuln_token(request):
 def ding_vuln_detail(request, v_detail_id):
     """钉钉漏洞详情页，根据v_detail_id获取token、vuln_id，返回对应漏洞详情"""
     v_token = Cache.get_value(v_detail_id)
-    # if not v_token:
-    #     return permission_denied(request)
-    user_name = JWT.decode_jwt(v_token).get('user')
+    if not v_token:
+        return permission_denied(request)
+    user_name_zh = JWT.decode_jwt(v_token).get('user')
     vuln_id = JWT.decode_jwt(v_token).get('v_detail_id').split('yz ')[1]
+    user_name = han_to_pinyin(user_name_zh)
     res = get_user_area(user_name)
     is_admin, user_area_list = res.get('is_admin'), res.get('user_area_list')
-    is_admin = True  # 调试用
+    # is_admin = True  # 调试用
+    # user_area_list = None
     if is_admin:
         vuln = get_object_or_404(Vulnerability_scan, vuln_id=vuln_id)
     else:
