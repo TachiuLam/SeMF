@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.utils.html import escape
 from SeMF.settings import MEDIA_API, MEDIA_TYPE, APP_KEY, APP_SECRET, AUTH_APP_ID, AUTH_APP_SECRET
-from SeMF.views import permission_denied
+from SeMF.views import permission_denied, page_not_found
 from SeMF.redis import Cache
 from SeMFSetting.views import paging
 from RBAC.service.user_process import get_user_area, han_to_pinyin
@@ -74,8 +74,8 @@ def ding_vuln_view(request):
     access_token = DinkTalk.get_access_token(APP_KEY, APP_SECRET)
     user_name_zh = DinkTalk.get_user_name_by_code(code, access_token, AUTH_APP_ID, AUTH_APP_SECRET)
     if not user_name_zh:
-        return permission_denied(request)
-    user_name_zh = '林特超'     # 调试用
+        return page_not_found(request)
+    # user_name_zh = '林特超'     # 调试用
     context = {}
     # 构造token返回
     token = Cache.get_value(key='tk_' + user_name_zh)
@@ -96,7 +96,7 @@ def ding_vuln_list(request):
         return permission_denied(request)
     user_name_zh = JWT.decode_jwt(token).get('user')
     if not user_name_zh:
-        return permission_denied(request)
+        return page_not_found(request)
     page = request.POST.get('page')
     rows = request.POST.get('limit')
     user_name = han_to_pinyin(user_name_zh)
@@ -143,7 +143,7 @@ def ding_vuln_process(request):
     token = request.POST.get('token')
     user_name_zh = JWT.decode_jwt(token).get('user')
     if not user_name_zh:      # 校验token，防止cc攻击，导致缓存空间不足
-        return permission_denied(request)
+        return page_not_found(request)
     vuln_id_list = request.POST.get('vuln_id_list')
 
     if isinstance(vuln_id_list, list):
@@ -198,7 +198,7 @@ def ding_vuln_token(request):
     vuln_id = request.POST.get('vuln_id')
     user_name_zh = JWT.decode_jwt(token).get('user')
     if not user_name_zh:      # 校验token，防止cc攻击，导致缓存空间不足
-        return permission_denied(request)
+        return page_not_found(request)
     v_detail_id = 'yz' + vuln_id
     if not Cache.get_value(key=v_detail_id):
         v_token = JWT.generate_jwt(user=user_name_zh, vuln_id=v_detail_id)
