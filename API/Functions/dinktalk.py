@@ -46,7 +46,7 @@ class DinkTalk:
         url = 'https://oapi.dingtalk.com/sns/getuserinfo_bycode?accessKey={}&timestamp={}&signature={}'.format(
             auth_app_id, timestamp, signature)
         res = requests.post(url=url, data=json.dumps(data))
-        r = res
+        # r = res
         res = json.loads(res.content)
         if res.get('errcode') == 0:  # 避免user_info为空时出现异常
             unionid = res.get('user_info').get('unionid')
@@ -60,8 +60,8 @@ class DinkTalk:
                 user_name_zh = Cache.get_value(key=user_name).get('name_zh')
             return user_name_zh
         else:
-            return r
-            # return None
+            # return r
+            return None
 
     @staticmethod
     def get_userid_by_unionid(access_token, unionid):

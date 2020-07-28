@@ -73,9 +73,9 @@ def ding_vuln_view(request):
         return permission_denied(request)
     access_token = DinkTalk.get_access_token(APP_KEY, APP_SECRET)
     user_name_zh = DinkTalk.get_user_name_by_code(code, access_token, AUTH_APP_ID, AUTH_APP_SECRET)
-    # if not user_name_zh:
-        # return page_not_found(request)
-    return HttpResponse(user_name_zh)
+    if not user_name_zh:
+        return page_not_found(request)
+    # return HttpResponse(user_name_zh)
     # user_name_zh = '林特超'     # 调试用
     context = {}
     # 构造token返回
