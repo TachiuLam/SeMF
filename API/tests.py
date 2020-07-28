@@ -16,6 +16,7 @@ import jwt
 from SeMF.settings import APP_SECRET, ALGORITHM, APP_KEY
 import datetime
 from RBAC.service.user_process import get_user_area
+from API.tasks import refresh_cache
 
 # Create your tests here.
 
@@ -192,17 +193,17 @@ if __name__ == '__main__':
     print(int(time.time() * 1000))
     name = 'pts'
 
-    user_id = User.objects.filter(username=name).values('id').first().get('id')
-    profile_id = Profile.objects.filter(user_id=user_id).values('area').all
-    print(user_id, profile_id)
-    r = get_user_area(name).get('user_area_list')
-    print(r)
-    vuln_list = Vulnerability_scan.objects.filter(
-        vuln_asset__asset_area__in=r,
-        # fix_status__icontains='2',
-        leave__gte=1,
-    ).exclude(fix_status__icontains='2',).order_by('-fix_status', '-leave')
-    print(vuln_list)
+    # user_id = User.objects.filter(username=name).values('id').first().get('id')
+    # profile_id = Profile.objects.filter(user_id=user_id).values('area').all
+    # print(user_id, profile_id)
+    # r = get_user_area(name).get('user_area_list')
+    # print(r)
+    # vuln_list = Vulnerability_scan.objects.filter(
+    #     vuln_asset__asset_area__in=r,
+    #     # fix_status__icontains='2',
+    #     leave__gte=1,
+    # ).exclude(fix_status__icontains='2',).order_by('-fix_status', '-leave')
+    # print(vuln_list)
     # user_area = Profile.objects.filter(user=user).values('area').all()
     def test(u, **kwargs):
         a = {}
@@ -214,3 +215,17 @@ if __name__ == '__main__':
 
     res = test(1)
     print(res)
+
+    a= '["009","010"]'
+    # a = None
+    a = str(a)
+    a= eval(a)
+    a.extend(['009', "010"])
+    print(a)
+    a = None
+    a= str(a)
+    if not a:
+        print(22)
+
+    refresh_cache()
+    name = Cache.get_value(key='lintechao')

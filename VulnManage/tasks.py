@@ -4,6 +4,7 @@ Created on 2017/11/3
 
 @author: gy
 '''
+from django.shortcuts import  get_object_or_404
 from xml.dom.minidom import parse
 from VulnManage.models import Vulnerability, Vulnerability_scan
 from celery import shared_task
@@ -99,4 +100,19 @@ def vulnlist_assign(v_id, user, username_list):
                                                 access_token=token,
                                                 user_name_list=username_list,
                                                 msg=msg)
+
+    if error.get('errcode') == 0 and username_list:  # 派发成功时，保存派发人员列表：str
+        for vuln_id in vuln_id_list:
+            username = []
+            vuln = get_object_or_404(Vulnerability_scan, vuln_id=vuln_id)
+            if not vuln.assign_user:  # 未派发过的漏洞
+                vuln.assign_user = str(username_list)
+            else:  # 已派发过的漏洞，派发用户列表进行追加
+                u = eval(vuln.assign_user)
+                username.extend(username_list)
+                username.extend(u)
+                # 列表去重
+                username = list(set(username))
+                vuln.assign_user = str(username)
+                vuln.save()
     return error
