@@ -9,30 +9,6 @@
     </span>
 </div>
 <div class="x-body">
-    <div class="layui-row  ">
-{#		<div class='layui-col-md6'>#}
-	       <form class="layui-form layui-col-md12 x-so">
-				<input class="layui-input" placeholder="资产关联" name="key" id="id_key">
-                <input class="layui-input" placeholder="漏洞名称" name="v_key" id="id_v_key">
-
-
-		            <select class="layui-input-inline" name="contrller" id ='id_vuln_type'>
-		              <option value="">修复状态</option>
-		              <option value="0">已忽略</option>
-		              <option value="1">已修复</option>
-		              <option value="2">待修复</option>
-		              <option value="3">漏洞重现</option>
-		              <option value="4">修复中</option>
-                      <option value="5">已派发</option>
-		            </select>
-                 <button class="layui-btn"  data-type="reload"><i class="layui-icon" >&#xe615;</i></button>
-	       </form>
-{#	     </div>#}
-{#	     <div class='UserTable'>#}
-
-{#	     </div>#}
-     </div>
-
     <xblock>
         <div class="UserTable">
             <button class="layui-btn " data-type="statuschoice" id="1"><i class="layui-icon layui-icon-senior"></i>批量受理
@@ -137,9 +113,9 @@
                         'token': token
                     }, function (res) {
                         layer.msg(res.error);
-                        setTimeout(function () {
-                            location.replace(location.href);
-                        }, 2000)
+                        //setTimeout(function () {
+                         //   location.replace(location.href);
+                        //}, 2000)
                     });
                 }
             }
