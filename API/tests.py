@@ -238,3 +238,6 @@ if __name__ == '__main__':
     tk_user_name_zh = 'tk_' + '林特超'
     user_name_zh = tk_user_name_zh.split('tk_')[1]
     print(user_name_zh)
+
+    v_id = 'yz' + '122131231'
+    print(v_id.split('yz')[1])
