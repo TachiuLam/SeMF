@@ -79,7 +79,7 @@ def ding_vuln_view(request):
     # user_name_zh = '林特超'     # 调试用
     context = {}
     # 构造token返回
-    token = Cache.get_value(key='tk_' + user_name_zh)
+    token = Cache.get_value(key='tk_' + user_name_zh)       # 注意加密和缓存key为 tk_中文用户名
     if not token:
         token = JWT.generate_jwt('tk_' + user_name_zh)
         Cache.set_value(token, 'tk_' + user_name_zh, 3)
@@ -95,16 +95,17 @@ def ding_vuln_list(request):
     token = request.POST.get('token')
     if not token:
         return permission_denied(request)
-    user_name_zh = JWT.decode_jwt(token).get('user')
-    if not user_name_zh:
+    tk_user_name_zh = JWT.decode_jwt(token).get('user')
+    if not tk_user_name_zh:
         return page_not_found(request)
+    user_name_zh = tk_user_name_zh.split('tk_')[1]
     page = request.POST.get('page')
     rows = request.POST.get('limit')
     user_name = han_to_pinyin(user_name_zh)
     res = get_user_area(user_name)
-    # is_admin, user_area_list = res.get('is_admin'), res.get('user_area_list')
-    is_admin = True  # 调试用
-    user_area_list = None
+    is_admin, user_area_list = res.get('is_admin'), res.get('user_area_list')
+    # is_admin = True  # 调试用
+    # user_area_list = None
     # 返回状态不为“已修复”的漏洞
     if is_admin:
         vuln_list = Vulnerability_scan.objects.exclude(
@@ -142,9 +143,10 @@ def ding_vuln_list(request):
 def ding_vuln_process(request):
     """钉钉受理接口"""
     token = request.POST.get('token')
-    user_name_zh = JWT.decode_jwt(token).get('user')
-    if not user_name_zh:      # 校验token，防止cc攻击，导致缓存空间不足
+    tk_user_name_zh = JWT.decode_jwt(token).get('user')
+    if not tk_user_name_zh:     # 校验token，防止cc攻击，导致缓存空间不足
         return page_not_found(request)
+    user_name_zh = tk_user_name_zh.split('tk_')[1]
     vuln_id_list = request.POST.get('vuln_id_list')
 
     if isinstance(vuln_id_list, list):
@@ -197,12 +199,13 @@ def ding_vuln_token(request):
     """钉钉漏洞id和token加工形成新v_token"""
     token = request.POST.get('token')
     vuln_id = request.POST.get('vuln_id')
-    user_name_zh = JWT.decode_jwt(token).get('user')
-    if not user_name_zh:      # 校验token，防止cc攻击，导致缓存空间不足
+    tk_user_name_zh = JWT.decode_jwt(token).get('user')
+    if not tk_user_name_zh:  # 校验token，防止cc攻击，导致缓存空间不足
         return page_not_found(request)
+
     v_detail_id = 'yz' + vuln_id
     if not Cache.get_value(key=v_detail_id):
-        v_token = JWT.generate_jwt(user=user_name_zh, vuln_id=v_detail_id)
+        v_token = JWT.generate_jwt(user=tk_user_name_zh, vuln_id=v_detail_id)
         v_detail_id = Cache.set_value(v_token, key=v_detail_id, key_time_id=2)
     return JsonResponse({'v_detail_id': v_detail_id})
 
@@ -213,7 +216,8 @@ def ding_vuln_detail(request, v_detail_id):
     v_token = Cache.get_value(v_detail_id)
     if not v_token:
         return permission_denied(request)
-    user_name_zh = JWT.decode_jwt(v_token).get('user')
+    tk_user_name_zh = JWT.decode_jwt(v_token).get('user')
+    user_name_zh = tk_user_name_zh.split('tk_')[1]
     vuln_id = JWT.decode_jwt(v_token).get('v_detail_id').split('yz ')[1]
     user_name = han_to_pinyin(user_name_zh)
     res = get_user_area(user_name)

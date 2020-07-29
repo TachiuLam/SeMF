@@ -90,7 +90,7 @@
                     $.post("{% url 'dingtalk_detail' %}",{'token': token,'vuln_id': vuln_id},function(res){
                         url = "{% url 'dingtalk_detail_id' '0' %}";
                         url = url.replace(/0/, res.v_detail_id);
-                        x_admin_show('状态变更',url);
+                        x_admin_show('漏洞详情',url);
                     });
                     {#$.post(url = "{% url 'dingtalk_detail' %}", {#}
                     {#        'vuln_id': vuln_id,#}
