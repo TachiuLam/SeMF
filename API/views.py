@@ -173,7 +173,7 @@ def ding_vuln_process(request):
     tk_user_name_zh = jwt.get('username') if jwt else None
 
     if not tk_user_name_zh:     # 校验token，防止cc攻击，导致缓存空间不足
-        return JsonResponse({'error': '非法用户'})
+        return JsonResponse({'res': '非法用户'})
     user_name_zh = tk_user_name_zh.split('tk_')[1]
     vuln_id_list = request.POST.get('vuln_id_list')
 
@@ -182,14 +182,15 @@ def ding_vuln_process(request):
         for vuln_id in vuln_id_list:
             # 判断是否有受理权限 漏洞是否已被受理
             if not vuln_to_assign(vuln_id, user_name_zh):
-                return JsonResponse({'error': '无受理权限'})
+                return JsonResponse({'res': '无受理权限'})
             elif not vuln_to_process(vuln_id):
-                return JsonResponse({'error': '{} 漏洞已被受理'.format(vuln_id)})
-            # vuln = get_object_or_404(Vulnerability_scan, vuln_id=vuln_id)
-            # vuln.process_user = user_name_zh
-            # vuln.fix_status = '4'   # 修复中
-        return {'error': str(vuln_id_list)}
-    return JsonResponse({'error': '未知错误，请联系管理员'})
+                return JsonResponse({'res': '{} 漏洞已被受理'.format(vuln_id)})
+            vuln = get_object_or_404(Vulnerability_scan, vuln_id=vuln_id)
+            vuln.process_user = user_name_zh
+            vuln.fix_status = '4'   # 修复中
+            vuln.save()
+        return JsonResponse({'res': '受理成功'})
+    return JsonResponse({'res': '未知错误，请联系管理员'})
 
 
 def vuln_to_assign(vuln_id, user_name_zh):
