@@ -104,6 +104,17 @@ def ding_vuln_list(request):
 
     if not tk_user_name_zh:
         return page_not_found(request)
+
+    key = request.POST.get('key')
+    if not key:
+        key = ''
+    v_key = request.POST.get('v_key')
+    if not v_key:
+        v_key = ''
+    fix_status = request.POST.get('fix_status')
+    if not fix_status:
+        fix_status = ''
+
     user_name_zh = tk_user_name_zh.split('tk_')[1]
     page = request.POST.get('page')
     rows = request.POST.get('limit')
@@ -115,13 +126,20 @@ def ding_vuln_list(request):
 
     # 返回状态不为“已修复”的漏洞
     if is_admin:
-        vuln_list = Vulnerability_scan.objects.exclude(
-            fix_status__icontains='1',
+        vuln_list = Vulnerability_scan.objects.filter(
+            vuln_asset__asset_key__icontains=key,
+            vuln_name__icontains=v_key,
+            fix_status__icontains=fix_status,
             leave__gte=1,
+        ).exclude(
+            fix_status__icontains='1',
         ).order_by('-fix_status', '-leave')
     else:
         vuln_list = Vulnerability_scan.objects.filter(
             vuln_asset__asset_area__in=user_area_list,  # 根据项目ID进行筛选
+            vuln_asset__asset_key__icontains=key,
+            vuln_name__icontains=v_key,
+            fix_status__icontains=fix_status,
             leave__gte=1,
         ).exclude(fix_status__icontains='1', ).order_by('-fix_status', '-leave')
 
@@ -166,10 +184,10 @@ def ding_vuln_process(request):
                 return {'error': '无受理权限'}
             elif not vuln_to_process(vuln_id):
                 return {'error': '{} 漏洞已被受理'.format(vuln_id)}
-            vuln = get_object_or_404(Vulnerability_scan, vuln_id=vuln_id)
-            vuln.process_user = user_name_zh
-            vuln.fix_status = '4'   # 修复中
-            return {'error': '已受理'}
+            # vuln = get_object_or_404(Vulnerability_scan, vuln_id=vuln_id)
+            # vuln.process_user = user_name_zh
+            # vuln.fix_status = '4'   # 修复中
+        return {'error': str(vuln_id_list)}
 
     elif isinstance(vuln_id_list, str):
         # 判断是否有受理权限 漏洞是否已被受理

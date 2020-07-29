@@ -3,146 +3,170 @@
 
 {% block index %}
 {#    {% csrf_token %}#}
-    <div class="x-nav">
+<div class="x-nav">
 	<span class="layui-breadcrumb">
         <a href="">漏洞管理</a>
       </span>
-    </div>
-    <div class="x-body">
-        <xblock>
-            <div class="UserTable">
-                <button class="layui-btn " data-type="statuschoice" id="1"><i class="layui-icon layui-icon-senior"></i>批量受理
-                </button>
-            </div>
-        </xblock>
-        <table class="layui-hide" id="vuln_table" lay-filter="vuln"></table>
-    </div>
-    <script>
-        var token = {{ token|safe }};
+      <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon layui-icon-refresh" style="line-height:30px"></i>
+      </a>
+</div>
+<div class="x-body">
+    <div class="layui-row  ">
+		<div class='layui-col-md6'>
+	       <form class="layui-form layui-col-md12 x-so">
+				<input class="layui-input" placeholder="资产关联" name="key" id="id_key">
+                <input class="layui-input" placeholder="漏洞名称" name="v_key" id="id_v_key">
 
-        layui.use('table', function () {
-            var table = layui.table;
-            //方法级渲染
-            table.render({
-                elem: '#vuln_table'
-                , url: "{% url 'dingtalk_vulnlist' %}"
-                , method: 'post'
-                ,where: {'token':token}
-                , cols: [[
-                    {checkbox: true, fixed: true}
-                   // , {field: 'vuln_id', title: '漏洞编号', sort: true, fixed: true}
-                    , {field: 'vuln_name', title: '漏洞名称', sort: true, event: 'detail'}
-                    //, {field: 'asset', title: '关联资产', event: 'Asset'}
-                    , {field: 'asset', title: '关联资产'}
-                   // , {field: 'leave', title: '威胁等级', sort: true}
-                    , {field: 'fix_status', title: '修复状态', sort: true}
-                    , {field: 'assign_user', title: '受理人', sort: true}
-                ]],
-                done: function () {
-                    //分类显示中文名称
-                    $("[data-field='leave']").children(1).each(function () {
-                        if ($(this).text() == '紧急') {
-                            //  $('tr').eq(index).css("background-color",BJCOLOR);
-                            $(this).css("color", '#676762');
-                        } else if ($(this).text() == '高危') {
-                            $(this).css("color", '#c60e06');
-                            //   $('tr').eq(index).css("color",YJYJCOLOR);
-                        } else if ($(this).text() == '中危') {
-                            // $('tr').eq(index).css("background-color",EJYJCOLOR);
-                            $(this).css("color", '#c68f06');
-                        } else if ($(this).text() == '低危') {
-                            $(this).css("color", '#18c611');
-                            // $('tr').eq(index).css("color",SJYJCOLOR);
-                        } else if ($(this).text() == '信息') {
-                            $(this).css("color", '#60b1c6');
-                        }
-                    });
-                    $("[data-field='assign_user']").children(1).each(function () {
-                        if ($(this).text() == '受理人') {
-                            $(this).css('color', 'black');
-                            //  $('tr').eq(index).css("background-color",BJCOLOR);
-                        } else if ($(this).text() == '未受理') {
-                            $(this).css("color", '#c60e06');
-                        } else if ($(this).text()) {
-                            $(this).css("color", '#18c611');
-                        } else {
-                            $(this).text("未受理");
-                            $(this).css("color", '#c60e06');
-                        }
-                    });
-                }
-                , id: 'vulnsReload'
-                , page: true
-                , limit: 15
-                , text: {
-                    none: '暂无相关数据'
-                }
-            });
+		        <div class="layui-input-inline">
+		            <select name="contrller" id ='id_vuln_type'>
+		              <option value="">修复状态</option>
+		              <option value="0">已忽略</option>
+		              <option value="1">已修复</option>
+		              <option value="2">待修复</option>
+		              <option value="3">漏洞重现</option>
+		              <option value="4">修复中</option>
+                      <option value="5">已派发</option>
+		            </select>
+		        </div>
+	       </form>
+	     </div>
+	     <div class='UserTable'>
+	       <button class="layui-btn"  data-type="reload"><i class="layui-icon" >&#xe615;</i></button>
+	     </div>
+     </div>
 
-            table.on('tool(vuln)', function (obj) {
-                var data = obj.data.asset_id
-                    , vuln_id = obj.data.vuln_id
-                if (obj.event === 'Asset') {
-                    url = "{% url 'assetdetails' '0' %}";
-                    url = url.replace(/0/, data);
-                    x_admin_show('资产详情', url);
-                } else if (obj.event === 'detail') {
-                    $.post("{% url 'dingtalk_detail' %}",{'token': token,'vuln_id': vuln_id},function(res){
-                        url = "{% url 'dingtalk_detail_id' '0' %}";
-                        url = url.replace(/0/, res.v_detail_id);
-                        x_admin_show('漏洞详情',url);
-                    });
-                    {#$.post(url = "{% url 'dingtalk_detail' %}", {#}
-                    {#        'vuln_id': vuln_id,#}
-                            {#'token': token#}
-                    {#    });#}
-                }
-            });
+    <xblock>
+        <div class="UserTable">
+            <button class="layui-btn " data-type="statuschoice" id="1"><i class="layui-icon layui-icon-senior"></i>批量受理
+            </button>
+        </div>
+    </xblock>
+    <table class="layui-hide" id="vuln_table" lay-filter="vuln"></table>
+</div>
 
-            var $ = layui.$, active = {
-                statuschoice: function () { //获取选中数据
-                    {#var token = {{ token }};#}
-                    var checkStatus = table.checkStatus('vulnsReload')
-                        , data = checkStatus.data
-                        , list = new Array();
-                    for (var i = 0; i < data.length; i++) {
-                        list[i] = data[i].vuln_id
+<script>
+    var token = {{ token|safe }};
+
+    layui.use('table', function () {
+        var table = layui.table;
+        //方法级渲染
+        table.render({
+            elem: '#vuln_table'
+            , url: "{% url 'dingtalk_vulnlist' %}"
+            , method: 'post'
+            ,where: {'token':token}
+            , cols: [[
+                {checkbox: true, fixed: true}
+               // , {field: 'vuln_id', title: '漏洞编号', sort: true, fixed: true}
+                , {field: 'vuln_name', title: '漏洞名称', sort: true, event: 'detail'}
+                //, {field: 'asset', title: '关联资产', event: 'Asset'}
+                , {field: 'asset', title: '关联资产'}
+               // , {field: 'leave', title: '威胁等级', sort: true}
+                , {field: 'fix_status', title: '修复状态', sort: true}
+                , {field: 'assign_user', title: '受理人', sort: true}
+            ]],
+            done: function () {
+                //分类显示中文名称
+                $("[data-field='leave']").children(1).each(function () {
+                    if ($(this).text() == '紧急') {
+                        //  $('tr').eq(index).css("background-color",BJCOLOR);
+                        $(this).css("color", '#676762');
+                    } else if ($(this).text() == '高危') {
+                        $(this).css("color", '#c60e06');
+                        //   $('tr').eq(index).css("color",YJYJCOLOR);
+                    } else if ($(this).text() == '中危') {
+                        // $('tr').eq(index).css("background-color",EJYJCOLOR);
+                        $(this).css("color", '#c68f06');
+                    } else if ($(this).text() == '低危') {
+                        $(this).css("color", '#18c611');
+                        // $('tr').eq(index).css("color",SJYJCOLOR);
+                    } else if ($(this).text() == '信息') {
+                        $(this).css("color", '#60b1c6');
                     }
-                    if (list.length === 0) {
-                        layer.confirm('请先选择要操作的漏洞');
-                    } else if (this.id === '1') {
-                        $.post("{% url 'dingtalk_process' %}", {
-                            'vuln_id_list': JSON.stringify(list),
-                            'token': token
-                        }, function (res) {
-                            layer.msg(res.error);
-                            setTimeout(function () {
-                                location.replace(location.href);
-                            }, 2000)
-                        });
+                });
+                $("[data-field='assign_user']").children(1).each(function () {
+                    if ($(this).text() == '受理人') {
+                        $(this).css('color', 'black');
+                        //  $('tr').eq(index).css("background-color",BJCOLOR);
+                    } else if ($(this).text() == '未受理') {
+                        $(this).css("color", '#c60e06');
+                    } else if ($(this).text()) {
+                        $(this).css("color", '#18c611');
+                    } else {
+                        $(this).text("未受理");
+                        $(this).css("color", '#c60e06');
                     }
-                }
-                , reload: function () {
-                    //执行重载
-                    table.reload('vulnsReload', {
-                        page: {
-                            curr: 1 //重新从第 1 页开始
-                        }
-                        , where: {
-                            key: $("#id_key").val()
-                            , v_key: $("#id_v_key").val()
-                            , leave: $("#id_leave option:selected").val()
-                            , fix_status: $("#id_vuln_type option:selected").val()
-                        }
-                    });
-                }
-            };
-            $('.UserTable .layui-btn').on('click', function () {
-                var type = $(this).data('type');
-                active[type] ? active[type].call(this) : '';
-            });
+                });
+            }
+            , id: 'vulnsReload'
+            , page: true
+            , limit: 10
+            , text: {
+                none: '暂无相关数据'
+            }
         });
 
-    </script>
+        table.on('tool(vuln)', function (obj) {
+            var data = obj.data.asset_id
+                , vuln_id = obj.data.vuln_id
+            if (obj.event === 'Asset') {
+                url = "{% url 'assetdetails' '0' %}";
+                url = url.replace(/0/, data);
+                x_admin_show('资产详情', url);
+            } else if (obj.event === 'detail') {
+                $.post("{% url 'dingtalk_detail' %}",{'token': token,'vuln_id': vuln_id},function(res){
+                    url = "{% url 'dingtalk_detail_id' '0' %}";
+                    url = url.replace(/0/, res.v_detail_id);
+                    x_admin_show('漏洞详情',url);
+                });
+            }
+        });
+
+        var $ = layui.$, active = {
+            statuschoice: function () { //获取选中数据
+                {#var token = {{ token }};#}
+                var checkStatus = table.checkStatus('vulnsReload')
+                    , data = checkStatus.data
+                    , list = new Array();
+                for (var i = 0; i < data.length; i++) {
+                    list[i] = data[i].vuln_id
+                }
+                if (list.length === 0) {
+                    layer.confirm('请先选择要操作的漏洞');
+                } else if (this.id === '1') {
+                    $.post("{% url 'dingtalk_process' %}", {
+                        'vuln_id_list': JSON.stringify(list),
+                        'token': token
+                    }, function (res) {
+                        layer.msg(res.error);
+                        setTimeout(function () {
+                            location.replace(location.href);
+                        }, 2000)
+                    });
+                }
+            }
+            , reload: function () {
+                //执行重载
+                table.reload('vulnsReload', {
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                    , where: {
+                        key: $("#id_key").val()
+                        , v_key: $("#id_v_key").val()
+                        {#, leave: $("#id_leave option:selected").val()#}
+                        , fix_status: $("#id_vuln_type option:selected").val()
+                    }
+                });
+            }
+        };
+        $('.UserTable .layui-btn').on('click', function () {
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+    });
+
+</script>
 
 {% endblock %}
