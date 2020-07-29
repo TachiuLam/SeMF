@@ -188,8 +188,8 @@ def ding_vuln_process(request):
             vuln.process_user = user_name_zh
             vuln.fix_status = '4'   # 修复中
             vuln.save()
-        return JsonResponse({'res': '受理成功'})
-    return JsonResponse({'res': '未知错误，请联系管理员'})
+        return '受理成功'
+    return '未知错误，请联系管理员'
 
 
 def vuln_to_process(vuln_id, user_name_zh):
