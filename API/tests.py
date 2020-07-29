@@ -245,10 +245,3 @@ if __name__ == '__main__':
     # jwt = None
     # aa = jwt.get('a') if jwt else 2
     # print(aa)
-
-    bb = 'aaaa'
-    if isinstance(eval(bb), list):
-        cc = eval(bb)
-        print(cc, type(cc))
-    else:
-        print('3')
