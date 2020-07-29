@@ -154,7 +154,7 @@ def ding_vuln_list(request):
         dic['fix_status'] = escape(VULN_STATUS[vuln_item.fix_status])
         dic['asset'] = escape(vuln_item.vuln_asset.asset_key)
         dic['asset_id'] = escape(vuln_item.vuln_asset.asset_id)
-        dic['process_user'] = vuln_item.process_user
+        dic['process_user'] = vuln_item.process_user if vuln_item.process_user else '未受理'
         data.append(dic)
     resultdict['code'] = 0
     resultdict['msg'] = "漏洞列表"
@@ -181,10 +181,10 @@ def ding_vuln_process(request):
         vuln_id_list = eval(vuln_id_list)
         for vuln_id in vuln_id_list:
             # 判断是否有受理权限 漏洞是否已被受理
-            if not vuln_to_assign(vuln_id, user_name_zh):
-                return JsonResponse({'res': '无受理权限'})
-            elif not vuln_to_process(vuln_id):
-                return JsonResponse({'res': '{} 漏洞已被受理'.format(vuln_id)})
+            # if not vuln_to_assign(vuln_id, user_name_zh):
+            #     return JsonResponse({'res': '无受理权限'})
+            # elif not vuln_to_process(vuln_id):
+            #     return JsonResponse({'res': '{} 漏洞已被受理'.format(vuln_id)})
             vuln = Vulnerability_scan.objects.filter(vuln_id=vuln_id).first()
             vuln.process_user = user_name_zh
             vuln.fix_status = '4'   # 修复中

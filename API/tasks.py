@@ -9,6 +9,7 @@ import requests
 import json
 from celery import shared_task
 from .Functions import dinktalk
+from VulnManage.models import Vulnerability_scan
 from NoticeManage.views import notice_add
 from celery.utils.log import get_task_logger
 
@@ -41,6 +42,12 @@ def send_conversation(url, data, user, to_user, vuln):
             'notice_type': 'inform',
         }
         notice_add(user, data_message)
+        # 保存派发人员 vuln：['520200615431'] <class 'list'>
+        for each in vuln:
+            v = Vulnerability_scan.objects.filter(vuln_id=each).first()
+            v.fix_status = '5'      # 已派发
+            v.assign_user = str(to_user)
+            v.save()
         return {'errcode': 0, 'result': '漏洞派发成功'}
     else:
         data_message = {
