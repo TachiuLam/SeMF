@@ -180,11 +180,10 @@ def ding_vuln_process(request):
     if isinstance(vuln_id_list, str):
         vuln_id_list = eval(vuln_id_list)
         for vuln_id in vuln_id_list:
-            # 判断是否有受理权限 漏洞是否已被受理
-            # if not vuln_to_assign(vuln_id, user_name_zh):
-            #     return JsonResponse({'res': '无受理权限'})
-            # elif not vuln_to_process(vuln_id):
-            #     return JsonResponse({'res': '{} 漏洞已被受理'.format(vuln_id)})
+            # 判断是否有受理权限
+            error = vuln_to_process(vuln_id, user_name_zh)
+            if not error:
+                return error.get('error')
             vuln = Vulnerability_scan.objects.filter(vuln_id=vuln_id).first()
             vuln.process_user = user_name_zh
             vuln.fix_status = '4'   # 修复中
@@ -193,23 +192,22 @@ def ding_vuln_process(request):
     return JsonResponse({'res': '未知错误，请联系管理员'})
 
 
-def vuln_to_assign(vuln_id, user_name_zh):
-    """根据漏洞id/id列表，判断用户是否属于漏洞派发人员"""
-    assign_user_list = Vulnerability_scan.objects.filter(vuln_id=vuln_id).values('assign_user')
-    if not assign_user_list:
-        return False
-    assign_user_list = eval(assign_user_list)       # 将字符产列表转换为列表
-    if user_name_zh in assign_user_list:
+def vuln_to_process(vuln_id, user_name_zh):
+    """判断漏洞受理条件是否满足"""
+    vuln_info = Vulnerability_scan.objects.filter(vuln_id=vuln_id).first()
+    process_user = vuln_info.process_user
+    assign_user_list = vuln_info.assign_user
+    fix_status = vuln_info.fix_status
+    # 未受理和漏洞状态为 已派发 ，且当前受理人在派发列表内，才允许进行受理操作
+    if not assign_user_list or fix_status != '5':
+        return {'error': '该漏洞 {} 未派发'.format(vuln_id)}
+    elif process_user:
+        return {'error': '该漏洞 {} 已被受理'.format(vuln_id)}
+    elif user_name_zh not in eval(assign_user_list):
+        return {'error': '不具备该漏洞 {} 受理权限'.format(vuln_id)}
+    elif not process_user and (fix_status == '5') and (user_name_zh in eval(assign_user_list)):
         return True
-    return False
-
-
-def vuln_to_process(vuln_id):
-    """判断漏洞是否已被受理"""
-    process_user = Vulnerability_scan.objects.filter(vuln_id=vuln_id).values('process_user')
-    if not process_user:
-        return True
-    return False
+    return {'error': '该漏洞 {} 存在未知受理错误，请联系管理员'.format(vuln_id)}
 
 
 @require_http_methods(['POST'])
