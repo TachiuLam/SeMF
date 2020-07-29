@@ -27,7 +27,10 @@ def report_upload(request):
     """漏洞报告上传接口"""
     # print(request.FILES)
     token = request.META.get('HTTP_AUTHORIZATION')
-    user = JWT.decode_jwt(token).get('user')
+
+    jwt = JWT.decode_jwt(token)
+    user = jwt.get('username') if jwt else None
+
     if user and User.objects.filter(username=user).first():
         if request.POST.get('type') == MEDIA_TYPE[0]:  # rsas处理漏扫结果
             file = request.FILES.get('file', None)
@@ -57,8 +60,8 @@ def report_upload(request):
 @login_required()
 def api_info(request):
     """API文档接口"""
-    from .tasks import refresh_cache
-    refresh_cache()
+    # from .tasks import refresh_cache
+    # refresh_cache()
     user = request.user
     token = JWT.generate_jwt(user=user)
     return render(request, 'API/apiinfo.html', {'info': {'token': token}})
@@ -95,7 +98,10 @@ def ding_vuln_list(request):
     token = request.POST.get('token')
     if not token:
         return permission_denied(request)
-    tk_user_name_zh = JWT.decode_jwt(token).get('user')
+
+    jwt = JWT.decode_jwt(token)
+    tk_user_name_zh = jwt.get('username') if jwt else None
+
     if not tk_user_name_zh:
         return page_not_found(request)
     user_name_zh = tk_user_name_zh.split('tk_')[1]
@@ -143,7 +149,10 @@ def ding_vuln_list(request):
 def ding_vuln_process(request):
     """钉钉受理接口"""
     token = request.POST.get('token')
-    tk_user_name_zh = JWT.decode_jwt(token).get('user')
+
+    jwt = JWT.decode_jwt(token)
+    tk_user_name_zh = jwt.get('username') if jwt else None
+
     if not tk_user_name_zh:     # 校验token，防止cc攻击，导致缓存空间不足
         return {'error': '非法用户'}
     user_name_zh = tk_user_name_zh.split('tk_')[1]
@@ -199,13 +208,16 @@ def ding_vuln_token(request):
     """钉钉漏洞id和token加工形成新v_token"""
     token = request.POST.get('token')
     vuln_id = request.POST.get('vuln_id')
-    tk_user_name_zh = JWT.decode_jwt(token).get('user')
+
+    jwt = JWT.decode_jwt(token)
+    tk_user_name_zh = jwt.get('username') if jwt else None
+
     if not tk_user_name_zh:  # 校验token，防止cc攻击，导致缓存空间不足
         return page_not_found(request)
 
     v_detail_id = 'yz' + vuln_id
     if not Cache.get_value(key=v_detail_id):
-        v_token = JWT.generate_jwt(user=tk_user_name_zh, vuln_id=v_detail_id)
+        v_token = JWT.generate_jwt(user=tk_user_name_zh, v_detail_id=v_detail_id)
         v_detail_id = Cache.set_value(v_token, key=v_detail_id, key_time_id=2)
     return JsonResponse({'v_detail_id': v_detail_id})
 
@@ -216,7 +228,10 @@ def ding_vuln_detail(request, v_detail_id):
     v_token = Cache.get_value(v_detail_id)
     if not v_token:
         return permission_denied(request)
-    tk_user_name_zh = JWT.decode_jwt(v_token).get('user')
+
+    jwt = JWT.decode_jwt(v_token)
+    tk_user_name_zh = jwt.get('username') if jwt else None
+
     user_name_zh = tk_user_name_zh.split('tk_')[1]
     vuln_id = JWT.decode_jwt(v_token).get('v_detail_id').split('yz')[1]
     user_name = han_to_pinyin(user_name_zh)
