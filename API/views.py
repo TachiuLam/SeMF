@@ -185,7 +185,7 @@ def ding_vuln_process(request):
                 return JsonResponse({'res': '无受理权限'})
             elif not vuln_to_process(vuln_id):
                 return JsonResponse({'res': '{} 漏洞已被受理'.format(vuln_id)})
-            vuln = get_object_or_404(Vulnerability_scan, vuln_id=vuln_id)
+            vuln = Vulnerability_scan.objects.filter(vuln_id=vuln_id).first()
             vuln.process_user = user_name_zh
             vuln.fix_status = '4'   # 修复中
             vuln.save()
