@@ -7,9 +7,9 @@
 	<span class="layui-breadcrumb">
         <a href="">漏洞管理</a>
     </span>
-     <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" data-type="reload" title="刷新">
-        <i class="layui-icon layui-icon-refresh" style="line-height:30px"></i>
-     </a>
+    <button class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" data-type="reload">
+        <i class="layui-icon" >&#xe669;</i>
+    </button>
 </div>
 <div class="x-body">
     <xblock>
@@ -115,7 +115,7 @@
                         'vuln_id_list': JSON.stringify(list),
                         'token': token
                     }, function (res) {
-                        layer.msg(res.res);
+                        layer.msg(res);
                         //setTimeout(function () {
                          //   location.replace(location.href);
                         //}, 2000)
