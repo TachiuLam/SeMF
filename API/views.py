@@ -147,7 +147,7 @@ def ding_vuln_process(request):
     token = request.POST.get('token')
     tk_user_name_zh = JWT.decode_jwt(token).get('user')
     if not tk_user_name_zh:     # 校验token，防止cc攻击，导致缓存空间不足
-        return page_not_found(request)
+        return {'error': '非法用户'}
     user_name_zh = tk_user_name_zh.split('tk_')[1]
     vuln_id_list = request.POST.get('vuln_id_list')
 
@@ -155,7 +155,7 @@ def ding_vuln_process(request):
         for vuln_id in vuln_id_list:
             # 判断是否有受理权限 漏洞是否已被受理
             if not vuln_to_assign(vuln_id, user_name_zh):
-                return {'error': 'No process permission'}
+                return {'error': '无受理权限'}
             elif not vuln_to_process(vuln_id):
                 return {'error': '{} 漏洞已被受理'.format(vuln_id)}
             vuln = get_object_or_404(Vulnerability_scan, vuln_id=vuln_id)
@@ -220,7 +220,7 @@ def ding_vuln_detail(request, v_detail_id):
         return permission_denied(request)
     tk_user_name_zh = JWT.decode_jwt(v_token).get('user')
     user_name_zh = tk_user_name_zh.split('tk_')[1]
-    vuln_id = JWT.decode_jwt(v_token).get('v_detail_id').split('yz ')[1]
+    vuln_id = JWT.decode_jwt(v_token).get('v_detail_id').split('yz')[1]
     user_name = han_to_pinyin(user_name_zh)
     res = get_user_area(user_name)
     is_admin, user_area_list = res.get('is_admin'), res.get('user_area_list')
