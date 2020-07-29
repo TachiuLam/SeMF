@@ -83,7 +83,7 @@ def ding_vuln_view(request):
     if not token:
         token = JWT.generate_jwt('tk_' + user_name_zh)
         Cache.set_value(token, 'tk_' + user_name_zh, 3)
-    token = token.split('Token ')[1]
+    # token = token.split('Token ')[1]
     context['token'] = json.dumps(token)
     return render(request, 'API/dingtalk_vulnlist.html', context)
 
