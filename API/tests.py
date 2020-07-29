@@ -15,7 +15,7 @@ import time
 import jwt
 from SeMF.settings import APP_SECRET, ALGORITHM, APP_KEY
 import datetime
-from RBAC.service.user_process import get_user_area
+from RBAC.service.user_process import get_user_area, han_to_pinyin
 from API.tasks import refresh_cache
 
 # Create your tests here.
@@ -231,3 +231,10 @@ if __name__ == '__main__':
     name = Cache.get_value(key='lintechao')
     info = Cache.get_value(key='191152606026429443')
     print(name, info)
+
+    user_name = han_to_pinyin('pts')
+    res = get_user_area(user_name)
+    print(res)
+    tk_user_name_zh = 'tk_' + '林特超'
+    user_name_zh = tk_user_name_zh.split('tk_')[1]
+    print(user_name_zh)
