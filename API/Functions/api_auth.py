@@ -27,14 +27,13 @@ class JWT:
             b_token = token.split('Token ')[1]
             # print(b_token)
             decode_jwt = jwt.decode(b_token, SECRET_KEY, algorithms=ALGORITHM)
-            user = decode_jwt.get('username')
-            return {'user': user}
-            # if User.objects.filter(username=user).first():
-            #     return {'result': True}
+            # user = decode_jwt.get('username')
+            # return {'user': user}
+            return decode_jwt
         except Exception as error:
             print(error)
             pass
-        return {'user': False}
+        return False
 
         # return {'user': decode_jwt.get('username')}
 
