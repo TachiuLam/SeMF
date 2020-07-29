@@ -177,7 +177,8 @@ def ding_vuln_process(request):
     user_name_zh = tk_user_name_zh.split('tk_')[1]
     vuln_id_list = request.POST.get('vuln_id_list')
 
-    if isinstance(vuln_id_list, list):
+    if isinstance(vuln_id_list, str):
+        vuln_id_list = eval(vuln_id_list)
         for vuln_id in vuln_id_list:
             # 判断是否有受理权限 漏洞是否已被受理
             if not vuln_to_assign(vuln_id, user_name_zh):
@@ -188,17 +189,6 @@ def ding_vuln_process(request):
             # vuln.process_user = user_name_zh
             # vuln.fix_status = '4'   # 修复中
         return {'error': str(vuln_id_list)}
-
-    elif isinstance(vuln_id_list, str):
-        # 判断是否有受理权限 漏洞是否已被受理
-        if not vuln_to_assign(vuln_id_list, user_name_zh):
-            return {'error': 'No process permission'}
-        elif not vuln_to_process(vuln_id_list):
-            return {'error': '{} 漏洞已被受理'.format(vuln_id_list)}
-        vuln = get_object_or_404(Vulnerability_scan, vuln_id=vuln_id_list)
-        vuln.process_user = user_name_zh
-        vuln.fix_status = '4'  # 修复中
-        return {'error': '已受理'}
     return {'error': '未知错误，请联系管理员'}
 
 

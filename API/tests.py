@@ -242,6 +242,13 @@ if __name__ == '__main__':
     v_id = 'yz' + '122131231'
     print(v_id.split('yz')[1])
 
-    jwt = None
-    aa = jwt.get('a') if jwt else 2
-    print(aa)
+    # jwt = None
+    # aa = jwt.get('a') if jwt else 2
+    # print(aa)
+
+    bb = 'aaaa'
+    if isinstance(eval(bb), list):
+        cc = eval(bb)
+        print(cc, type(cc))
+    else:
+        print('3')
