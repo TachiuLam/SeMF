@@ -7,7 +7,7 @@
 	<span class="layui-breadcrumb">
         <a href="">漏洞管理</a>
     </span>
-        <button class="layui-btn " style="line-height:1.6em;margin-top:3px;float:right"
+        <button class="layui-btn UserTable" style="line-height:1.6em;margin-top:3px;float:right"
                 data-type="reload">
             <i class="layui-icon">&#xe669;</i>
         </button>
@@ -45,23 +45,23 @@
                 ]],
                 done: function () {
                     //分类显示中文名称
-                    $("[data-field='leave']").children(1).each(function () {
-                        if ($(this).text() == '紧急') {
-                            //  $('tr').eq(index).css("background-color",BJCOLOR);
-                            $(this).css("color", '#676762');
-                        } else if ($(this).text() == '高危') {
-                            $(this).css("color", '#c60e06');
-                            //   $('tr').eq(index).css("color",YJYJCOLOR);
-                        } else if ($(this).text() == '中危') {
-                            // $('tr').eq(index).css("background-color",EJYJCOLOR);
-                            $(this).css("color", '#c68f06');
-                        } else if ($(this).text() == '低危') {
-                            $(this).css("color", '#18c611');
-                            // $('tr').eq(index).css("color",SJYJCOLOR);
-                        } else if ($(this).text() == '信息') {
-                            $(this).css("color", '#60b1c6');
-                        }
-                    });
+                    {#$("[data-field='leave']").children(1).each(function () {#}
+                    {#    if ($(this).text() == '紧急') {#}
+                    {#        //  $('tr').eq(index).css("background-color",BJCOLOR);#}
+                    {#        $(this).css("color", '#676762');#}
+                    {#    } else if ($(this).text() == '高危') {#}
+                    {#        $(this).css("color", '#c60e06');#}
+                    {#        //   $('tr').eq(index).css("color",YJYJCOLOR);#}
+                    {#    } else if ($(this).text() == '中危') {#}
+                    {#        // $('tr').eq(index).css("background-color",EJYJCOLOR);#}
+                    {#        $(this).css("color", '#c68f06');#}
+                    {#    } else if ($(this).text() == '低危') {#}
+                    {#        $(this).css("color", '#18c611');#}
+                    {#        // $('tr').eq(index).css("color",SJYJCOLOR);#}
+                    {#    } else if ($(this).text() == '信息') {#}
+                    {#        $(this).css("color", '#60b1c6');#}
+                    {#    }#}
+                    //});
                     $("[data-field='process_user']").children(1).each(function () {
                         if ($(this).text() == '受理人') {
                             $(this).css('color', 'black');
@@ -118,7 +118,12 @@
                         }, function (res) {
                             layer.msg(res.notice);
                             setTimeout(function () {
-                               location.replace(location.href);
+                               {#location.replace(location.href);#}
+                               table.reload('vulnsReload', {
+                                    page: {
+                                        curr: 1 //重新从第 1 页开始
+                                    }
+                                });
                             }, 2000)
                         });
                     }
