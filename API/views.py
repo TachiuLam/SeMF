@@ -60,8 +60,8 @@ def report_upload(request):
 @login_required()
 def api_info(request):
     """API文档接口"""
-    # from .tasks import refresh_cache
-    # refresh_cache()
+    from .tasks import refresh_cache
+    refresh_cache()
     user = request.user
     token = JWT.generate_jwt(user=user)
     return render(request, 'API/apiinfo.html', {'info': {'token': token}})
@@ -124,7 +124,8 @@ def ding_vuln_list(request):
     # is_admin = True  # 调试用
     # user_area_list = None
 
-    # 返回状态不为“已修复”的漏洞
+    # 非管理员返回状态为“待修复”、“已派发”、“修复中”的漏洞
+    # 管理员返回非“已修复”状态漏洞
     if is_admin:
         vuln_list = Vulnerability_scan.objects.filter(
             vuln_asset__asset_key__icontains=key,
@@ -141,7 +142,7 @@ def ding_vuln_list(request):
             vuln_name__icontains=v_key,
             fix_status__icontains=fix_status,
             leave__gte=1,
-        ).exclude(fix_status__icontains='1', ).order_by('-fix_status', '-leave')
+        ).exclude(fix_status__icontains='0', ).exclude(fix_status__icontains='5', ).order_by('-fix_status', '-leave')
 
     total = vuln_list.count()
     vuln_list = paging(vuln_list, rows, page)
@@ -183,7 +184,7 @@ def ding_vuln_process(request):
             # 判断是否有受理权限
             vuln = Vulnerability_scan.objects.filter(vuln_id=vuln_id).first()
             error = vuln_to_process(vuln, vuln_id, user_name_zh)
-            if not error:
+            if error:
                 return JsonResponse(error)
             vuln.process_user = user_name_zh
             vuln.fix_status = '4'   # 修复中
@@ -198,14 +199,14 @@ def vuln_to_process(vuln, vuln_id, user_name_zh):
     assign_user_list = vuln.assign_user
     fix_status = vuln.fix_status
     # 未受理和漏洞状态为 已派发 ，且当前受理人在派发列表内，才允许进行受理操作
-    if not assign_user_list or fix_status != '5':
+    if (not assign_user_list) or fix_status != '5':
         return {'notice': '该漏洞 {} 未派发'.format(vuln_id)}
     elif process_user:
         return {'notice': '该漏洞 {} 已被受理'.format(vuln_id)}
     elif user_name_zh not in eval(assign_user_list):
         return {'notice': '不具备该漏洞 {} 受理权限'.format(vuln_id)}
     elif not process_user and (fix_status == '5') and (user_name_zh in eval(assign_user_list)):
-        return True
+        return None
     return {'notice': '该漏洞 {} 存在未知受理错误，请联系管理员'.format(vuln_id)}
 
 
