@@ -3,15 +3,16 @@
 
 {% block index %}
     {#    {% csrf_token %}#}
-    <div class="x-nav">
+{#    <div class="x-nav">#}
+ <div class="UserTable">
 	<span class="layui-breadcrumb">
-        <a href="">漏洞管理</a>
+        <a>漏洞受理</a>
     </span>
-        <button class="layui-btn UserTable" style="line-height:1.6em;margin-top:3px;float:right"
-                data-type="reload">
-            <i class="layui-icon">&#xe669;</i>
-        </button>
-    </div>
+    <button class="layui-btn " style="line-height:1.6em;margin-top:3px;float:right"
+            data-type="reload">
+        <i class="layui-icon">&#xe669;</i>
+    </button>
+ </div>
     <div class="x-body">
         <xblock>
             <div class="UserTable">
