@@ -198,12 +198,14 @@ if __name__ == '__main__':
     # print(user_id, profile_id)
     # r = get_user_area(name).get('user_area_list')
     # print(r)
-    # vuln_list = Vulnerability_scan.objects.filter(
-    #     vuln_asset__asset_area__in=r,
-    #     # fix_status__icontains='2',
-    #     leave__gte=1,
-    # ).exclude(fix_status__icontains='2',).order_by('-fix_status', '-leave')
-    # print(vuln_list)
+    vuln_list = Vulnerability_scan.objects.filter(
+        # vuln_asset__asset_area__in=r,
+        # fix_status__icontains='2',
+        leave__gte=1,
+    ).exclude(fix_status__icontains='2').exclude(fix_status__icontains='1').order_by('-fix_status', '-leave')
+    print(vuln_list)
+    for each in vuln_list:
+        print(each.fix_status)
     # user_area = Profile.objects.filter(user=user).values('area').all()
     def test(u, **kwargs):
         a = {}
@@ -216,32 +218,29 @@ if __name__ == '__main__':
     res = test(1)
     print(res)
 
-    a= '["009","010"]'
+    # a= '["009","010"]'
+    # # a = None
+    # a = str(a)
+    # a= eval(a)
+    # a.extend(['009', "010"])
+    # print(a)
     # a = None
-    a = str(a)
-    a= eval(a)
-    a.extend(['009', "010"])
-    print(a)
-    a = None
-    a= str(a)
-    if not a:
-        print(22)
+    # a= str(a)
+    # if not a:
+    #     print(22)
+    #
+    # # refresh_cache()
+    # name = Cache.get_value(key='lintechao')
+    # info = Cache.get_value(key='191152606026429443')
+    # print(name, info)
+    #
+    # user_name = han_to_pinyin('pts')
+    # res = get_user_area(user_name)
+    # print(res)
+    # tk_user_name_zh = 'tk_' + '林特超'
+    # user_name_zh = tk_user_name_zh.split('tk_')[1]
+    # print(user_name_zh)
+    #
+    # v_id = 'yz' + '122131231'
+    # print(v_id.split('yz')[1])
 
-    # refresh_cache()
-    name = Cache.get_value(key='lintechao')
-    info = Cache.get_value(key='191152606026429443')
-    print(name, info)
-
-    user_name = han_to_pinyin('pts')
-    res = get_user_area(user_name)
-    print(res)
-    tk_user_name_zh = 'tk_' + '林特超'
-    user_name_zh = tk_user_name_zh.split('tk_')[1]
-    print(user_name_zh)
-
-    v_id = 'yz' + '122131231'
-    print(v_id.split('yz')[1])
-
-    # jwt = None
-    # aa = jwt.get('a') if jwt else 2
-    # print(aa)

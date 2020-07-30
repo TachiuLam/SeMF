@@ -117,9 +117,9 @@
                             'token': token
                         }, function (res) {
                             layer.msg(res.notice);
-                            //setTimeout(function () {
-                            //   location.replace(location.href);
-                            //}, 2000)
+                            setTimeout(function () {
+                               location.replace(location.href);
+                            }, 2000)
                         });
                     }
                 }
@@ -129,12 +129,12 @@
                         page: {
                             curr: 1 //重新从第 1 页开始
                         }
-                        , where: {
+                        {#, where: {#}
                             {#key: $("#id_key").val()#}
                             {#, v_key: $("#id_v_key").val()#}
                             {#, leave: $("#id_leave option:selected").val()#}
                             {#, fix_status: $("#id_vuln_type option:selected").val()#}
-                        }
+                        //}
                     });
                 }
             };
