@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404, HttpResponse
+from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
@@ -176,28 +176,29 @@ def ding_vuln_process(request):
         return JsonResponse({'res': '非法用户'})
     user_name_zh = tk_user_name_zh.split('tk_')[1]
     vuln_id_list = request.POST.get('vuln_id_list')
+    try:
+        if isinstance(vuln_id_list, str):
+            vuln_id_list = eval(vuln_id_list)
+            for vuln_id in vuln_id_list:
+                # 判断是否有受理权限
+                vuln = Vulnerability_scan.objects.filter(vuln_id=vuln_id).first()
+                error = vuln_to_process(vuln, vuln_id, user_name_zh)
+                if not error:
+                    return error.get('error')
+                vuln.process_user = user_name_zh
+                vuln.fix_status = '4'   # 修复中
+                vuln.save()
+            return '受理成功'
+        return '未知错误，请联系管理员'
+    except Exception as e:
+        return e
 
-    if isinstance(vuln_id_list, str):
-        vuln_id_list = eval(vuln_id_list)
-        for vuln_id in vuln_id_list:
-            # 判断是否有受理权限
-            error = vuln_to_process(vuln_id, user_name_zh)
-            if not error:
-                return error.get('error')
-            vuln = Vulnerability_scan.objects.filter(vuln_id=vuln_id).first()
-            vuln.process_user = user_name_zh
-            vuln.fix_status = '4'   # 修复中
-            vuln.save()
-        return '受理成功'
-    return '未知错误，请联系管理员'
 
-
-def vuln_to_process(vuln_id, user_name_zh):
+def vuln_to_process(vuln, vuln_id, user_name_zh):
     """判断漏洞受理条件是否满足"""
-    vuln_info = Vulnerability_scan.objects.filter(vuln_id=vuln_id).first()
-    process_user = vuln_info.process_user
-    assign_user_list = vuln_info.assign_user
-    fix_status = vuln_info.fix_status
+    process_user = vuln.process_user
+    assign_user_list = vuln.assign_user
+    fix_status = vuln.fix_status
     # 未受理和漏洞状态为 已派发 ，且当前受理人在派发列表内，才允许进行受理操作
     if not assign_user_list or fix_status != '5':
         return {'error': '该漏洞 {} 未派发'.format(vuln_id)}
