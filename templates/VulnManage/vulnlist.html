@@ -47,7 +47,9 @@
 	<xblock>
 		<div class="UserTable">
 			<button class="layui-btn " data-type="statuschoice" id="1"><i class="layui-icon layui-icon-senior"></i>批量变更</button>
+            {% if user.is_superuser %}
             <button class="layui-btn " data-type="statuschoice" id="2"><i class="layui-icon ">&#xe601;</i>漏洞派发</button>
+            {% endif %}
 		</div>
 	</xblock>
 	
@@ -74,6 +76,7 @@ layui.use('table', function(){
       ,{field:'vuln_type', title: '漏洞分类', sort: true}
       ,{field:'leave', title: '威胁等级',sort: true}
       ,{field:'fix_status', title: '修复状态',sort: true}
+      ,{field:'process_user', title: '受理人',sort: true}
       ,{field:'update_data', title: '更新时间', sort:true}
       ,{ title: '高级选项',fixed: 'right', align:'center', toolbar: '#barDemo'}
     ]]

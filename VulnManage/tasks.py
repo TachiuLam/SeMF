@@ -85,6 +85,8 @@ def vulnlist_save_status(v_id, fix_status):
     vuln_id_list = eval(Cache.get_value(v_id))
     for each in vuln_id_list:
         vuln = Vulnerability_scan.objects.filter(vuln_id=each).first()
+        if vuln.fix_status == '5':  # 修改为已派发时，重置漏洞受理人
+            vuln.process_user = None
         vuln.fix_status = fix_status
         vuln.save()
     return True

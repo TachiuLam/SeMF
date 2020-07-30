@@ -53,6 +53,9 @@ def vuln_change_status(request, vuln_id):
                 if not is_admin and (form.cleaned_data['fix_status'] in ['1', '3']):
                     error = '仅允许更改为"待修复"，"修复中"，"已忽略"'
                 else:
+                    if vuln.fix_status == '5':      # 修改为已派发时，重置漏洞受理人
+                        vuln.process_user = None
+                        vuln.save()
                     form.save()
                     error = '更改成功'
             else:
@@ -240,6 +243,7 @@ def vulntablelist(request):
         dic['update_data'] = escape(vuln_item.update_data)
         dic['asset'] = escape(vuln_item.vuln_asset.asset_key)
         dic['asset_id'] = escape(vuln_item.vuln_asset.asset_id)
+        dic['process_user'] = escape(vuln_item.process_user if vuln_item.process_user else '无')
         data.append(dic)
     resultdict['code'] = 0
     resultdict['msg'] = "漏洞列表"
