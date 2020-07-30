@@ -116,7 +116,7 @@
                             'vuln_id_list': JSON.stringify(list),
                             'token': token
                         }, function (res) {
-                            layer.msg(res);
+                            layer.msg(res.notice);
                             //setTimeout(function () {
                             //   location.replace(location.href);
                             //}, 2000)
@@ -130,10 +130,10 @@
                             curr: 1 //重新从第 1 页开始
                         }
                         , where: {
-                            key: $("#id_key").val()
-                            , v_key: $("#id_v_key").val()
+                            {#key: $("#id_key").val()#}
+                            {#, v_key: $("#id_v_key").val()#}
                             {#, leave: $("#id_leave option:selected").val()#}
-                            , fix_status: $("#id_vuln_type option:selected").val()
+                            {#, fix_status: $("#id_vuln_type option:selected").val()#}
                         }
                     });
                 }
