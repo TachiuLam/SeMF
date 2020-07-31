@@ -99,7 +99,7 @@ $.get("{% url 'chartvulnleave' %}").done(function (data) {
 		       text: '威胁分级',
 		   },
 		color :[
-			'#228B22','#EEDC82','#CD950C','#A52A2A'
+			'#60b1c6','#228B22','#CD950C','#A52A2A','#676762'
 		 ],
 		legend: {
 		       data: data.categories
@@ -122,7 +122,7 @@ $.get("{% url 'chartvulnstatus' %}").done(function (data) {
 		       text: '修复状态',
 		   },
 		color :[
-			'#228B22','#EEDC82','#CD950C','#A52A2A'
+			'#676762','#228B22','#EEDC82','#CD950C','#A52A2A','#219da5'
 		],
 		legend: {
 		       data: data.categories
