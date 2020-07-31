@@ -4,9 +4,9 @@
 {% block index %}
     {#    {% csrf_token %}#}
 {#    <div class="x-nav">#}
- <div class="UserTable">
+ <div class="UserTable x-nav">
 	<span class="layui-breadcrumb">
-        <a class="x-nav">漏洞受理</a>
+        <a>漏洞受理</a>
     </span>
     <button class="layui-btn " style="line-height:1.6em;margin-top:3px;float:right"
             data-type="reload">
@@ -79,7 +79,7 @@
                 }
                 , id: 'vulnsReload'
                 , page: true
-                , limit: 10
+                , limit: 15
                 , text: {
                     none: '暂无相关数据'
                 }
