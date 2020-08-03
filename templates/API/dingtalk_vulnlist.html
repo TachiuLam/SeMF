@@ -69,9 +69,9 @@
                             //  $('tr').eq(index).css("background-color",BJCOLOR);
                         } else if ($(this).text() == '未受理') {
                             $(this).css("color", '#c60e06');
-                        } else if ($(this).text()&& $("[data-field='fix_status']").children(1).each.text() == '4') {
+                        } else if ($(this).text()&& $("[data-field='fix_status']").children(1).each.text() == '修复中') {
                             $(this).css("color", '#60b1c6');
-                        } else if ($(this).text()&& $("[data-field='fix_status']").children(1).each.text() == '4'){
+                        } else if ($(this).text()&& $("[data-field='fix_status']").children(1).each.text() == '修复完成'){
                             $(this).css("color", '#18c611');
                         } else {
                             $(this).text("未受理");

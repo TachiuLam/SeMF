@@ -198,6 +198,12 @@ def ding_vuln_process(request):
         for vuln_id in vuln_id_list:
             # 判断是否有“修复完成”权限
             vuln = Vulnerability_scan.objects.filter(vuln_id=vuln_id).first()
+            error = vuln_to_finish(vuln, vuln_id, user_name_zh)
+            if error:
+                return JsonResponse(error)
+            vuln.fix_status = '6'  # 修复中
+            vuln.save()
+        return JsonResponse({'notice': '操作成功'})
 
     return JsonResponse({'notice': '未知错误，请联系管理员'})
 
