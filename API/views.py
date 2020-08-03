@@ -82,7 +82,7 @@ def ding_vuln_view(request):
     # user_name_zh = '林特超'     # 调试用
     context = {}
     # 构造token返回
-    token = Cache.get_value(key='tk_' + user_name_zh)       # 注意加密和缓存key为 tk_中文用户名
+    token = Cache.get_value(key='tk_' + user_name_zh)  # 注意加密和缓存key为 tk_中文用户名
     if not token:
         token = JWT.generate_jwt('tk_' + user_name_zh)
         Cache.set_value(token, 'tk_' + user_name_zh, 3)
@@ -168,17 +168,19 @@ def ding_vuln_list(request):
 @csrf_exempt
 def ding_vuln_process(request):
     """钉钉受理接口"""
+    choice_id = request.POST.get('choice_id')
     token = request.POST.get('token')
 
     jwt = JWT.decode_jwt(token)
     tk_user_name_zh = jwt.get('username') if jwt else None
 
-    if not tk_user_name_zh:     # 校验token，防止cc攻击，导致缓存空间不足
+    if not tk_user_name_zh:  # 校验token，防止cc攻击，导致缓存空间不足
         return JsonResponse({'res': '非法用户'})
     user_name_zh = tk_user_name_zh.split('tk_')[1]
     vuln_id_list = request.POST.get('vuln_id_list')
 
-    if isinstance(vuln_id_list, str):
+    # 漏洞受理
+    if isinstance(vuln_id_list, str) and choice_id == '1':
         vuln_id_list = eval(vuln_id_list)
         for vuln_id in vuln_id_list:
             # 判断是否有受理权限
@@ -187,9 +189,16 @@ def ding_vuln_process(request):
             if error:
                 return JsonResponse(error)
             vuln.process_user = user_name_zh
-            vuln.fix_status = '4'   # 修复中
+            vuln.fix_status = '4'  # 修复中
             vuln.save()
         return JsonResponse({'notice': '受理成功'})
+    # 修复完成
+    elif isinstance(vuln_id_list, str) and choice_id == '2':
+        vuln_id_list = eval(vuln_id_list)
+        for vuln_id in vuln_id_list:
+            # 判断是否有“修复完成”权限
+            vuln = Vulnerability_scan.objects.filter(vuln_id=vuln_id).first()
+
     return JsonResponse({'notice': '未知错误，请联系管理员'})
 
 
@@ -207,7 +216,22 @@ def vuln_to_process(vuln, vuln_id, user_name_zh):
         return {'notice': '不具备该漏洞 {} 受理权限'.format(vuln_id)}
     elif not process_user and (fix_status == '5') and (user_name_zh in eval(assign_user_list)):
         return None
-    return {'notice': '该漏洞 {} 存在未知受理错误，请联系管理员'.format(vuln_id)}
+    return {'notice': '该漏洞 {} 受理存在未知错误，请联系管理员'.format(vuln_id)}
+
+
+def vuln_to_finish(vuln, vuln_id, user_name_zh):
+    """判断漏洞完成修复条件是否满足"""
+    process_user = vuln.process_user
+    fix_status = vuln.fix_status
+    if (not process_user) or fix_status != '4':
+        return {'notice': '该漏洞 {} 未处于修复状态或未被受理'.format(vuln_id)}
+    elif user_name_zh != process_user:
+        return {'notice': '不具备该漏洞 {} 修复完成权限'.format(vuln_id)}
+    elif fix_status in ('6', '1'):
+        return {'notice': '该漏洞 {} 已完成修复'.format(vuln_id)}
+    elif (fix_status == '4') and (user_name_zh == process_user):
+        return None
+    return {'notice': '该漏洞 {} 操作存在未知错误，请联系管理员'.format(vuln_id)}
 
 
 @require_http_methods(['POST'])

@@ -16,8 +16,8 @@
     <div class="x-body">
         <xblock>
             <div class="UserTable">
-                <button class="layui-btn " data-type="statuschoice" id="1"><i class="layui-icon layui-icon-senior"></i>批量受理
-                </button>
+                <button class="layui-btn " data-type="statuschoice" id="1"><i class="layui-icon layui-icon-senior"></i>受理</button>
+                <button class="layui-btn " data-type="statuschoice" id="2"><i class="layui-icon layui-icon-senior"></i>修复完成</button>
             </div>
         </xblock>
         <table class="layui-hide" id="vuln_table" lay-filter="vuln"></table>
@@ -69,7 +69,9 @@
                             //  $('tr').eq(index).css("background-color",BJCOLOR);
                         } else if ($(this).text() == '未受理') {
                             $(this).css("color", '#c60e06');
-                        } else if ($(this).text()) {
+                        } else if ($(this).text()&& $("[data-field='fix_status']").text() == '4') {
+                            $(this).css("color", '#60b1c6');
+                        } else if ($(this).text()&& $("[data-field='fix_status']").text() == '4'){
                             $(this).css("color", '#18c611');
                         } else {
                             $(this).text("未受理");
@@ -112,10 +114,11 @@
                     }
                     if (list.length === 0) {
                         layer.confirm('请先选择要操作的漏洞');
-                    } else if (this.id === '1') {
+                    } else if (this.id) {
                         $.post("{% url 'dingtalk_process' %}", {
                             'vuln_id_list': JSON.stringify(list),
-                            'token': token
+                            'token': token,
+                            'choice_id': this.id
                         }, function (res) {
                             layer.msg(res.notice);
                             setTimeout(function () {
