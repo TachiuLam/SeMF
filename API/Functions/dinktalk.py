@@ -153,7 +153,7 @@ class DinkTalk:
         url = 'https://oapi.dingtalk.com/topapi/message/corpconversation/asyncsend_v2?access_token={}'.format(
             access_token)
         data = {}
-        userid_list = []
+        userid_list = ''
         for name in user_name_list:
             user_info = Cache.get_value(key=user_process.han_to_pinyin(name))
             # 缓存查询不到，用户不存在
@@ -161,7 +161,7 @@ class DinkTalk:
                 # cls.save_user_list(access_token=access_token)
                 # 用户不存在, 钉钉接口不会判断不存在的用户，强制中断派发请求
                 return {'errcode': -1, 'result': '用户{}不存在'.format(name)}
-            userid_list.append(user_info.get('userid'))
+            userid_list = userid_list + (user_info.get('userid') + ',')
 
         data['agent_id'] = agent_id
         if userid_list:
