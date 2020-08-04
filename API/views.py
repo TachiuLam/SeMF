@@ -1,3 +1,12 @@
+# -*- coding: utf-8 -*-
+# tachiu lam
+# techaolin@gmail.com
+# 2020/6/6 2:59 下午
+# PyCharm
+
+import shutil
+import os
+import json
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
@@ -15,9 +24,7 @@ from VulnManage.views.views import VULN_STATUS, VULN_LEAVE
 from API.Functions.api_auth import JWT
 from API.Functions.rsas import RSAS
 from API.Functions.dinktalk import DinkTalk
-import shutil
-import os
-import json
+from NoticeManage.views import notice_add
 
 
 # Create your views here.
@@ -177,6 +184,7 @@ def ding_vuln_process(request):
     if not tk_user_name_zh:  # 校验token，防止cc攻击，导致缓存空间不足
         return JsonResponse({'res': '非法用户'})
     user_name_zh = tk_user_name_zh.split('tk_')[1]
+    username = han_to_pinyin(user_name_zh)      # 用于web端消息通知
     vuln_id_list = request.POST.get('vuln_id_list')
 
     # 漏洞受理
@@ -191,6 +199,14 @@ def ding_vuln_process(request):
             vuln.process_user = user_name_zh
             vuln.fix_status = '4'  # 修复中
             vuln.save()
+
+        data_message = {
+            'notice_title': '漏洞受理成功',
+            'notice_body': '漏洞已被受理：漏洞id：{}；受理人员：{}；'.format(vuln_id_list, user_name_zh),
+            'notice_type': 'inform',
+        }
+        user = get_object_or_404(User, username=username)
+        notice_add(user, data_message)
         return JsonResponse({'notice': '受理成功'})
     # 修复完成
     elif isinstance(vuln_id_list, str) and choice_id == '2':
@@ -203,6 +219,13 @@ def ding_vuln_process(request):
                 return JsonResponse(error)
             vuln.fix_status = '6'  # 修复中
             vuln.save()
+        data_message = {
+            'notice_title': '漏洞修复完成',
+            'notice_body': '漏洞修复完成，等待检查修复结果：漏洞id：{}；修复人员：{}；'.format(vuln_id_list, user_name_zh),
+            'notice_type': 'inform',
+        }
+        user = get_object_or_404(User, username=username)
+        notice_add(user, data_message)
         return JsonResponse({'notice': '操作成功'})
 
     return JsonResponse({'notice': '未知错误，请联系管理员'})
