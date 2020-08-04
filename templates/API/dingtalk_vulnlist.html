@@ -52,17 +52,21 @@
                             $(this).children().eq(4).css("color", '#18c611')
                         } else if (fix_statux == "修复中"){
                             $(this).children().eq(4).css("color", '#60b1c6')
+                        } else if ($(this).children().eq(4).text() == "受理人") {
+                            $(this).children().eq(4).css("color", 'black')
+                        } else {
+                            $(this).children().eq(4).css("color", '#c60e06')
                         }
                     });
 
-                    $("[data-field='process_user']").children(1).each(function () {
+                    //$("[data-field='process_user']").children(1).each(function () {
 
-                        if ($(this).text() == '受理人') {
-                            $(this).css('color', 'black');
+                     //   if ($(this).text() == '受理人') {
+                     //       $(this).css('color', 'black');
                             //  $('tr').eq(index).css("background-color",BJCOLOR);
-                        } else if (!$(this).text()) {
-                            $(this).text("未受理");
-                            $(this).css("color", '#c60e06');
+                     //   } else if (!$(this).text()) {
+                     //       $(this).text("未受理");
+                     //       $(this).css("color", '#c60e06');
                         //} else if ($(this).text() == '修复中') {
                         //    $(this).css("color", '#60b1c6');
                         //} else if (fix_status == '修复完成'){
@@ -70,8 +74,8 @@
                         //} else {
                         //    $(this).text("未受理");
                          //   $(this).css("color", '#c60e06');
-                        }
-                    });
+                  //      }
+                  //  });
                 }
                 , id: 'vulnsReload'
                 , page: true
