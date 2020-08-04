@@ -115,7 +115,7 @@ class DinkTalk:
             user_info = cls.get_user_info(access_token, each_id)
             if user_info:
                 # 用户名拼音作为缓存key
-                Cache.set_value(value=user_info, key=user_info.get('name'), key_time_id=2)
+                Cache.set_value(value=user_info, key=user_info.get('name'), key_time_id=1)
 
                 # 更新用户头像，并缓存本地url
                 # file_path = STATICFILES_DIRS[0] + '/images/'
@@ -127,7 +127,7 @@ class DinkTalk:
                 #                 key_time_id=2)
 
                 # 用户userid作为缓存key
-                Cache.set_value(value=user_info.get('name'), key=user_info.get('userid'), key_time_id=2)
+                Cache.set_value(value=user_info.get('name'), key=user_info.get('userid'), key_time_id=1)
                 user_name_list.append(user_info.get('name'))
         return user_name_list
 
