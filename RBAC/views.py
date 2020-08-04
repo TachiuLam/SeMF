@@ -310,6 +310,9 @@ def login(request):
                                         password=generate_password(16))
                     user_get = User.objects.filter(username=username).first()
                 else:
+                    # 更新邮箱
+                    if not user_get.email:
+                        user_get.email = ldap_auth_res.get('mail')
                     # 更新密码错误累计次数
                     user_get.profile.error_count = 0
                     user_get.save()

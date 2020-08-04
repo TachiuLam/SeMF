@@ -12,15 +12,19 @@ from .Functions import dinktalk
 from VulnManage.models import Vulnerability_scan
 from NoticeManage.views import notice_add
 from celery.utils.log import get_task_logger
+from django.contrib.auth.models import User
+from RBAC.service.ldap_auth import generate_password
 
 logger = get_task_logger(__name__)
 
 
 @shared_task
 def refresh_cache():
-    """定时任务：更新钉钉通讯录缓存，更新钉钉用户头像缓存"""
+    """定时任务：更新钉钉通讯录缓存，更新钉钉用户头像缓存；同步创建钉钉用户到本地"""
     token = dinktalk.DinkTalk.get_access_token()
-    dinktalk.DinkTalk.save_user_list(access_token=token)
+    user_name_list = dinktalk.DinkTalk.save_user_list(access_token=token)
+    # 同步钉钉用户，创建本地用户
+    sync_ldap_user(user_name_list)
     # msg = {"msgtype": "text", "text": {"content": "定时推送测试322——by tachiulam"}}
     # info = DinkTalk.corp_conversation(assess_token=token,
     #                                   user_name_list=['lintechao'],
@@ -59,3 +63,15 @@ def send_conversation(url, data, user, to_user, vuln):
         }
         notice_add(user, data_message)
         return {'errcode': res.get('errcode'), 'result': '漏洞派发失败'}
+
+
+def sync_ldap_user(user_name_list):
+    """根据钉钉内用户名，创建本地用户"""
+
+    for username in user_name_list:
+        # 判断ldap用户是否已在本地创建
+        user_get = User.objects.filter(username=username).first()
+        # 若未创建，新建用户，增加本机随机密码
+        if not user_get:
+            User.objects.create(username=username, password=generate_password(16))
+    return True
