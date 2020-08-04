@@ -3,6 +3,7 @@
 # lintechao@yingzi.com
 # 2020/7/15 10:30
 
+import datetime
 from django.shortcuts import get_object_or_404
 from VulnManage.models import Vulnerability_scan
 from .dinktalk import DinkTalk
@@ -13,18 +14,18 @@ class DingTalkMsg:
 
     @staticmethod
     def assign_msg(vuln_id_list):
-        messeage = '### {}个待处理漏洞推送\n'.format(str(len(vuln_id_list)))
-
+        message = '### {}个待处理漏洞推送\n'.format(str(len(vuln_id_list)))
+        message = message + "##### " + str(datetime.date.today()) + "##### {}个漏洞待处理"
         # 漏洞派发钉钉message，类型卡片
-        for num, vuln_id in enumerate(vuln_id_list):
-            vuln = get_object_or_404(Vulnerability_scan, vuln_id=vuln_id)
-            messeage = messeage + str(num+1) + str(vuln.vuln_name) + '\n'
+        # for num, vuln_id in enumerate(vuln_id_list):
+        #     vuln = get_object_or_404(Vulnerability_scan, vuln_id=vuln_id)
+        #     message = message + str(num+1) + str(vuln.vuln_name) + '\n'
 
         assign_msg = {
             "msgtype": "action_card",
             "action_card": {
                 "title": "{}个待处理漏洞推送".format(str(len(vuln_id_list))),
-                "markdown": messeage,
+                "markdown": message,
                 "btn_orientation": "0",
                 "btn_json_list": [
                     # {

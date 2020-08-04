@@ -243,4 +243,5 @@ if __name__ == '__main__':
     #
     # v_id = 'yz' + '122131231'
     # print(v_id.split('yz')[1])
+    print(datetime.date.today())
 
