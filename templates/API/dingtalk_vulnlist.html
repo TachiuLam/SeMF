@@ -45,39 +45,31 @@
                     , {field: 'process_user', title: '受理人', sort: true}
                 ]],
                 done: function () {
-                    //分类显示中文名称
-                    {#$("[data-field='leave']").children(1).each(function () {#}
-                    {#    if ($(this).text() == '紧急') {#}
-                    {#        //  $('tr').eq(index).css("background-color",BJCOLOR);#}
-                    {#        $(this).css("color", '#676762');#}
-                    {#    } else if ($(this).text() == '高危') {#}
-                    {#        $(this).css("color", '#c60e06');#}
-                    {#        //   $('tr').eq(index).css("color",YJYJCOLOR);#}
-                    {#    } else if ($(this).text() == '中危') {#}
-                    {#        // $('tr').eq(index).css("background-color",EJYJCOLOR);#}
-                    {#        $(this).css("color", '#c68f06');#}
-                    {#    } else if ($(this).text() == '低危') {#}
-                    {#        $(this).css("color", '#18c611');#}
-                    {#        // $('tr').eq(index).css("color",SJYJCOLOR);#}
-                    {#    } else if ($(this).text() == '信息') {#}
-                    {#        $(this).css("color", '#60b1c6');#}
-                    {#    }#}
-                    //});
-                    var fix_status = $("[data-field='fix_status']").children(1).each().text();
+                    // 根据修复状态控制受理人字段颜色
+                    $('table tr').each(function(){
+                        var fix_statux = $(this).children().eq(3).text();
+                        if (fix_statux == "修复完成") {
+                            $(this).children().eq(4).css("color", '#18c611')
+                        } else if (fix_statux == "修复中"){
+                            $(this).children().eq(4).css("color", '#60b1c6')
+                        }
+                    });
+
                     $("[data-field='process_user']").children(1).each(function () {
 
                         if ($(this).text() == '受理人') {
                             $(this).css('color', 'black');
                             //  $('tr').eq(index).css("background-color",BJCOLOR);
-                        } else if ($(this).text() == '未受理') {
-                            $(this).css("color", '#c60e06');
-                        } else if (fix_status == '修复中') {
-                            $(this).css("color", '#60b1c6');
-                        } else if (fix_status == '修复完成'){
-                            $(this).css("color", '#18c611');
-                        } else {
+                        } else if (!$(this).text()) {
                             $(this).text("未受理");
                             $(this).css("color", '#c60e06');
+                        //} else if ($(this).text() == '修复中') {
+                        //    $(this).css("color", '#60b1c6');
+                        //} else if (fix_status == '修复完成'){
+                        //   $(this).css("color", '#18c611');
+                        //} else {
+                        //    $(this).text("未受理");
+                         //   $(this).css("color", '#c60e06');
                         }
                     });
                 }
