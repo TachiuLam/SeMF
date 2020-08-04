@@ -49,13 +49,14 @@
                     $('table tr').each(function(){
                         var fix_statux = $(this).children().eq(3).text();
                         if (fix_statux == "修复完成") {
-                            $(this).children().eq(4).css("color", '#18c611')
+                            $(this).children().eq(4).css("color", '#18c611');
                         } else if (fix_statux == "修复中"){
-                            $(this).children().eq(4).css("color", '#60b1c6')
+                            $(this).children().eq(4).css("color", '#60b1c6');
                         } else if ($(this).children().eq(4).text() == "受理人") {
-                            $(this).children().eq(4).css("color", 'black')
+                            $(this).children().eq(4).css("color", 'black');
                         } else {
-                            $(this).children().eq(4).css("color", '#c60e06')
+                            $(this).children().eq(4).text("未受理");
+                            $(this).children().eq(4).css("color", '#c60e06');
                         }
                     });
 
