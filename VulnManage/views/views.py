@@ -314,7 +314,7 @@ def vulnlist_assign(request, v_id):
                 error = res.get('result')
                 username_list = res.get('username_list')
                 if error == 0:  # 进行钉钉漏洞派发
-                    error = tasks.vulnlist_assign(v_id, user, username_list).get('result')
+                    error = tasks.vulnlist_assign(v_id, user.username, username_list).get('result')
             else:
                 error = '请检查输入'
         else:

@@ -12,15 +12,20 @@ from .Functions import dinktalk
 from VulnManage.models import Vulnerability_scan
 from NoticeManage.views import notice_add
 from celery.utils.log import get_task_logger
+from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404
+from RBAC.service.ldap_auth import generate_password
 
 logger = get_task_logger(__name__)
 
 
 @shared_task
 def refresh_cache():
-    """定时任务：更新钉钉通讯录缓存，更新钉钉用户头像缓存"""
+    """定时任务：更新钉钉通讯录缓存，更新钉钉用户头像缓存；同步创建钉钉用户到本地"""
     token = dinktalk.DinkTalk.get_access_token()
-    dinktalk.DinkTalk.save_user_list(access_token=token)
+    user_name_list = dinktalk.DinkTalk.save_user_list(access_token=token)
+    # 同步钉钉用户，创建本地用户
+    sync_ldap_user(user_name_list)
     # msg = {"msgtype": "text", "text": {"content": "定时推送测试322——by tachiulam"}}
     # info = DinkTalk.corp_conversation(assess_token=token,
     #                                   user_name_list=['lintechao'],
@@ -28,19 +33,21 @@ def refresh_cache():
 
 
 @shared_task
-def send_conversation(url, data, user, to_user, vuln):
+def send_conversation(url, data, username, to_user, vuln):
     """异步派发漏洞，派发结果使用notice模块通知"""
     res = requests.post(url=url, data=data)
     res = json.loads(res.content)
     # res = {'errcode': 0, 'task_id': 232719853185, 'request_id': '3x1qbs76ef3k'}
     # 使用notice进行推送，待添加
+    user = get_object_or_404(User, username=username)
     if res.get('errcode') == 0:
         data_message = {
             'notice_title': '漏洞派发成功',
-            'notice_body': '漏洞id：{}；操作人员：{}；派发对象：{}'.format(vuln, user.username, to_user),
+            'notice_body': '漏洞id：{}；操作人员：{}；派发对象：{}'.format(vuln, username, to_user),
             # 'notice_url': '/vuln/user/',
             'notice_type': 'inform',
         }
+
         notice_add(user, data_message)
         # 保存派发人员 vuln：['520200615431'] <class 'list'>
         for each in vuln:
@@ -59,3 +66,15 @@ def send_conversation(url, data, user, to_user, vuln):
         }
         notice_add(user, data_message)
         return {'errcode': res.get('errcode'), 'result': '漏洞派发失败'}
+
+
+def sync_ldap_user(user_name_list):
+    """根据钉钉内用户名，创建本地用户"""
+
+    for username in user_name_list:
+        # 判断ldap用户是否已在本地创建
+        user_get = User.objects.filter(username=username).first()
+        # 若未创建，新建用户，增加本机随机密码
+        if not user_get:
+            User.objects.create(username=username, password=generate_password(16))
+    return True
