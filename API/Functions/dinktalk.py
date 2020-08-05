@@ -147,7 +147,7 @@ class DinkTalk:
         return user_info
 
     @classmethod
-    def corp_conversation(cls, user, vuln, access_token, msg, user_name_list, agent_id=AGENT_ID, dept_id_list=None,
+    def corp_conversation(cls, username, vuln, access_token, msg, user_name_list, agent_id=AGENT_ID, dept_id_list=None,
                           to_all_user=False):
         """工作通知推送，参数说明见文档https://ding-doc.dingtalk.com/doc#/serverapi2/pgoxpy/e2262dad"""
         url = 'https://oapi.dingtalk.com/topapi/message/corpconversation/asyncsend_v2?access_token={}'.format(
@@ -179,8 +179,8 @@ class DinkTalk:
         # # res = {'errcode': 0, 'task_id': 232719853185, 'request_id': '3x1qbs76ef3k'}
         # return res
         # 异步推送
-        # tasks.send_conversation(url, data, user, user_name_list, vuln)
-        tasks.send_conversation.delay(url, data, user, user_name_list, vuln)
+        # tasks.send_conversation(url, data, username, user_name_list, vuln)
+        tasks.send_conversation.delay(url, data, username, user_name_list, vuln)
         return {'errcode': 0, 'result': '漏洞已派发'}
 
 

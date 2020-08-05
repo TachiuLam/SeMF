@@ -13,6 +13,7 @@ from VulnManage.models import Vulnerability_scan
 from NoticeManage.views import notice_add
 from celery.utils.log import get_task_logger
 from django.contrib.auth.models import User
+from django.shortcuts import get_object_or_404
 from RBAC.service.ldap_auth import generate_password
 
 logger = get_task_logger(__name__)
@@ -32,19 +33,21 @@ def refresh_cache():
 
 
 @shared_task
-def send_conversation(url, data, user, to_user, vuln):
+def send_conversation(url, data, username, to_user, vuln):
     """异步派发漏洞，派发结果使用notice模块通知"""
     res = requests.post(url=url, data=data)
     res = json.loads(res.content)
     # res = {'errcode': 0, 'task_id': 232719853185, 'request_id': '3x1qbs76ef3k'}
     # 使用notice进行推送，待添加
+    user = get_object_or_404(User, username=username)
     if res.get('errcode') == 0:
         data_message = {
             'notice_title': '漏洞派发成功',
-            'notice_body': '漏洞id：{}；操作人员：{}；派发对象：{}'.format(vuln, user.username, to_user),
+            'notice_body': '漏洞id：{}；操作人员：{}；派发对象：{}'.format(vuln, username, to_user),
             # 'notice_url': '/vuln/user/',
             'notice_type': 'inform',
         }
+
         notice_add(user, data_message)
         # 保存派发人员 vuln：['520200615431'] <class 'list'>
         for each in vuln:
