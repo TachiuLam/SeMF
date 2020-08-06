@@ -14,7 +14,7 @@ class DingTalkMsg:
 
     @staticmethod
     def assign_msg(vuln_id_list):
-        message = '### {}个漏洞带处理\n'.format(str(len(vuln_id_list)))
+        message = '### {}个漏洞待处理\n'.format(str(len(vuln_id_list)))
         message = message + "##### " + str(datetime.date.today())
         # 漏洞派发钉钉message，类型卡片
         # for num, vuln_id in enumerate(vuln_id_list):

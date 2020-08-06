@@ -139,9 +139,8 @@ def ding_vuln_list(request):
             vuln_name__icontains=v_key,
             fix_status__icontains=fix_status,
             leave__gte=1,
-        ).exclude(
-            fix_status__icontains='1',
-        ).order_by('-fix_status', '-leave')
+        ).exclude(fix_status__icontains='0', ).exclude(fix_status__icontains='1', ).exclude(fix_status__icontains='2')\
+            .exclude(fix_status__icontains='3').order_by('-fix_status', '-leave')
     else:
         vuln_list = Vulnerability_scan.objects.filter(
             vuln_asset__asset_area__in=user_area_list,  # 根据项目ID进行筛选
@@ -149,7 +148,8 @@ def ding_vuln_list(request):
             vuln_name__icontains=v_key,
             fix_status__icontains=fix_status,
             leave__gte=1,
-        ).exclude(fix_status__icontains='0', ).exclude(fix_status__icontains='5', ).order_by('-fix_status', '-leave')
+        ).exclude(fix_status__icontains='0', ).exclude(fix_status__icontains='1', ).exclude(fix_status__icontains='2')\
+            .exclude(fix_status__icontains='3').order_by('-fix_status', '-leave')
 
     total = vuln_list.count()
     vuln_list = paging(vuln_list, rows, page)
