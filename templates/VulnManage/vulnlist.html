@@ -27,7 +27,7 @@
 		            </select>
 		        </div>
 		        <div class="layui-input-inline">
-		            <select name="contrller" id ='id_vuln_type'>
+		            <select name="contrller" id ='id_vuln_status'>
 		              <option value="">修复状态</option>
 		              <option value="0">已忽略</option>
 		              <option value="1">已修复</option>
@@ -38,10 +38,20 @@
                       <option value="6">修复完成</option>
 		            </select>
 		        </div>
+			    <div class="layui-input-inline">
+		            <select name="contrller" id ='id_asset_type'>
+		              <option value="">资产分类</option>
+		              <option value="5">服务器</option>
+		              <option value="6">办公设备</option>
+					  <option value="7">容器</option>
+		              <option value="14">WEB应用</option>
+					  <option value="17">公网IP</option>
+		            </select>
+		        </div>
 	       </form>
 	     </div>
-	     <div class='UserTable'>
-	       <button class="layui-btn"  data-type="reload"><i class="layui-icon" >&#xe615;</i></button>
+	    <div class='UserTable'>
+	       <button class="layui-btn"  data-type="reload" ><i class="layui-icon" >&#xe615;</i></button>
 	     </div>
      </div>
 
@@ -73,8 +83,8 @@ layui.use('table', function(){
       ,{field:'vuln_name', title: '漏洞名称', sort: true}
       ,{field:'vuln_info', title: '验证信息', sort: true}
       ,{field:'asset', title: '关联资产', event:'Asset'}
-      ,{field:'asset_description', title: '资产介绍', sort: true}
-      ,{field:'vuln_type', title: '漏洞分类', sort: true}
+      // ,{field:'asset_description', title: '资产介绍', sort: true}
+      ,{field:'asset_type', title: '资产类型', sort: true}
       ,{field:'leave', title: '威胁等级',sort: true}
       ,{field:'fix_status', title: '修复状态',sort: true}
       ,{field:'process_user', title: '受理人',sort: true}
@@ -149,7 +159,8 @@ layui.use('table', function(){
 	    	key: $("#id_key").val()
             ,v_key: $("#id_v_key").val()
 	    	,leave: $("#id_leave option:selected").val()
-	    	,fix_status: $("#id_vuln_type option:selected").val()
+	    	,fix_status: $("#id_vuln_status option:selected").val()
+			,asset_type: $("#id_asset_type option:selected").val()
         }
       });
     }
