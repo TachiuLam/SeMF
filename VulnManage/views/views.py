@@ -229,7 +229,13 @@ def vulntablelist(request):
                 fix_status__icontains=fix_status,
                 leave__gte=1,
             ).order_by('-fix_status', '-leave')
-
+    asset_type = request.POST.get('asset_type')
+    if asset_type:
+        try:
+            asset_type = int(asset_type)
+        except ValueError:
+            asset_type = 0
+        vuln_list = vuln_list.filter(vuln_asset__asset_type=asset_type)
     total = vuln_list.count()
     vuln_list = paging(vuln_list, rows, page)
     data = []
@@ -238,7 +244,7 @@ def vulntablelist(request):
         dic['vuln_id'] = escape(vuln_item.vuln_id)
         dic['vuln_info'] = escape(vuln_item.vuln_info)
         dic['vuln_name'] = escape(vuln_item.vuln_name)
-        dic['vuln_type'] = escape(vuln_item.vuln_type)
+        dic['asset_type'] = escape(vuln_item.vuln_asset.asset_type)
         dic['leave'] = escape(VULN_LEAVE[vuln_item.leave])
         dic['fix_status'] = escape(VULN_STATUS[vuln_item.fix_status])
         dic['update_data'] = escape(vuln_item.update_data)
