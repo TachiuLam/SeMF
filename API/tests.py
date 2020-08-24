@@ -2,7 +2,6 @@ from django.test import TestCase
 import requests
 from API.Functions.rsas import RSAS
 from SeMF.redis import Cache
-from AssetManage.models import AssetUser
 from VulnManage.models import Vulnerability_scan
 from API.Functions.api_auth import JWT
 from django.contrib.auth.models import User
@@ -230,9 +229,9 @@ if __name__ == '__main__':
     #     print(22)
     #
     # # refresh_cache()
-    # name = Cache.get_value(key='lintechao')
+    name = Cache.get_value(key='lintechao')
     # info = Cache.get_value(key='191152606026429443')
-    # print(name, info)
+    print(name)
     #
     # user_name = han_to_pinyin('pts')
     # res = get_user_area(user_name)

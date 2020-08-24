@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_protect
 from .. import tasks, models, forms
 import json
-from django.contrib.auth.models import User
+from AssetManage.models import Area
 from django.http import JsonResponse
 
 
@@ -56,16 +56,20 @@ def assetuser(request, assetuser_id):
     if request.method == 'POST':
         form = forms.AssetUserForm(request.POST, instance=assetuser)
         if form.is_valid():
-            dst_user_email = form.cleaned_data['dst_user_email']
-            user = User.objects.filter(email=dst_user_email).first()
-            if user:
+            # dst_user_email = form.cleaned_data['dst_user_email']
+            # user = User.objects.filter(email=dst_user_email).first()
+            asset_area = form.cleaned_data['asset_area']
+
+            areas = Area.objects.all()
+            if asset_area in areas:
                 asset_id_list = form.cleaned_data['asset_list']
                 asset_id_list = json.loads(asset_id_list)
                 form.save()
-                tasks.asset_user_save(dst_user_email, asset_id_list)
+                # tasks.asset_user_save(dst_user_email, asset_id_list)
+                tasks.asset_user_save(asset_area, asset_id_list)
                 error = '操作成功'
             else:
-                error = '对方账号不存在'
+                error = '项目不存在'
         else:
             error = '请检查输入'
     else:

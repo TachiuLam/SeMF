@@ -32,9 +32,10 @@ class HandoverForm(ModelForm):
 class AssetUserForm(ModelForm):
     class Meta:
         model = models.AssetUser
-        fields = ['dst_user_email', 'reason', 'asset_list']
+        fields = ['asset_area', 'reason', 'asset_list']
         widgets = {
-            'dst_user_email': widgets.TextInput(attrs={'class': 'form-control', 'placeholder': '请输入对方账号邮箱'}),
+            # 'dst_user_email': widgets.TextInput(attrs={'class': 'form-control', 'placeholder': '请输入对方账号邮箱'}),
+            'asset_area': widgets.Select(attrs={'class': 'form-control', 'placeholder': '所属项目'}),
             'reason': widgets.Textarea(attrs={'class': 'form-control', 'placeholder': '该操作会将本网段所有资产添加至对方名下，请谨慎操作'}),
             'asset_list': widgets.TextInput(attrs={'class': 'form-control', 'placeholder': '资产列表', 'type': 'hidden'}),
         }

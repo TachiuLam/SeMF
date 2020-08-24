@@ -211,13 +211,15 @@ class File(models.Model):
 
 
 class AssetUser(models.Model):
-    dst_user_email = models.EmailField('目标账号')
-    reason = models.TextField('指定说明')
+    # dst_user_email = models.EmailField('目标账号')
+
+    reason = models.TextField('指定说明', null=True, blank=True)
     asset_list = models.TextField('资产列表')
     request_updatetime = models.DateField('更新时间', auto_now=True)
-
+    asset_area = models.ForeignKey(Area, related_name='asset_area', verbose_name='所属项目', on_delete=models.CASCADE,
+                                   null=True, blank=True)
     action_user = models.ForeignKey(User, related_name='assetuser_action_user', on_delete=models.CASCADE, null=True,
                                     blank=True)
 
     def __str__(self):
-        return self.dst_user_email
+        return self.asset_area
