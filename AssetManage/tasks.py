@@ -20,12 +20,13 @@ from SeMFSetting.Functions.checkip import checkip
 
 
 @shared_task
-def asset_user_save(user_email, asset_id_list):
-    user = User.objects.filter(email=user_email).first()
+def asset_user_save(asset_area, asset_id_list):
+    # user = User.objects.filter(email=user_email).first()
     for item in asset_id_list:
         asset_id = item
         asset = models.Asset.objects.filter(asset_id=asset_id).first()
-        asset.asset_user.add(user)
+        # asset.asset_user.add(user)
+        asset.asset_area = asset_area
         asset.save()
     return True
 

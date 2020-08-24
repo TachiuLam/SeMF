@@ -2,7 +2,6 @@ from django.test import TestCase
 import requests
 from API.Functions.rsas import RSAS
 from SeMF.redis import Cache
-from AssetManage.models import AssetUser
 from VulnManage.models import Vulnerability_scan
 from API.Functions.api_auth import JWT
 from django.contrib.auth.models import User
