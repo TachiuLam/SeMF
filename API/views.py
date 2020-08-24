@@ -14,6 +14,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.utils.html import escape
+from django.db.models import Q
 from SeMF.settings import MEDIA_API, MEDIA_TYPE, APP_KEY, APP_SECRET, AUTH_APP_ID, AUTH_APP_SECRET
 from SeMF.views import permission_denied, page_not_found
 from SeMF.redis import Cache
@@ -131,8 +132,7 @@ def ding_vuln_list(request):
     # is_admin = True  # 调试用
     # user_area_list = None
 
-    # 非管理员返回状态为“待修复”、“已派发”、“修复中”的漏洞
-    # 管理员返回非“已修复”状态漏洞
+    # 返回状态为“待修复”、“已派发”、“修复中”的漏洞
     if is_admin:
         vuln_list = Vulnerability_scan.objects.filter(
             vuln_asset__asset_key__icontains=key,
@@ -142,12 +142,14 @@ def ding_vuln_list(request):
         ).exclude(fix_status__icontains='0', ).exclude(fix_status__icontains='1', ).exclude(fix_status__icontains='2')\
             .exclude(fix_status__icontains='3').order_by('-fix_status', '-leave')
     else:
+        # 漏洞查看权限：所属项目成员 | 被派发的人员
         vuln_list = Vulnerability_scan.objects.filter(
-            vuln_asset__asset_area__in=user_area_list,  # 根据项目ID进行筛选
             vuln_asset__asset_key__icontains=key,
             vuln_name__icontains=v_key,
             fix_status__icontains=fix_status,
             leave__gte=1,
+        ).filter(
+            Q(vuln_asset__asset_area__in=user_area_list) | Q(assign_user__icontains=user_name_zh)
         ).exclude(fix_status__icontains='0', ).exclude(fix_status__icontains='1', ).exclude(fix_status__icontains='2')\
             .exclude(fix_status__icontains='3').order_by('-fix_status', '-leave')
 

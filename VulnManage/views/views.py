@@ -7,6 +7,7 @@ from SeMFSetting.views import paging
 from django.http import JsonResponse
 import time
 from django.utils.html import escape
+from django.db.models import Q
 from SeMF.redis import Cache
 from RBAC.service.user_process import get_user_area, username_list_identify
 
@@ -198,6 +199,7 @@ def vulntablelist(request):
     if not fix_status:
         fix_status = ''
 
+    user_name_zh = Cache.get_value(key=user).get('name_zh')
     if user.is_superuser:
         vuln_list = models.Vulnerability_scan.objects.filter(
             vuln_asset__asset_key__icontains=key,
@@ -220,14 +222,16 @@ def vulntablelist(request):
                 leave__gte=1,
             ).order_by('-fix_status', '-leave')
         else:
-            # user_area_list 则查询不到数据
+            # 根据项目ID进行筛选或派发人员
             vuln_list = models.Vulnerability_scan.objects.filter(
-                vuln_asset__asset_area__in=user_area_list,  # 根据项目ID进行筛选
+                # vuln_asset__asset_area__in=user_area_list,  # 根据项目ID进行筛选
                 vuln_asset__asset_key__icontains=key,
                 vuln_name__icontains=v_key,
                 leave__icontains=leave,
                 fix_status__icontains=fix_status,
                 leave__gte=1,
+            ).filter(
+                Q(vuln_asset__asset_area__in=user_area_list) | Q(assign_user__icontains=user_name_zh)
             ).order_by('-fix_status', '-leave')
     asset_type = request.POST.get('asset_type')
     if asset_type:
