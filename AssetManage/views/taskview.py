@@ -9,7 +9,6 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_protect
 from .. import tasks, models, forms
 import json
-from django.contrib.auth.models import User
 from AssetManage.models import Area
 from django.http import JsonResponse
 
