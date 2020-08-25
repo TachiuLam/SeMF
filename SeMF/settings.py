@@ -176,7 +176,7 @@ CACHES = {
         "LOCATION": "redis://172.19.130.20:6379",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
-            "CONNECTION_POOL_KWARGS": {"max_connections": 100},
+            "CONNECTION_POOL_KWARGS": {"max_connections": 10000},
             "PASSWORD": "1qaz@WSX",
             "DECODE_RESPONSES": True
         }
