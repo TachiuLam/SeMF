@@ -177,6 +177,9 @@ CACHES = {
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
             "CONNECTION_POOL_KWARGS": {"max_connections": 10000},
+            "SOCKET_CONNECT_TIMEOUT": 5,  # 建立连接超时 in seconds
+            "SOCKET_TIMEOUT": 5,  # 连接建立后读写超时 in seconds
+            # "IGNORE_EXCEPTIONS": True,  # 忽略异常
             "PASSWORD": "1qaz@WSX",
             "DECODE_RESPONSES": True
         }
