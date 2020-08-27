@@ -37,7 +37,7 @@ app.conf.update(
         # },
         # 每天04：30执行钉钉通讯录缓存刷新
         'refresh-cache': {
-            'task': 'api.tasks.refresh_cache',
+            'task': 'API.tasks.refresh_cache',
             'schedule': crontab(hour=8, minute=30),
             # 'schedule': crontab(minute=3),
         }
