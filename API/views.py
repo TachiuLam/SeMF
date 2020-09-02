@@ -288,7 +288,10 @@ def ding_vuln_token(request):
 @csrf_exempt
 def ding_vuln_detail(request, v_detail_id):
     """钉钉漏洞详情页，根据v_detail_id获取token、vuln_id，返回对应漏洞详情"""
-    v_token = Cache.get_value(v_detail_id)
+    try:
+        v_token = Cache.get_value(v_detail_id)
+    except Exception as e:
+        print(e)
     if not v_token:
         return permission_denied(request)
 
