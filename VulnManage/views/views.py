@@ -198,8 +198,10 @@ def vulntablelist(request):
     fix_status = request.POST.get('fix_status')
     if not fix_status:
         fix_status = ''
-
-    user_name_zh = Cache.get_value(key=user).get('name_zh')
+    try:
+        user_name_zh = Cache.get_value(key=user).get('name_zh')
+    except Exception as e:
+        print(e)
     if user.is_superuser:
         vuln_list = models.Vulnerability_scan.objects.filter(
             vuln_asset__asset_key__icontains=key,
