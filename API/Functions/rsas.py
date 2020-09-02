@@ -20,7 +20,7 @@ class RSAS:
         :param file_name:
         :return: 漏洞报告类型
         """
-        report_type = {'server': 22, 'office': 23, 'docker': 24}
+        report_type = {'server': 22, 'office-gz': 23, 'docker': 24, 'office-sz': 35}
         for key in report_type:
             if key in str(file_name):
                 return report_type.get(key)
