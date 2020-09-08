@@ -3,5 +3,6 @@ from SeMF.redis import Cache
 # Create your tests here.
 
 key = 'lintechao'
-value = Cache.get_value(key=key).get('name_zh')
+Cache.set_value('value_test', key=key)
+value = Cache.get_value(key=key)
 print(value)
