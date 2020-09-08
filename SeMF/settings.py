@@ -173,14 +173,14 @@ DATABASES = {
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://redis:6379",
+        "LOCATION": "redis://redis-semf.db:7000",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
             "CONNECTION_POOL_KWARGS": {"max_connections": 10000},
             "SOCKET_CONNECT_TIMEOUT": 5,  # 建立连接超时 in seconds
             "SOCKET_TIMEOUT": 5,  # 连接建立后读写超时 in seconds
             "IGNORE_EXCEPTIONS": True,  # 忽略异常
-            "PASSWORD": "1qaz@WSX",
+            "PASSWORD": "143edid8Svaq",
             "DECODE_RESPONSES": True    # 数据存储格式为字符串
         }
     },
