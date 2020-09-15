@@ -204,7 +204,7 @@ class RSAS:
                     asset_type_id=asset_type_id,
                     asset_key=asset_key,
                     asset_score=asset_score,
-                    asset_area=13,      # 默认归类到安全组项目
+                    asset_area_id=13,      # 默认归类到安全组项目
                     # asset_description=asset_description,
                 )
                 # asset_create : (<Asset: asset_key>, True)
