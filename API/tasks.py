@@ -15,6 +15,7 @@ from celery.utils.log import get_task_logger
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404
 from RBAC.service.ldap_auth import generate_password
+from RBAC.models import Profile
 
 logger = get_task_logger(__name__)
 
@@ -69,7 +70,7 @@ def send_conversation(url, data, username, to_user, vuln):
 
 
 def sync_ldap_user(user_name_list):
-    """根据钉钉内用户名，创建本地用户"""
+    """根据钉钉内用户名，创建本地用户，划分默认项目组：其他；默认角色：其他"""
 
     for username in user_name_list:
         # 判断ldap用户是否已在本地创建
@@ -77,4 +78,8 @@ def sync_ldap_user(user_name_list):
         # 若未创建，新建用户，增加本机随机密码
         if not user_get:
             User.objects.create(username=username, password=generate_password(16))
+            profile = Profile.objects.filter(username=username).first()
+            profile.area = '16'
+            profile.roles = '9'
+            profile.save()
     return True

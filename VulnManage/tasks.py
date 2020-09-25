@@ -107,9 +107,7 @@ def vulnlist_assign(v_id, username, username_list):
         for vuln_id in vuln_id_list:
             username_l = []
             vuln = get_object_or_404(Vulnerability_scan, vuln_id=vuln_id)
-            if not vuln.assign_user:  # 未派发过的漏洞
-                vuln.assign_user = str(username_list)
-            else:  # 已派发过的漏洞，派发用户列表进行追加
+            if vuln.assign_user:  # 已派发过的漏洞，派发用户列表进行追加
                 u = eval(vuln.assign_user)
                 username_l.extend(username_list)
                 username_l.extend(u)
@@ -117,4 +115,6 @@ def vulnlist_assign(v_id, username, username_list):
                 username_l = list(set(username_l))
                 vuln.assign_user = str(username_l)
                 vuln.save()
+            else:  # 未派发过的漏洞
+                vuln.assign_user = str(username_list)
     return error
