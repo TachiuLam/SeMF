@@ -117,4 +117,5 @@ def vulnlist_assign(v_id, username, username_list):
                 vuln.save()
             else:  # 未派发过的漏洞
                 vuln.assign_user = str(username_list)
+                vuln.save()
     return error
