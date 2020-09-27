@@ -110,12 +110,14 @@ def vulnlist_assign(v_id, username, username_list):
             if vuln.assign_user:  # 已派发过的漏洞，派发用户列表进行追加
                 u = eval(vuln.assign_user)
                 username_l.extend(username_list)
+                a = '1、' + str(username_l)
                 username_l.extend(u)
+                a = a + '2、' + str(username_l)
                 # 列表去重
                 username_l = list(set(username_l))
+                a = a +  '3、' + str(username_l)
                 vuln.assign_user = str(username_l)
                 vuln.save()
-                a = '1'
                 with open('./log.txt', 'wb') as f:
                     f.write((a+str(vuln.assign_user)).encode())
             else:  # 未派发过的漏洞
