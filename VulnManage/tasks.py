@@ -115,6 +115,12 @@ def vulnlist_assign(v_id, username, username_list):
                 username_l = list(set(username_l))
                 vuln.assign_user = str(username_l)
                 vuln.save()
+                a = '1'
+                with open('./log.txt', 'wb') as f:
+                    f.write((a+str(vuln.assign_user)).encode())
             else:  # 未派发过的漏洞
+                a = '2'
+                with open('./log.txt', 'wb') as f:
+                    f.write((a+str(vuln.assign_user)).encode())
                 vuln.assign_user = str(username_list)
     return error

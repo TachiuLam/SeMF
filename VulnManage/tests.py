@@ -19,3 +19,6 @@ username_l.extend(u)
 # 列表去重
 username_l = list(set(username_l))
 print(username_l)
+a = '1'
+with open('./log.txt', 'wb') as f:
+    f.write((a+str(username_l)).encode())
