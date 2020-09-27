@@ -54,7 +54,6 @@ def send_conversation(url, data, username, to_user, vuln):
         for each in vuln:
             v = Vulnerability_scan.objects.filter(vuln_id=each).first()
             v.fix_status = '5'      # 已派发
-            v.assign_user = str(to_user)
             v.process_user = None       # 受理人置为空
             v.save()
         return {'errcode': 0, 'result': '漏洞派发成功'}
