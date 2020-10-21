@@ -1,6 +1,6 @@
 from django.test import TestCase
 from SeMF.redis import Cache
-
+from decimal import *
 
 # Create your tests here.
 
@@ -22,3 +22,5 @@ print(username_l)
 a = '1'
 with open('./log.txt', 'wb') as f:
     f.write((a+str(username_l)).encode())
+print(float(0.1+0.2))
+print(Decimal('0.1'+'0.2'))

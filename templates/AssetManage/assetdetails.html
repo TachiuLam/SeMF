@@ -228,9 +228,11 @@
 						    ]]
 						    ,id: 'vulnReload'
 						    ,page: true
+							,limits: [10,30,50,100,200,400,800]
 						    ,text:{
 						    	none:'暂无相关数据'
 						    }
+						    ,loading: true
 						  });
 						  table.on('tool(vuln)', function(obj){
 						    var data = obj.data.vuln_id;
