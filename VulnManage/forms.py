@@ -60,12 +60,12 @@ class Vuln_action_form(ModelForm):
 class Cnvd_vuln_form(ModelForm):
     class Meta:
         model = models.Vulnerability
-        fields = ['introduce', 'fix', 'fix_step']
+        fields = ['introduce', 'fix', 'note']
         widgets = {
             'introduce': widgets.Textarea(
                 attrs={'class': 'form-control', 'placeholder': '漏洞介绍', 'style': 'height:250px'}),
             'fix': widgets.Textarea(attrs={'class': 'form-control', 'placeholder': '修复方案', 'style': 'height:250px'}),
-            'fix_step': widgets.TextInput(attrs={'class': 'form-control', 'placeholder': '修复指南'}),
+            'note': widgets.TextInput(attrs={'class': 'form-control', 'placeholder': '其他'}),
         }
 
 

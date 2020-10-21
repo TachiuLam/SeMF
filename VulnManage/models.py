@@ -51,15 +51,17 @@ class Cnvdfiles(models.Model):
 
 # Create your models here.
 class Vulnerability(models.Model):
-    cve_id = models.CharField('漏洞编号', max_length=30)
-    cnvd_id = models.CharField('cnvd编号', max_length=30, null=True)
-    cve_name = models.CharField('漏洞名称', max_length=255)
-    leave = models.CharField('危险等级', max_length=10)
-    introduce = models.TextField('漏洞简介')
-    scopen = models.TextField('影响范围')
-    fix = models.TextField('修复方案')
-    fix_step = models.URLField('修复指南', null=True, blank=True)
+    vuln_id = models.CharField('漏洞编号', max_length=30)
+    # cnvd_id = models.CharField('cnvd编号', max_length=30, null=True)
+    vuln_name = models.CharField('漏洞名称', max_length=255,null=True)
+    cve_name = models.CharField('cve编号', max_length=50, null=True, blank=True)
+    leave = models.CharField('危险等级', max_length=10, choices=VULN_LEAVE)
+    introduce = models.TextField('漏洞简介', null=True)
+    # scopen = models.TextField('影响范围')
+    fix = models.TextField('修复方案', null=True)
+    # fix_step = models.URLField('修复指南', null=True, blank=True)
     update_data = models.DateTimeField("更新日期", auto_now=True)
+    note = models.TextField("其他", null=True)
 
     def __str__(self):
         return self.cve_id

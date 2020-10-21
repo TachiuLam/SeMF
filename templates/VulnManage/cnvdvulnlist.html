@@ -15,13 +15,15 @@
 	<div class="layui-row  ">
 		<div class='layui-col-md4'>
 	       <form class="layui-form layui-col-md12 x-so">
-				<input class="layui-input" placeholder="名称/cve/cnvd" name="name" id="id_name">
+				<input class="layui-input" placeholder="名称/cve" name="name" id="id_name">
 				<div class="layui-input-inline">
 		           <select name="contrller" id ='id_leave'>
 		              <option value="">威胁等级</option>
+					  <option value="低">信息</option>
 		              <option value="低">低危</option>
 		              <option value="中">中危</option>
 		              <option value="高">高危</option>
+					  <option value="低">紧急</option>
 		            </select>
 		        </div>
 	       </form>
@@ -51,9 +53,8 @@ layui.use('table', function(){
     ,method: 'post'
     ,where: {'csrfmiddlewaretoken':csrf}
     ,cols: [[
-      {field:'cve_id', title: 'cve编号', sort: true, fixed: true}
-      ,{field:'cnvd_id', title: 'cnvd编号', event:'vuln'}
-      ,{field:'cve_name', title: '漏洞名称', sort: true}
+      {field:'vlun_name', title: '漏洞名称', sort: true}
+      ,{field:'cve_name', title: 'cve编号', sort: true, fixed: true}
       ,{field:'leave', title: '威胁等级'}
       ,{field:'update_data', title: '更新时间',sort: true}
       ,{ title: '高级选项',fixed: 'right', align:'center', toolbar: '#barDemo'}
@@ -76,7 +77,8 @@ layui.use('table', function(){
     } else if(obj.event === 'detail'){
     	url = "{% url 'cnvdvulndetails' '0' %}";
     	url = url.replace(/0/,data);
-    	window.open(url);
+    	// window.open(url);
+		x_admin_show('漏洞详情',url,600);
     }
     else if(obj.event === 'edit'){
     	url = "{% url 'cnvdvulnupdate' '0' %}";

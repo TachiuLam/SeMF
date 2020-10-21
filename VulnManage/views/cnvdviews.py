@@ -54,27 +54,27 @@ def renew(request):
 
 
 @login_required
-def cnvdvulndetails(request, cnvdvuln_id):
-    vuln = get_object_or_404(models.Vulnerability, id=cnvdvuln_id)
+def cnvdvulndetails(request, vuln_id):
+    vuln = get_object_or_404(models.Vulnerability, vuln_id=vuln_id)
     return render(request, 'VulnManage/cnvdvulndetails.html', {'vuln': vuln})
 
 
 @login_required
 @csrf_protect
-def cnvdvuln_update(request, cnvdvuln_id):
+def cnvdvuln_update(request, vuln_id):
     user = request.user
     error = ''
     if user.is_superuser or get_user_area(user).get('is_admin'):
-        cnvd_vuln = get_object_or_404(models.Vulnerability, id=cnvdvuln_id)
+        vuln = get_object_or_404(models.Vulnerability, vuln_id=vuln_id)
         if request.method == 'POST':
-            form = forms.Cnvd_vuln_form(request.POST, instance=cnvd_vuln)
+            form = forms.Cnvd_vuln_form(request.POST, instance=vuln)
             if form.is_valid():
                 form.save()
                 error = '修改成功'
         else:
-            form = forms.Cnvd_vuln_form(instance=cnvd_vuln)
+            form = forms.Cnvd_vuln_form(instance=vuln)
         return render(request, 'formupdate.html',
-                      {'form': form, 'post_url': 'cnvdvulnupdate', 'argu': cnvdvuln_id, 'error': error})
+                      {'form': form, 'post_url': 'cnvdvulnupdate', 'argu': vuln_id, 'error': error})
     else:
         error = '权限错误'
         return render(request, 'error.html', {'error': error})
@@ -101,8 +101,7 @@ def cnvdvulntablelist(request):
         leave = ''
 
     vuln_list = models.Vulnerability.objects.filter(
-        Q(cve_id__icontains=name) |
-        Q(cnvd_id__icontains=name) | Q(cve_name__icontains=name)
+        Q(vuln_name__icontains=name) | Q(cve_name__icontains=name)
     ).filter(leave__icontains=leave).order_by('-update_data')
 
     total = vuln_list.count()
@@ -111,9 +110,8 @@ def cnvdvulntablelist(request):
     for vuln_item in vuln_list:
         dic = {}
         dic['id'] = escape(vuln_item.id)
-        dic['cve_id'] = escape(vuln_item.cve_id)
-        dic['cnvd_id'] = escape(vuln_item.cnvd_id)
         dic['cve_name'] = escape(vuln_item.cve_name)
+        dic['vuln_name'] = escape(vuln_item.vuln_name)
         dic['leave'] = escape(vuln_item.leave)
         dic['update_data'] = escape(vuln_item.update_data)
         data.append(dic)
