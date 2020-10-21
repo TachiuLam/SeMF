@@ -1,6 +1,6 @@
 from django.test import TestCase
 from SeMF.redis import Cache
-
+from decimal import *
 
 # Create your tests here.
 
@@ -19,3 +19,5 @@ username_l.extend(u)
 # 列表去重
 username_l = list(set(username_l))
 print(username_l)
+print(float(0.1+0.2))
+print(Decimal('0.1'+'0.2'))
