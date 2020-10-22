@@ -69,20 +69,16 @@ layui.use('table', function(){
   });
   
   table.on('tool(vuln)', function(obj){
-    var data = obj.data.vuln_id;
-    if(obj.event === 'vuln'){
+    var vuln_id = obj.data.vuln_id;
+    if(obj.event === 'detail'){
     	url = "{% url 'cnvdvulndetails' '0' %}";
-    	url = url.replace(/0/,data);
-    	x_admin_show('资产详情',url);
-    } else if(obj.event === 'detail'){
-    	url = "{% url 'cnvdvulndetails' '0' %}";
-    	url = url.replace(/0/,data);
+    	url = url.replace(/0/,vuln_id);
     	// window.open(url);
 		x_admin_show('漏洞详情',url,600);
     }
     else if(obj.event === 'edit'){
     	url = "{% url 'cnvdvulnupdate' '0' %}";
-    	url = url.replace(/0/,data);
+    	url = url.replace(/0/,vuln_id);
     	x_admin_show('信息变更',url,600);
     }
   });
