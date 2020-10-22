@@ -4,7 +4,7 @@
 # 2020/6/6 10:28 下午
 # PyCharm
 from AssetManage.models import Asset, Port_Info
-from .vulnerability import Vulnerability
+from .vulnerability import VulnerabilityManage
 import pandas as pd
 import os
 import time
@@ -137,7 +137,8 @@ class RSAS:
         # Vulnerability_scan.objects.filter(vuln_asset_id=num_id).delete()  # 删除已有漏洞
         v_info = pd.read_excel(filename, sheet_name=1).to_dict()
         if v_info.get('漏洞名称'):
-            v_num_id = Vulnerability.get_vuln_id() + 1  # 获取漏洞表id
+            v_num_id = VulnerabilityManage.get_vuln_id() + 1  # 获取漏洞表id
+            v_num_id_2 = VulnerabilityManage.get_vuln_id(v_type='2') + 1  # 获取漏洞库表id
             rows = len(v_info.get('漏洞名称'))
             for row in range(rows):
                 v = {}
@@ -153,18 +154,25 @@ class RSAS:
                 v['cve'] = v_info.get('CVE编号').get(row)
                 v['return'] = v_info.get('返回信息').get(row)
 
-                exits = Vulnerability.status(num_id, v['name'], v_num_id)
+                exits = VulnerabilityManage.status(num_id=num_id, name=v['name'], v_num_id=v_num_id)
                 v['asset'] = exits['asset']  # 先进行漏洞和资产绑定，避免删除其他资产漏洞
                 if exits.get('exits') is True:
                     v['fix_status'] = exits['fix_status']  # 继承漏洞状态
-                    Vulnerability.update_or_create(v, exits=True).get('result')
+                    VulnerabilityManage.update_or_create(v, exits=True).get('result')
                 else:
                     v['fix_status'] = exits['fix_status']
                     v['v_id'] = exits['v_id']
                     v['v_type'] = exits['v_type']
-                    Vulnerability.update_or_create(v, exits=False).get('result')
+                    VulnerabilityManage.update_or_create(v, exits=False).get('result')
                     v_num_id += 1  # 新建查询漏洞，漏洞id都需要递增
-
+                # 导入漏洞库
+                exits2 = VulnerabilityManage.status(name=v['name'], v_num_id=v_num_id_2, v_type='2')
+                if exits2.get('exits') is True:
+                    VulnerabilityManage.update_or_create(v, exits=True, v_type='2').get('result')
+                else:
+                    v['v_id'] = exits2['v_id']
+                    VulnerabilityManage.update_or_create(v, exits=False, v_type='2').get('result')
+                    v_num_id_2 += 1  # 新建查询漏洞，漏洞id都需要递增
             return {'result': '漏洞导入成功'}
         return {'result': '无漏洞信息'}
 
