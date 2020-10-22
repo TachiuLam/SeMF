@@ -116,7 +116,7 @@ def cnvdvulntablelist(request):
     data = []
     for vuln_item in vuln_list:
         dic = {}
-        dic['id'] = escape(vuln_item.id)
+        dic['vuln_id'] = escape(vuln_item.vuln_id)
         dic['cve_name'] = escape(vuln_item.cve_name)
         dic['vuln_name'] = escape(vuln_item.vuln_name)
         dic['leave'] = escape(VULN_LEAVE[vuln_item.leave])
