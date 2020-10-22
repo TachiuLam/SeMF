@@ -127,7 +127,7 @@ def cnvdvulntablelist(request):
         if not count:
             dic['count'] = '0'
         else:
-            dic['count'] = str(count.get('number'))
+            dic['count'] = str(count[0].get('number'))
         data.append(dic)
     resultdict['code'] = 0
     resultdict['msg'] = "漏洞列表"
