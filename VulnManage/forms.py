@@ -60,8 +60,11 @@ class Vuln_action_form(ModelForm):
 class Cnvd_vuln_form(ModelForm):
     class Meta:
         model = models.Vulnerability
-        fields = ['introduce', 'fix', 'note']
+        fields = ['vuln_name', 'cve_name', 'leave', 'introduce', 'fix', 'note']
         widgets = {
+            'vuln_name': widgets.TextInput(attrs={'class': 'form-control', 'placeholder': '漏洞名称'}),
+            'cve_name': widgets.TextInput(attrs={'class': 'form-control', 'placeholder': 'cve编号'}),
+            'leave': widgets.Select(attrs={'class': 'form-control', 'placeholder': '危险等级'}),
             'introduce': widgets.Textarea(
                 attrs={'class': 'form-control', 'placeholder': '漏洞介绍', 'style': 'height:250px'}),
             'fix': widgets.Textarea(attrs={'class': 'form-control', 'placeholder': '修复方案', 'style': 'height:250px'}),
