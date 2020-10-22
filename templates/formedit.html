@@ -18,15 +18,17 @@
         </div>
     </form>
 </div>
-
 <script>
     layui.use(['laydate'], function () {
         var laydate = layui.laydate;
         laydate.render({
-            elem: '#id_start_time'
+            elem: '#id_up_time'
         });
         laydate.render({
-            elem: '#id_end_time'
+            elem: '#id_guarante_time'
+        });
+        laydate.render({
+            elem: '#id_down_time'
         });
     });
     layui.use('layedit', function () {
@@ -56,7 +58,33 @@
                 layedit.sync(index);
             });
         });
+        index = layedit.build('id_introduce', {
+            height: 200
+        }); //建立编辑器
+        layui.use('form', function () {
+            var form = layui.form;
+            form.on('submit(form_post)', function (data) {
+                layedit.sync(index);
+            });
+        });
+        index = layedit.build('id_vuln_info', {
+            height: 200
+        }); //建立编辑器
+        layui.use('form', function () {
+            var form = layui.form;
+            form.on('submit(form_post)', function (data) {
+                layedit.sync(index);
+            });
+        });
+        index = layedit.build('id_fix', {
+            height: 200
+        }); //建立编辑器
+        layui.use('form', function () {
+            var form = layui.form;
+            form.on('submit(form_post)', function (data) {
+                layedit.sync(index);
+            });
+        });
     });
-
 </script>
 {% endblock %}
