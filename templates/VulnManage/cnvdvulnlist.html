@@ -53,9 +53,9 @@ layui.use('table', function(){
     ,method: 'post'
     ,where: {'csrfmiddlewaretoken':csrf}
     ,cols: [[
-      {field:'vlun_name', title: '漏洞名称', sort: true}
+      {field:'vuln_name', title: '漏洞名称', sort: true}
       ,{field:'cve_name', title: 'cve编号', sort: true, fixed: true}
-      ,{field:'leave', title: '威胁等级'}
+      ,{field:'leave', title: '威胁等级', sort: true}
       ,{field:'update_data', title: '更新时间',sort: true}
       ,{ title: '高级选项',fixed: 'right', align:'center', toolbar: '#barDemo'}
     ]]
@@ -69,7 +69,7 @@ layui.use('table', function(){
   });
   
   table.on('tool(vuln)', function(obj){
-    var data = obj.data.id;
+    var data = obj.data.vuln_id;
     if(obj.event === 'vuln'){
     	url = "{% url 'cnvdvulndetails' '0' %}";
     	url = url.replace(/0/,data);

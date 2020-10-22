@@ -17,6 +17,13 @@ import os
 from django.utils.html import escape
 from RBAC.service.user_process import get_user_area
 
+VULN_LEAVE = {
+    '0': '信息',
+    '1': '低危',
+    '2': '中危',
+    '3': '高危',
+    '4': '紧急'
+}
 
 @login_required
 @csrf_protect
@@ -112,7 +119,7 @@ def cnvdvulntablelist(request):
         dic['id'] = escape(vuln_item.id)
         dic['cve_name'] = escape(vuln_item.cve_name)
         dic['vuln_name'] = escape(vuln_item.vuln_name)
-        dic['leave'] = escape(vuln_item.leave)
+        dic['leave'] = escape(VULN_LEAVE[vuln_item.leave])
         dic['update_data'] = escape(vuln_item.update_data)
         data.append(dic)
     resultdict['code'] = 0
