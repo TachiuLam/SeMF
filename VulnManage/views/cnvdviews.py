@@ -10,12 +10,13 @@ from django.contrib.auth.decorators import login_required
 from .. import models, forms
 from SeMFSetting.views import paging
 from django.http import JsonResponse
-from django.db.models import Q
+from django.db.models import Q, Count
 from ..tasks import parse_cnvdxml
 from SeMF.settings import MEDIA_ROOT
 import os
 from django.utils.html import escape
 from RBAC.service.user_process import get_user_area
+import time
 
 VULN_LEAVE = {
     '0': '信息',
@@ -121,9 +122,58 @@ def cnvdvulntablelist(request):
         dic['vuln_name'] = escape(vuln_item.vuln_name)
         dic['leave'] = escape(VULN_LEAVE[vuln_item.leave])
         dic['update_data'] = escape(vuln_item.update_data)
+        count = models.Vulnerability_scan.objects.filter(vuln_name=vuln_item.vuln_name).values('vuln_name').annotate(
+            number=Count('id'))
+        if not count:
+            dic['count'] = '0'
+        else:
+            dic['count'] = str(count.get('number'))
         data.append(dic)
     resultdict['code'] = 0
     resultdict['msg'] = "漏洞列表"
     resultdict['count'] = total
     resultdict['data'] = data
     return JsonResponse(resultdict)
+
+@login_required
+@csrf_protect
+def cnvdvulncreate(request):
+    user = request.user
+    error = ''
+    if user.is_superuser or get_user_area(user).get('is_admin'):
+        if request.method == 'POST':
+            form = forms.Cnvd_vuln_form(request.POST)
+            if form.is_valid():
+                try:
+                    num = models.Vulnerability.objects.latest('id').id
+                except Exception:
+                    num = 0
+                num = num + 1
+                vuln_id = time.strftime('%Y%m%d', time.localtime(time.time())) + str(num)
+                vuln_name = form.cleaned_data['vuln_name']
+                cve_name = form.cleaned_data['cve_name']
+                leave = form.cleaned_data['leave']
+                introduce = form.cleaned_data['introduce']
+                note = form.cleaned_data['note']
+                fix = form.cleaned_data['fix']
+                res = models.Vulnerability.objects.get_or_create(
+                    vuln_id = vuln_id,
+                    vuln_name=vuln_name,
+                    cve_name=cve_name,
+                    leave=leave,
+                    introduce=introduce,
+                    note=note,
+                    fix=fix,
+                )
+                vuln = res[0]
+                vuln.save()
+                error = '添加成功'
+            else:
+                error = '请检查输入'
+        else:
+            form = forms.Cnvd_vuln_form()
+        return render(request, 'formedit.html',
+                      {'form': form, 'post_url': 'cnvdvulncreate','error': error})
+    else:
+        error = '权限错误'
+        return render(request, 'error.html', {'error': error})

@@ -68,7 +68,7 @@ class Cnvd_vuln_form(ModelForm):
             'introduce': widgets.Textarea(
                 attrs={'class': 'form-control', 'placeholder': '漏洞介绍', 'style': 'height:250px'}),
             'fix': widgets.Textarea(attrs={'class': 'form-control', 'placeholder': '修复方案', 'style': 'height:250px'}),
-            'note': widgets.TextInput(attrs={'class': 'form-control', 'placeholder': '其他'}),
+            'note': widgets.Textarea(attrs={'class': 'form-control', 'placeholder': '其他', 'style': 'height:250px'}),
         }
 
 
