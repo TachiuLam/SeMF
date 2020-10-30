@@ -13,8 +13,8 @@
 </div>
 <div class="x-body">
 	<div class="layui-row  ">
-		<div class='layui-col-md6'>
-	       <form class="layui-form layui-col-md12 x-so">
+		<div class='layui-col-md10'>	 <!--占页面宽度比例，12为满-->
+	       <form class="layui-form layui-col-md12 x-so" id="input">
 				<input class="layui-input" placeholder="资产关联" name="key" id="id_key">
                 <input class="layui-input" placeholder="漏洞名称" name="v_key" id="id_v_key">
 				<div class="layui-input-inline">
@@ -52,19 +52,19 @@
 	       </form>
 	     </div>
 	    <div class='UserTable'>
-	       <button class="layui-btn"  data-type="reload" ><i class="layui-icon" >&#xe615;</i></button>
+	       <button class="layui-btn"  data-type="reload" id="search"><i class="layui-icon" >&#xe615;</i></button>
 	     </div>
      </div>
 
 	<xblock>
 		<div class="UserTable">
+			{% if user.is_superuser %}
 			<button class="layui-btn " data-type="statuschoice" id="1"><i class="layui-icon layui-icon-senior"></i>批量变更</button>
-            {% if user.is_superuser %}
             <button class="layui-btn " data-type="statuschoice" id="2"><i class="layui-icon ">&#xe601;</i>漏洞派发</button>
             {% endif %}
 		</div>
 	</xblock>
-	
+
 	<table class="layui-hide" id="vuln_table" lay-filter="vuln"></table> 
 </div>
 <script>
@@ -125,7 +125,7 @@ layui.use('table', function(){
     }
   });
   
-  
+
   
   var $ = layui.$, active = {
 	statuschoice: function(){ //获取选中数据
@@ -173,7 +173,12 @@ layui.use('table', function(){
     active[type] ? active[type].call(this) : '';
   });
 });
-
+$('#input'||'#id_leave').keydown(function (event) {
+        if (event.keyCode == 13) {
+        	var bt = document.getElementById("search");
+        		bt.click();
+            }
+        });
 </script>
 <script type="text/html" id="barDemo">
 <div class="layui-btn-group">
