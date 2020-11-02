@@ -14,10 +14,10 @@
 <div class="x-body">
 	<div class="layui-row  ">
 		<div class='layui-col-md4'>
-	       <form class="layui-form layui-col-md12 x-so">
+	       <form class="layui-form layui-col-md12 x-so" id="input" onchange="selectclick()">
 				<input class="layui-input" placeholder="名称/cve" name="name" id="id_name">
 				<div class="layui-input-inline">
-		           <select name="contrller" id ='id_leave'>
+		           <select name="contrller" id ='id_leave' lay-filter="v_select">
 		              <option value="">威胁等级</option>
 					  <option value="0">信息</option>
 		              <option value="1">低危</option>
@@ -29,7 +29,7 @@
 	       </form>
 	     </div>
 	     <div class='UserTable'>
-	       <button class="layui-btn"  data-type="reload"><i class="layui-icon" >&#xe615;</i></button>
+	       <button class="layui-btn"  data-type="reload" id="search"><i class="layui-icon" >&#xe615;</i></button>
 	     </div>
      </div>
      {% if user.is_superuser %}
@@ -105,8 +105,35 @@ layui.use('table', function(){
     var type = $(this).data('type');
     active[type] ? active[type].call(this) : '';
   });
+ $('#input').keydown(function (event) {
+        if (event.keyCode == 13) {
+        	var bt = document.getElementById("search");
+        		bt.click();
+            }
+  });
 });
+</script>
+<script>
+	// 监听select 触发事件
+	layui.use(['layer', 'jquery', 'form'], function () {
+			var layer = layui.layer,
+					$ = layui.jquery,
+					form = layui.form;
 
+			form.on('select(v_select)', function(){
+				var bt = document.getElementById("search");
+        		bt.click();
+				form.render('select');//select是固定写法 不是选择器
+
+			});
+		});
+</script>
+<script>
+	// 文本框
+	  function selectclick() {
+  		var bt = document.getElementById("search");
+        		bt.click();
+  }
 </script>
 <script type="text/html" id="barDemo">
 <div class="layui-btn-group">

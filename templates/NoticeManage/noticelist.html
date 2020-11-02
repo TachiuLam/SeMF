@@ -14,16 +14,16 @@
 <div class="x-body">
 	<div class="layui-row  ">
 		<div class='layui-col-md3'>
-	       <form class="layui-form layui-col-md12 x-so">
+	       <form class="layui-form layui-col-md12 x-so" id="input" onchange="selectclick()">
 		        <div class="layui-input-inline">
-			        <select name="contrller" id='id_notice_type'>
+			        <select name="contrller" id='id_notice_type' lay-filter="v_select">
 		              <option value="">消息类型</option>
 		              <option value="notice">系统通告</option>
 		              <option value="inform">任务通知</option>
 		            </select>
 		        </div>
 		        <div class="layui-input-inline">
-			        <select name="contrller" id='id_notice_status'>
+			        <select name="contrller" id='id_notice_status' lay-filter="v_select">
 		              <option value="">消息状态</option>
 		              <option value="True">已读</option>
 		              <option value="False">未读</option>
@@ -32,7 +32,7 @@
 	       </form>
 	     </div>
 	     <div class='UserTable'>
-	       <button class="layui-btn"  data-type="reload"><i class="layui-icon" >&#xe615;</i></button>
+	       <button class="layui-btn"  data-type="reload" id="search"><i class="layui-icon" >&#xe615;</i></button>
 	     </div>
      </div>
 
@@ -155,7 +155,34 @@ layui.use('table', function(){
     var type = $(this).data('type');
     active[type] ? active[type].call(this) : '';
   });
+ $('#input').keydown(function (event) {
+        if (event.keyCode == 13) {
+        	var bt = document.getElementById("search");
+        		bt.click();
+            }
+  });
 });
+</script>
+<script>
+	// 监听select 触发事件
+	layui.use(['layer', 'jquery', 'form'], function () {
+			var layer = layui.layer,
+					$ = layui.jquery,
+					form = layui.form;
 
+			form.on('select(v_select)', function(){
+				var bt = document.getElementById("search");
+        		bt.click();
+				form.render('select');//select是固定写法 不是选择器
+
+			});
+		});
+</script>
+<script>
+	// 文本框
+	  function selectclick() {
+  		var bt = document.getElementById("search");
+        		bt.click();
+  }
 </script>
 {% endblock %}

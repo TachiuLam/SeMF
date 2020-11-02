@@ -14,11 +14,11 @@
 <div class="x-body">
 	<div class="layui-row  ">
 		<div class='layui-col-md10'>	 <!--占页面宽度比例，12为满-->
-	       <form class="layui-form layui-col-md12 x-so" id="input">
+	       <form class="layui-form layui-col-md12 x-so" id="input" onchange="selectclick()">
 				<input class="layui-input" placeholder="资产关联" name="key" id="id_key">
                 <input class="layui-input" placeholder="漏洞名称" name="v_key" id="id_v_key">
 				<div class="layui-input-inline">
-		           <select name="contrller" id ='id_leave'>
+		           <select name="contrller" id ='id_leave' lay-filter="v_select">
 		              <option value="">威胁等级</option>
 		              <option value="1">低危</option>
 		              <option value="2">中危</option>
@@ -27,7 +27,7 @@
 		            </select>
 		        </div>
 		        <div class="layui-input-inline">
-		            <select name="contrller" id ='id_vuln_status'>
+		            <select name="contrller" id ='id_vuln_status' lay-filter="v_select">
 		              <option value="">修复状态</option>
 		              <option value="0">已忽略</option>
 		              <option value="1">已修复</option>
@@ -39,7 +39,7 @@
 		            </select>
 		        </div>
 			    <div class="layui-input-inline">
-		            <select name="contrller" id ='id_asset_type'>
+		            <select name="contrller" id ='id_asset_type' lay-filter="v_select">
 		              <option value="">资产分类</option>
 		              <option value="5">服务器</option>
 		              <option value="6">办公设备-广州</option>
@@ -172,13 +172,35 @@ layui.use('table', function(){
     var type = $(this).data('type');
     active[type] ? active[type].call(this) : '';
   });
-});
-$('#input'||'#id_leave').keydown(function (event) {
+  $('#input').keydown(function (event) {
         if (event.keyCode == 13) {
         	var bt = document.getElementById("search");
         		bt.click();
             }
-        });
+  });
+});
+</script>
+<script>
+	// 监听select 触发事件
+	layui.use(['layer', 'jquery', 'form'], function () {
+			var layer = layui.layer,
+					$ = layui.jquery,
+					form = layui.form;
+
+			form.on('select(v_select)', function(){
+				var bt = document.getElementById("search");
+        		bt.click();
+				form.render('select');//select是固定写法 不是选择器
+
+			});
+		});
+</script>
+<script>
+	// 文本框
+	  function selectclick() {
+  		var bt = document.getElementById("search");
+        		bt.click();
+  }
 </script>
 <script type="text/html" id="barDemo">
 <div class="layui-btn-group">
