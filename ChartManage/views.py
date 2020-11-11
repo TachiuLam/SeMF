@@ -98,17 +98,21 @@ def getvulnleave(request):
         'data': [],
     }
     if user.is_superuser:
-        vuln_leave = Vulnerability_scan.objects.exclude(fix_status__in=[0, 1]).values('leave').annotate(
-            number=Count('id'))
+        # vuln_leave = Vulnerability_scan.objects.exclude(fix_status__in=[0, 5]).values('leave').annotate(
+        #     number=Count('id'))
+        vuln_leave = Vulnerability_scan.objects.values('leave').annotate(number=Count('id'))
     else:
         res = get_user_area(user)
         is_admin, user_area_list = res.get('is_admin'), res.get('user_area_list')
         if is_admin:
-            vuln_leave = Vulnerability_scan.objects.exclude(fix_status__in=[0, 1]).values('leave').annotate(
-                number=Count('id'))
+            # vuln_leave = Vulnerability_scan.objects.exclude(fix_status__in=[0, 5]).values('leave').annotate(
+            #     number=Count('id'))
+            vuln_leave = Vulnerability_scan.objects.values('leave').annotate(number=Count('id'))
         else:
-            vuln_leave = Vulnerability_scan.objects.filter(vuln_asset__asset_area__in=user_area_list).exclude(
-                fix_status__in=[0, 1]).values('leave').annotate(number=Count('id'))
+            # vuln_leave = Vulnerability_scan.objects.filter(vuln_asset__asset_area__in=user_area_list).exclude(
+            #     fix_status__in=[0, 1]).values('leave').annotate(number=Count('id'))
+            vuln_leave = Vulnerability_scan.objects.filter(vuln_asset__asset_area__in=user_area_list).values(
+                'leave').annotate(number=Count('id'))
 
     if vuln_leave:
         for item in vuln_leave:
@@ -219,7 +223,8 @@ def getdatemonth(request):
     select = {argu: connection.ops.date_trunc_sql(argu, 'update_data')}
     if user.is_superuser:
         vuln_fixed_date = Vulnerability_scan.objects.filter(fix_status='1', update_data__range=(
-        current_date - timedelta(days=30), current_date)).extra(select=select).values(argu).annotate(number=Count('id'))
+            current_date - timedelta(days=30), current_date)).extra(select=select).values(argu).annotate(
+            number=Count('id'))
     else:
         res = get_user_area(user)
         is_admin, user_area_list = res.get('is_admin'), res.get('user_area_list')

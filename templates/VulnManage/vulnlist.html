@@ -13,12 +13,12 @@
 </div>
 <div class="x-body">
 	<div class="layui-row  ">
-		<div class='layui-col-md6'>
-	       <form class="layui-form layui-col-md12 x-so">
+		<div class="layui-col" style="float: left; width:75%;">	 <!--占页面宽度比例，12为满-->
+	       <form class="layui-form layui-col-md12 x-so" id="input" onchange="selectclick()">
 				<input class="layui-input" placeholder="资产关联" name="key" id="id_key">
                 <input class="layui-input" placeholder="漏洞名称" name="v_key" id="id_v_key">
 				<div class="layui-input-inline">
-		           <select name="contrller" id ='id_leave'>
+		           <select name="contrller" id ='id_leave' lay-filter="v_select">
 		              <option value="">威胁等级</option>
 		              <option value="1">低危</option>
 		              <option value="2">中危</option>
@@ -27,7 +27,7 @@
 		            </select>
 		        </div>
 		        <div class="layui-input-inline">
-		            <select name="contrller" id ='id_vuln_status'>
+		            <select name="contrller" id ='id_vuln_status' lay-filter="v_select">
 		              <option value="">修复状态</option>
 		              <option value="0">已忽略</option>
 		              <option value="1">已修复</option>
@@ -39,7 +39,7 @@
 		            </select>
 		        </div>
 			    <div class="layui-input-inline">
-		            <select name="contrller" id ='id_asset_type'>
+		            <select name="contrller" id ='id_asset_type' lay-filter="v_select">
 		              <option value="">资产分类</option>
 		              <option value="22">服务器</option>
 		              <option value="23">办公设备-广州</option>
@@ -49,22 +49,38 @@
 					  <option value="34">公网IP</option>
 		            </select>
 		        </div>
+			   <div class="layui-input-inline">
+				   <input type="text" class="layui-input" placeholder="时间范围" id="test1">
+			   </div>
 	       </form>
 	     </div>
-	    <div class='UserTable'>
-	       <button class="layui-btn"  data-type="reload" ><i class="layui-icon" >&#xe615;</i></button>
-	     </div>
-     </div>
+		<div class="UserTable" style="float: right;text-align: right; width:23%;">
+			<div class="layui-form layui-col-md12 x-so">
+				<!--<div class="layui-input-inline">-->
+					<!--<button class="layui-btn layui-btn-primary" id="date" data-type="date">-->
+						<!--<i class="layui-icon layui-icon-date" style="color: #009587;">&#xe637;</i>-->
+						<!--&lt;!&ndash;<i class="layui-icon " style="color: #009587;">&#xe625;</i>&ndash;&gt;-->
+						<!--</button>-->
+				<!--</div>-->
+				<!--<div class="layui-input-inline">-->
+					<!--<input type="text" class="layui-input" id="test1">-->
+				<!--</div>-->
+				<div class="layui-input-inline">
+	       			<button class="layui-btn"  data-type="reload" id="search"><i class="layui-icon">&#xe615;</i></button>
+				</div>
+		</div>
+	</div>
+</div>
 
 	<xblock>
 		<div class="UserTable">
+			{% if user.is_superuser %}
 			<button class="layui-btn " data-type="statuschoice" id="1"><i class="layui-icon layui-icon-senior"></i>批量变更</button>
-            {% if user.is_superuser %}
             <button class="layui-btn " data-type="statuschoice" id="2"><i class="layui-icon ">&#xe601;</i>漏洞派发</button>
             {% endif %}
 		</div>
 	</xblock>
-	
+
 	<table class="layui-hide" id="vuln_table" lay-filter="vuln"></table> 
 </div>
 <script>
@@ -125,7 +141,7 @@ layui.use('table', function(){
     }
   });
   
-  
+
   
   var $ = layui.$, active = {
 	statuschoice: function(){ //获取选中数据
@@ -172,8 +188,48 @@ layui.use('table', function(){
     var type = $(this).data('type');
     active[type] ? active[type].call(this) : '';
   });
+  $('#input').keydown(function (event) {
+        if (event.keyCode == 13) {
+        	var bt = document.getElementById("search");
+        		bt.click();
+            }
+  });
 });
+</script>
+<script>
+	// 监听select 触发事件
+	layui.use(['layer', 'jquery', 'form'], function () {
+			var layer = layui.layer,
+					$ = layui.jquery,
+					form = layui.form;
 
+			form.on('select(v_select)', function(){
+				var bt = document.getElementById("search");
+        		bt.click();
+				form.render('select');//select是固定写法 不是选择器
+
+			});
+		});
+</script>
+<script>
+	layui.use('laydate', function(){
+  		var laydate = layui.laydate;
+	  //执行一个laydate实例
+	  laydate.render({
+		elem: '#test1' //指定元素
+		,type: 'datetime'
+		,trigger: 'click'  //日期不允许修改
+  		,range: '-'
+ 		,format: 'yyyy/M/d/ H:m:s'
+	  });
+	});
+</script>
+<script>
+	// 文本框
+	  function selectclick() {
+  		var bt = document.getElementById("search");
+        		bt.click();
+  }
 </script>
 <script type="text/html" id="barDemo">
 <div class="layui-btn-group">

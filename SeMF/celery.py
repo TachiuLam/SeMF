@@ -30,17 +30,17 @@ app.conf.update(
     enable_utc=True,
     CELERYBEAT_SCHEDULE={
 
-        # 'refresh-cache': {
-        #     'task': 'API.tasks.refresh_cache',
-        #     'schedule':  timedelta(seconds=30),
-        #     # 'args': (5, 6)
-        # },
         # 每天04：30执行钉钉通讯录缓存刷新
         'refresh-cache': {
             'task': 'API.tasks.refresh_cache',
             'schedule': crontab(hour=8, minute=30),
             # 'schedule': crontab(minute=3),
-        }
+        },
+        'sync_threat_intelligence': {
+            'task': 'ThreatManage.tasks.sync_threat_intelligence',
+            'schedule':  crontab(hour=10, minute=30),
+            # 'args': (5, 6)
+        },
     }
 )
 
