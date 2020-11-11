@@ -13,7 +13,7 @@
 </div>
 <div class="x-body">
 	<div class="layui-row  ">
-		<div class='layui-col-md10'>	 <!--占页面宽度比例，12为满-->
+		<div class="layui-col" style="float: left; width:75%;">	 <!--占页面宽度比例，12为满-->
 	       <form class="layui-form layui-col-md12 x-so" id="input" onchange="selectclick()">
 				<input class="layui-input" placeholder="资产关联" name="key" id="id_key">
                 <input class="layui-input" placeholder="漏洞名称" name="v_key" id="id_v_key">
@@ -49,12 +49,28 @@
 					  <option value="17">公网IP</option>
 		            </select>
 		        </div>
+			   <div class="layui-input-inline">
+				   <input type="text" class="layui-input" placeholder="时间范围" id="test1">
+			   </div>
 	       </form>
 	     </div>
-	    <div class='UserTable'>
-	       <button class="layui-btn"  data-type="reload" id="search"><i class="layui-icon" >&#xe615;</i></button>
-	     </div>
-     </div>
+		<div class="UserTable" style="float: right;text-align: right; width:23%;">
+			<div class="layui-form layui-col-md12 x-so">
+				<!--<div class="layui-input-inline">-->
+					<!--<button class="layui-btn layui-btn-primary" id="date" data-type="date">-->
+						<!--<i class="layui-icon layui-icon-date" style="color: #009587;">&#xe637;</i>-->
+						<!--&lt;!&ndash;<i class="layui-icon " style="color: #009587;">&#xe625;</i>&ndash;&gt;-->
+						<!--</button>-->
+				<!--</div>-->
+				<!--<div class="layui-input-inline">-->
+					<!--<input type="text" class="layui-input" id="test1">-->
+				<!--</div>-->
+				<div class="layui-input-inline">
+	       			<button class="layui-btn"  data-type="reload" id="search"><i class="layui-icon">&#xe615;</i></button>
+				</div>
+		</div>
+	</div>
+</div>
 
 	<xblock>
 		<div class="UserTable">
@@ -194,6 +210,19 @@ layui.use('table', function(){
 
 			});
 		});
+</script>
+<script>
+	layui.use('laydate', function(){
+  		var laydate = layui.laydate;
+	  //执行一个laydate实例
+	  laydate.render({
+		elem: '#test1' //指定元素
+		,type: 'datetime'
+		,trigger: 'click'  //日期不允许修改
+  		,range: '-'
+ 		,format: 'yyyy/M/d/ H:m:s'
+	  });
+	});
 </script>
 <script>
 	// 文本框

@@ -105,6 +105,7 @@ INSTALLED_APPS = [
     'MappedManage',
     'TaskManage',
     'API',
+    'ThreatManage',
 ]
 
 MIDDLEWARE = [
