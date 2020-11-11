@@ -11,4 +11,4 @@ class ThreatIP(models.Model):
     isp = models.CharField('运营商', max_length=15)
     longitude = models.CharField('经度', max_length=15)
     latitude = models.CharField('维度', max_length=15)
-    update_data = models.DateTimeField('修复时间', auto_now=True)
+    update_time = models.DateTimeField('修复时间', auto_now=True)
