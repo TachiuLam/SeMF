@@ -25,6 +25,7 @@ from VulnManage.views.views import VULN_STATUS, VULN_LEAVE
 from API.Functions.api_auth import JWT
 from API.Functions.rsas import RSAS
 from API.Functions.dinktalk import DinkTalk
+from API.Functions.send_mail import SendMail
 from NoticeManage.views import notice_add
 
 
@@ -310,3 +311,19 @@ def ding_vuln_detail(request, v_detail_id):
     else:
         vuln = get_object_or_404(Vulnerability_scan, vuln_asset__asset_area__in=user_area_list, vuln_id=vuln_id)
     return render(request, 'VulnManage/vulndetails.html', {'vuln': vuln})
+
+@csrf_exempt
+@require_http_methods(['POST'])
+def nat_upload(request):
+    """外网端口信息导入接口"""
+    # print(request.FILES)
+    token = request.META.get('HTTP_AUTHORIZATION')
+
+    jwt = JWT.decode_jwt(token)
+    user = jwt.get('username') if jwt else None
+
+    if user and User.objects.filter(username=user).first():
+        nat = request.POST.get('data')
+
+
+    return JsonResponse({'error': 'permission deny'})

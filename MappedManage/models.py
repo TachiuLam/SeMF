@@ -35,5 +35,5 @@ class Mapped(models.Model):
     
     Mapped_user = models.ManyToManyField(User,related_name='mapped_to_user',blank=True)
     
-    def __str__(self):
-        return self.asset_key
+    # def __str__(self):
+    #     return self.WANip

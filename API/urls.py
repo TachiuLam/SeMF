@@ -15,4 +15,5 @@ urlpatterns = [
     path('dingtalk/process/', views.ding_vuln_process, name='dingtalk_process'),
     path('dingtalk/detail_id/<str:v_detail_id>/', views.ding_vuln_detail, name='dingtalk_detail_id'),
     path('dingtalk/detail/', views.ding_vuln_token, name='dingtalk_detail'),
+    path('nat/upload/',views.nat_upload,name='nat_upload'),
 ]

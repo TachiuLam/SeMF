@@ -70,10 +70,10 @@ ALL_MENU_KEY = 'amk'
 PERMISSION_MENU_KEY = 'pmk'
 
 # 设置邮箱
-EMAIL_HOST = 'smtp-mail.outlook.com'  # SMTP地址
+EMAIL_HOST = 'smtp.yingzi.com'  # SMTP地址
 EMAIL_PORT = 25  # SMTP端口
-EMAIL_HOST_USER = 'xxxx@xxx.com'  # 我自己的邮箱
-EMAIL_HOST_PASSWORD = 'password3'  # 我的邮箱密码
+EMAIL_HOST_USER = 'scanning@yingzi.com'  # 我自己的邮箱
+EMAIL_HOST_PASSWORD = 'B68PvUZ4mRY'  # 我的邮箱密码
 EMAIL_SUBJECT_PREFIX = u'[SeMF]'  # 为邮件Subject-line前缀,默认是'[django]'
 EMAIL_USE_TLS = True  # 与SMTP服务器通信时，是否启动TLS链接(安全链接)。默认是false
 # 管理员站点
@@ -155,14 +155,14 @@ WSGI_APPLICATION = 'SeMF.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'SeMF',
-        'USER': 'root',
-        'PASSWORD': '1qaz@WSX',
-        'HOST': '172.19.130.20',
-        # 'NAME': 'defectdojo',
-        # 'USER': 'defectdojo',
-        # 'PASSWORD': 'l8f3JJOhFor',
-        # 'HOST': '172.18.10.36',
+        # 'NAME': 'SeMF',
+        # 'USER': 'root',
+        # 'PASSWORD': '1qaz@WSX',
+        # 'HOST': '172.19.130.20',
+        'NAME': 'defectdojo',
+        'USER': 'defectdojo',
+        'PASSWORD': 'l8f3JJOhFor',
+        'HOST': '172.18.10.36',
         'PORT': '3306',
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES' ",
