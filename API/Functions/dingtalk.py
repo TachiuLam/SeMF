@@ -216,4 +216,5 @@ class DinkTalk:
         # res = {'errcode': 0, 'task_id': 232719853185, 'request_id': '3x1qbs76ef3k'}
         if res.get('errcode') == 0:
             return {'errcode': res.get('errcode'), 'result': '告警发送成功'}
-        return {'errcode': res.get('errcode'), 'result': '告警发送失败'}
+        # return {'errcode': res.get('errcode'), 'result': '告警发送失败'}
+        return {'errcode': str(res), 'result': '告警发送失败'}
