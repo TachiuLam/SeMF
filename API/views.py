@@ -346,7 +346,7 @@ def nat_upload(request):
 
             if not mappedlist.exists():
                 msg['content'] += (privateIp + '\t' + privatePort + '\t' + publicIp + '\t' + publicPort + '\n')
-                msg['ding_content'] += ('#####' + privateIp + '\t' + privatePort + '\t' + publicIp + '\t' + publicPort + '\n')
+                msg['ding_content'] += ('##### ' + privateIp + '\t' + privatePort + '\t' + publicIp + '\t' + publicPort + '\n')
                 exists = True       # 表示存在新开放端口
                 count += 1
         # print(content)
