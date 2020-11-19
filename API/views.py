@@ -331,7 +331,7 @@ def nat_upload(request):
         nat = eval(nat)
         # print(type(nat), nat)
         msg = {'tittle': '', 'content':'\n'}
-        msg['tittle'] = '发现新的服务器NAT映射！！！'
+        count = 0
         for num, each in enumerate(nat):
             # print(num, each.get('vals'), '\n', each.get('vals').get('publicIp'), each.get('vals').get('publicPort'),
             #       each.get('vals').get('privateIp'), each.get('vals').get('privatePort'))
@@ -347,8 +347,10 @@ def nat_upload(request):
             if not mappedlist.exists():
                 msg['content'] += (privateIp + '\t' + privatePort + '\t' + publicIp + '\t' + publicPort + '\n')
                 exists = True       # 表示存在新开放端口
+                count += 1
         # print(content)
         if exists:
+            msg['tittle'] = '发现{}个新的服务器NAT映射！！！'.format(str(count))
             # 邮件告警
             nat_mail_info['content'] = msg['tittle'] + msg['content']
             SendMail.send_mail(nat_mail_info)

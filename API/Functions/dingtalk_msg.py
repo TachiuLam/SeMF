@@ -43,11 +43,13 @@ class DingTalkMsg:
 
     @staticmethod
     def card_msg(message):
+        text = '### ' + message.get('tittle') + '\n'
+        text = text + "##### " + message.get('content') + str(datetime.date.today())
         msg = {
             "msgtype": "action_card",
             "action_card": {
-                "title": "防火墙启用新NAT映射",
-                "markdown": '测试',
+                "title": message.get('tittle'),
+                "markdown": text,
                 "btn_orientation": "0",
                 "btn_json_list": [
                     # {
