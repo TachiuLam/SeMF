@@ -754,6 +754,15 @@ data = {
 headers = {
         "Authorization": r_token
     }
-res = requests.post(url=d_url, data=data, headers=headers)
-print(res.text)
+# res = requests.post(url=d_url, data=data, headers=headers)
+# print(res.text)
 # print(data)
+
+from API.Functions.dingtalk import DinkTalk
+from API.Functions.dingtalk_msg import DingTalkMsg
+from .alert_info import dingtalk_info
+
+msg = {'tittle': '', 'content': '\n'}
+msg['tittle'] = '发现新的服务器NAT映射！！！'
+username_list = dingtalk_info.get('username_list')
+nat_msg = DingTalkMsg.card_msg(msg)

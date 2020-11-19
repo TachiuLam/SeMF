@@ -46,8 +46,8 @@ class DingTalkMsg:
         msg = {
             "msgtype": "action_card",
             "action_card": {
-                "title": message.get('tittle'),
-                "markdown": message.get('content'),
+                "title": '防火墙发现新NAT映射',
+                "markdown": '测试',
                 "btn_orientation": "0",
             }
         }
