@@ -324,6 +324,7 @@ def nat_upload(request):
     jwt = JWT.decode_jwt(token)
     user = jwt.get('username') if jwt else None
     exists = False
+    false = 0
     if user and User.objects.filter(username=user).first():
         nat = request.POST.get('data')
         nat = eval(nat)
