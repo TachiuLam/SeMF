@@ -49,8 +49,6 @@ class DingTalkMsg:
                 "title": message.get('tittle'),
                 "markdown": message.get('content'),
                 "btn_orientation": "0",
-                "btn_json_list": [
-                ]
             }
         }
         return msg
