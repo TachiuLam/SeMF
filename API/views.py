@@ -324,6 +324,7 @@ def nat_upload(request):
     jwt = JWT.decode_jwt(token)
     user = jwt.get('username') if jwt else None
     exists = False
+    false = 0  # 推送的数据有未定义的false，防止出错，接口内定义
     if user and User.objects.filter(username=user).first():
         nat = request.POST.get('data')
         nat = eval(nat)
