@@ -44,7 +44,7 @@ class DingTalkMsg:
     @staticmethod
     def card_msg(message):
         text = '### ' + message.get('tittle') + '\n'
-        text = text + "##### " + message.get('content') + str(datetime.date.today())
+        text = text + message.get('ding_content') + '\n' +str(datetime.date.today())
         msg = {
             "msgtype": "action_card",
             "action_card": {
