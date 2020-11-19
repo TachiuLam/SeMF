@@ -192,9 +192,10 @@ class DinkTalk:
         data = {}
         userid_list = ''
         for name in user_name_list:
-            user_info = Cache.get_value(key=name)
+            user_info = Cache.get_value(key=user_process.han_to_pinyin(name))
             # 缓存查询不到，用户不存在
             if not user_info:
+                # cls.save_user_list(access_token=access_token)
                 # 用户不存在, 钉钉接口不会判断不存在的用户，强制中断派发请求
                 return {'errcode': -1, 'result': '用户{}不存在'.format(name)}
             userid_list = userid_list + (user_info.get('userid') + ',')
@@ -209,6 +210,7 @@ class DinkTalk:
             data['dept_id_list'] = dept_id_list
         if to_all_user:
             data['to_all_user'] = to_all_user
+
         res = requests.post(url=url, data=data)
         res = json.loads(res.content)
         # res = {'errcode': 0, 'task_id': 232719853185, 'request_id': '3x1qbs76ef3k'}

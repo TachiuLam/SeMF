@@ -27,7 +27,7 @@ nat_mail_info = {
 }
 
 dingtalk_info = {
-    'username_list': ['lintechao','huangzehong','yuxiaotian']
+    'username_list': ['林特超','黄泽鸿','余小添']
 }
 
 if __name__ == '__main__':
