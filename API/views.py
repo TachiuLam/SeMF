@@ -330,8 +330,8 @@ def nat_upload(request):
         nat = request.POST.get('data')
         nat = eval(nat)
         # print(type(nat), nat)
-        msg = {'tittle': '', 'content':''}
-        msg['tittle'] = '防火墙发现不在白名单内的服务器NAT映射！！' + '\n'
+        msg = {'tittle': '', 'content':'\n'}
+        msg['tittle'] = '发现新的服务器NAT映射！！！'
         for num, each in enumerate(nat):
             # print(num, each.get('vals'), '\n', each.get('vals').get('publicIp'), each.get('vals').get('publicPort'),
             #       each.get('vals').get('privateIp'), each.get('vals').get('privatePort'))
