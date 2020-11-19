@@ -37,5 +37,5 @@ class SendMail:
 
 
 if __name__ == '__main__':
-    from API.Functions.mail_info import nat_mail_info
+    from API.Functions.alert_info import nat_mail_info
     SendMail.send_mail(nat_mail_info)

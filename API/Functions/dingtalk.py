@@ -183,4 +183,22 @@ class DinkTalk:
         # tasks.send_conversation.delay(url, data, username, user_name_list, vuln)
         return {'errcode': 0, 'result': '漏洞已派发'}
 
+    @classmethod
+    def alert_conversation(cls, access_token, msg, user_name_list, agent_id=AGENT_ID, dept_id_list=None,
+                          to_all_user=False):
+        """普通卡片告警推送，参数说明见文档https://ding-doc.dingtalk.com/doc#/serverapi2/pgoxpy/e2262dad"""
+        url = 'https://oapi.dingtalk.com/topapi/message/corpconversation/asyncsend_v2?access_token={}'.format(
+            access_token)
 
+        for name in user_name_list:
+            user_info = Cache.get_value(key=name)
+            # 缓存查询不到，用户不存在
+            if not user_info:
+                # 用户不存在, 钉钉接口不会判断不存在的用户，强制中断派发请求
+                return {'errcode': -1, 'result': '用户{}不存在'.format(name)}
+        res = requests.post(url=url, data=msg)
+        res = json.loads(res.content)
+        # res = {'errcode': 0, 'task_id': 232719853185, 'request_id': '3x1qbs76ef3k'}
+        if res.get('errcode') == 0:
+            return {'errcode': res.get('errcode'), 'result': '告警发送成功'}
+        return {'errcode': res.get('errcode'), 'result': '告警发送失败'}

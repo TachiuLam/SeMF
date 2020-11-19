@@ -11,7 +11,7 @@ from celery import shared_task
 from NoticeManage.views import notice_add
 from django.contrib.auth.models import User
 from SeMF.redis import Cache
-from API.Functions import dinktalk
+from API.Functions import dingtalk
 from API.Functions import dingtalk_msg
 
 
@@ -94,10 +94,10 @@ def vulnlist_save_status(v_id, fix_status):
 
 def vulnlist_assign(v_id, username, username_list):
     vuln_id_list = eval(Cache.get_value(v_id))
-    token = dinktalk.DinkTalk.get_access_token()
+    token = dingtalk.DinkTalk.get_access_token()
 
     msg = dingtalk_msg.DingTalkMsg.assign_msg(vuln_id_list)
-    error = dinktalk.DinkTalk.corp_conversation(username=username,
+    error = dingtalk.DinkTalk.corp_conversation(username=username,
                                                 vuln=vuln_id_list,
                                                 access_token=token,
                                                 user_name_list=username_list,

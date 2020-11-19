@@ -24,9 +24,10 @@ from VulnManage.models import Vulnerability_scan
 from VulnManage.views.views import VULN_STATUS, VULN_LEAVE
 from API.Functions.api_auth import JWT
 from API.Functions.rsas import RSAS
-from API.Functions.dinktalk import DinkTalk
+from API.Functions.dingtalk import DinkTalk
+from API.Functions.dingtalk_msg import DingTalkMsg
 from API.Functions.send_mail import SendMail
-from API.Functions.mail_info import nat_mail_info
+from API.Functions.alert_info import nat_mail_info, dingtalk_info
 from NoticeManage.views import notice_add
 from MappedManage.models import Mapped
 
@@ -329,7 +330,8 @@ def nat_upload(request):
         nat = request.POST.get('data')
         nat = eval(nat)
         # print(type(nat), nat)
-        content = '防火墙发现不在白名单内的服务器NAT映射！！' + '\n'
+        msg = {'tittle': '', 'content':''}
+        msg['tittle'] = '防火墙发现不在白名单内的服务器NAT映射！！' + '\n'
         for num, each in enumerate(nat):
             # print(num, each.get('vals'), '\n', each.get('vals').get('publicIp'), each.get('vals').get('publicPort'),
             #       each.get('vals').get('privateIp'), each.get('vals').get('privatePort'))
@@ -343,11 +345,18 @@ def nat_upload(request):
                     LANPort__port__icontains=privatePort) | Q(WANPort__port__icontains=publicPort))
 
             if not mappedlist.exists():
-                content += (privateIp + '\t' + privatePort + '\t' + publicIp + '\t' + publicPort + '\n')
+                msg['content'] += (privateIp + '\t' + privatePort + '\t' + publicIp + '\t' + publicPort + '\n')
                 exists = True       # 表示存在新开放端口
         # print(content)
         if exists:
-            nat_mail_info['content'] = content
+            # 邮件告警
+            nat_mail_info['content'] = msg['tittle'] + msg['content']
             SendMail.send_mail(nat_mail_info)
+
+            # 钉钉告警
+            username_list = dingtalk_info.get('username_list')
+            nat_msg = DingTalkMsg.card_msg(msg)
+            token = DinkTalk.get_access_token()
+            error = DinkTalk.alert_conversation(access_token=token, user_name_list=username_list, msg=nat_msg)
         return JsonResponse({'msg': 'upload successfully'})
     return JsonResponse({'error': 'permission deny'})

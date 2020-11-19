@@ -26,5 +26,10 @@ nat_mail_info = {
     "filename": 'res'+ str(time.strftime('%Y-%m-%d', time.localtime(time.time()))) + '.png'
 }
 
+dingtalk_info = {
+    'username_list': ['lintechao','huangzehong','yuxiaotian']
+}
+
 if __name__ == '__main__':
     print(nat_mail_info)
+    print(dingtalk_info)

@@ -8,7 +8,7 @@ from __future__ import absolute_import
 import requests
 import json
 from celery import shared_task
-from .Functions import dinktalk
+from .Functions import dingtalk
 from VulnManage.models import Vulnerability_scan
 from NoticeManage.views import notice_add
 from celery.utils.log import get_task_logger
@@ -23,8 +23,8 @@ logger = get_task_logger(__name__)
 @shared_task
 def refresh_cache():
     """定时任务：更新钉钉通讯录缓存，更新钉钉用户头像缓存；同步创建钉钉用户到本地"""
-    token = dinktalk.DinkTalk.get_access_token()
-    user_name_list = dinktalk.DinkTalk.save_user_list(access_token=token)
+    token = dingtalk.DinkTalk.get_access_token()
+    user_name_list = dingtalk.DinkTalk.save_user_list(access_token=token)
     # 同步钉钉用户，创建本地用户
     sync_ldap_user(user_name_list)
     # msg = {"msgtype": "text", "text": {"content": "定时推送测试322——by tachiulam"}}

@@ -13,7 +13,7 @@ import json
 from django.db.models import Q
 from MappedManage.models import Mapped
 from API.Functions.send_mail import SendMail
-from API.Functions.mail_info import nat_mail_info
+from API.Functions.alert_info import nat_mail_info
 
 
 false = 1

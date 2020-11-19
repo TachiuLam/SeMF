@@ -6,7 +6,7 @@
 import datetime
 from django.shortcuts import get_object_or_404
 from VulnManage.models import Vulnerability_scan
-from .dinktalk import DinkTalk
+from .dingtalk import DinkTalk
 from SeMF.settings import AUTH_APP_ID, REDIRECT_URL
 
 
@@ -40,3 +40,17 @@ class DingTalkMsg:
             }
         }
         return assign_msg
+
+    @staticmethod
+    def card_msg(message):
+        msg = {
+            "msgtype": "action_card",
+            "action_card": {
+                "title": message.get('tittle'),
+                "markdown": message.get('content'),
+                "btn_orientation": "0",
+                "btn_json_list": [
+                ]
+            }
+        }
+        return msg
