@@ -209,7 +209,7 @@ class DinkTalk:
             data['dept_id_list'] = dept_id_list
         if to_all_user:
             data['to_all_user'] = to_all_user
-        res = requests.post(url=url, data=msg)
+        res = requests.post(url=url, data=data)
         res = json.loads(res.content)
         # res = {'errcode': 0, 'task_id': 232719853185, 'request_id': '3x1qbs76ef3k'}
         if res.get('errcode') == 0:
