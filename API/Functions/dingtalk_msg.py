@@ -46,9 +46,19 @@ class DingTalkMsg:
         msg = {
             "msgtype": "action_card",
             "action_card": {
-                "title": '防火墙发现新NAT映射',
+                "title": "防火墙启用新NAT映射",
                 "markdown": '测试',
                 "btn_orientation": "0",
+                "btn_json_list": [
+                    # {
+                    #     "title": "受理",
+                    #     "action_url": "http://127.0.0.1/vuln/user/details/"
+                    # },
+                    {
+                        "title": "添加白名单",
+                        "action_url": 'https://semf.yingzi.com'
+                    },
+                ]
             }
         }
         return msg
