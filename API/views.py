@@ -26,7 +26,9 @@ from API.Functions.api_auth import JWT
 from API.Functions.rsas import RSAS
 from API.Functions.dinktalk import DinkTalk
 from API.Functions.send_mail import SendMail
+from API.Functions.mail_info import nat_mail_info
 from NoticeManage.views import notice_add
+from MappedManage.models import Mapped
 
 
 # Create your views here.
@@ -321,9 +323,30 @@ def nat_upload(request):
 
     jwt = JWT.decode_jwt(token)
     user = jwt.get('username') if jwt else None
-
+    exists = False
     if user and User.objects.filter(username=user).first():
         nat = request.POST.get('data')
+        nat = eval(nat)
+        # print(type(nat), nat)
+        content = '防火墙发现不在白名单内的服务器NAT映射！！' + '\n'
+        for num, each in enumerate(nat):
+            # print(num, each.get('vals'), '\n', each.get('vals').get('publicIp'), each.get('vals').get('publicPort'),
+            #       each.get('vals').get('privateIp'), each.get('vals').get('privatePort'))
+            publicIp = str(each.get('vals').get('publicIp'))
+            publicPort = str(each.get('vals').get('publicPort'))
+            privateIp = str(each.get('vals').get('privateIp'))
+            privatePort = str(each.get('vals').get('privatePort'))
 
+            mappedlist = Mapped.objects.filter(
+                Q(LANip__asset_key__icontains=privateIp) | Q(WANip__asset_key__icontains=publicIp) | Q(
+                    LANPort__port__icontains=privatePort) | Q(WANPort__port__icontains=publicPort))
 
+            if not mappedlist.exists():
+                content += (privateIp + '\t' + privatePort + '\t' + publicIp + '\t' + publicPort + '\n')
+                exists = True       # 表示存在新开放端口
+        # print(content)
+        if exists:
+            nat_mail_info['content'] = content
+            SendMail.send_mail(nat_mail_info)
+        return JsonResponse({'msg': 'upload successfully'})
     return JsonResponse({'error': 'permission deny'})
