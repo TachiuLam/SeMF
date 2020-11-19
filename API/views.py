@@ -358,5 +358,6 @@ def nat_upload(request):
             nat_msg = DingTalkMsg.card_msg(msg)
             token = DinkTalk.get_access_token()
             error = DinkTalk.alert_conversation(access_token=token, user_name_list=username_list, msg=nat_msg)
+            return JsonResponse({'msg': error.get('result')})
         return JsonResponse({'msg': 'upload successfully'})
     return JsonResponse({'error': 'permission deny'})
