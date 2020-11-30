@@ -5,6 +5,7 @@
 # PyCharm
 from AssetManage.models import Asset, Port_Info
 from .vulnerability import VulnerabilityManage
+from MappedManage.models import Mapped
 import pandas as pd
 import os
 import time
@@ -77,14 +78,16 @@ class RSAS:
             return '0'
 
     @classmethod
-    def port_update(cls, num_id, filename):
+    def port_update(cls, num_id, filename, mapped=False):
         """
         根据asset_key即IP刷新该主机开放端口:删除旧端口、添加新端口
         :param num_id: 资产表id字段
         :param filename: 单个ip.xls的绝对路径+文件名
+        :param mapped：是否存在nat映射
         :return: {'result': '处理结果'}
         """
-        Port_Info.objects.filter(asset_id=num_id).delete()  # 删除已有端口
+        if not mapped:
+            Port_Info.objects.filter(asset_id=num_id).delete()  # 删除已有端口
 
         other_info = pd.read_excel(filename, sheet_name=2).to_dict()
         # print(list(other_info.values())[0].items())
@@ -225,8 +228,16 @@ class RSAS:
         else:  # IP已存在的情况,需要查找到资产对应的id，并更新资产类型
             num_id = Asset.objects.get(asset_key=asset_key).id
             Asset.objects.filter(asset_key=asset_key).update(asset_type_id=asset_type_id)
-        # 更新端口
-        port_result = cls.port_update(num_id, filename)
+
+        # 判断IP是否存在NAT映射
+        is_mapped = Mapped.objects.filter(LANip__asset_key__icontains=asset_key)
+        if is_mapped.exists():
+            mapped = True
+        else:
+            mapped = False
+
+        # 更新端口，有公网映射的端口不删除原端口映射
+        port_result = cls.port_update(num_id, filename, mapped=mapped)
         # 导入漏洞，后续逻辑需要细化
         vuln_result = cls.vlun_add_or_update(num_id, filename)
         return {'ip': asset_key, 'port': port_result, 'vulnerability': vuln_result}

@@ -3,7 +3,7 @@
 # lintechao@yingzi.com
 # 2020/9/15 11:53
 import pandas as pd
-
+from MappedManage.models import Mapped
 
 
 def report_main(filename):
@@ -16,6 +16,10 @@ def report_main(filename):
     print(asset_name, asset_score)
 
 if __name__=='__main__':
-    filepath = [r'C:\Users\lintechao\Downloads\test\172.20.3.146.xls']
-    for each in filepath:
-        report_main(each)
+    # filepath = [r'C:\Users\lintechao\Downloads\test\172.20.3.146.xls']
+    # for each in filepath:
+    #     report_main(each)
+    ip = '172.18.20.200 '
+    mip = Mapped.objects.filter(LANip__asset_key__icontains=ip)
+    if mip.exists():
+        print('ip 存在')
