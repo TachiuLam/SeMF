@@ -16,4 +16,5 @@ urlpatterns = [
     path('dingtalk/detail_id/<str:v_detail_id>/', views.ding_vuln_detail, name='dingtalk_detail_id'),
     path('dingtalk/detail/', views.ding_vuln_token, name='dingtalk_detail'),
     path('nat/upload/',views.nat_upload,name='nat_upload'),
+    path('harbor/webhook', views.harbor_webhook, name="harbor_webhook"),
 ]

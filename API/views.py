@@ -28,6 +28,7 @@ from API.Functions.dingtalk import DinkTalk
 from API.Functions.dingtalk_msg import DingTalkMsg
 from API.Functions.send_mail import SendMail
 from API.Functions.alert_info import nat_mail_info, dingtalk_info
+from API.Functions.img_scan import Img_Scan
 from NoticeManage.views import notice_add
 from MappedManage.models import Mapped
 
@@ -143,7 +144,7 @@ def ding_vuln_list(request):
             vuln_name__icontains=v_key,
             fix_status__icontains=fix_status,
             leave__gte=1,
-        ).exclude(fix_status__icontains='0', ).exclude(fix_status__icontains='1', ).exclude(fix_status__icontains='2')\
+        ).exclude(fix_status__icontains='0', ).exclude(fix_status__icontains='1', ).exclude(fix_status__icontains='2') \
             .exclude(fix_status__icontains='3').order_by('-fix_status', '-leave')
     else:
         # 漏洞查看权限：所属项目成员 | 被派发的人员
@@ -154,7 +155,7 @@ def ding_vuln_list(request):
             leave__gte=1,
         ).filter(
             Q(vuln_asset__asset_area__in=user_area_list) | Q(assign_user__icontains=user_name_zh)
-        ).exclude(fix_status__icontains='0', ).exclude(fix_status__icontains='1', ).exclude(fix_status__icontains='2')\
+        ).exclude(fix_status__icontains='0', ).exclude(fix_status__icontains='1', ).exclude(fix_status__icontains='2') \
             .exclude(fix_status__icontains='3').order_by('-fix_status', '-leave')
 
     total = vuln_list.count()
@@ -190,7 +191,7 @@ def ding_vuln_process(request):
     if not tk_user_name_zh:  # 校验token，防止cc攻击，导致缓存空间不足
         return JsonResponse({'res': '非法用户'})
     user_name_zh = tk_user_name_zh.split('tk_')[1]
-    username = han_to_pinyin(user_name_zh)      # 用于web端消息通知
+    username = han_to_pinyin(user_name_zh)  # 用于web端消息通知
     vuln_id_list = request.POST.get('vuln_id_list')
 
     # 漏洞受理
@@ -315,6 +316,7 @@ def ding_vuln_detail(request, v_detail_id):
         vuln = get_object_or_404(Vulnerability_scan, vuln_asset__asset_area__in=user_area_list, vuln_id=vuln_id)
     return render(request, 'VulnManage/vulndetails.html', {'vuln': vuln})
 
+
 @csrf_exempt
 @require_http_methods(['POST'])
 def nat_upload(request):
@@ -330,7 +332,7 @@ def nat_upload(request):
         nat = request.POST.get('data')
         nat = eval(nat)
         # print(type(nat), nat)
-        msg = {'tittle': '', 'content':'\n', 'ding_content': ''}
+        msg = {'tittle': '', 'content': '\n', 'ding_content': ''}
         count = 0
         for num, each in enumerate(nat):
             # print(num, each.get('vals'), '\n', each.get('vals').get('publicIp'), each.get('vals').get('publicPort'),
@@ -346,8 +348,9 @@ def nat_upload(request):
 
             if not mappedlist.exists():
                 msg['content'] += (privateIp + '\t' + privatePort + '\t' + publicIp + '\t' + publicPort + '\n')
-                msg['ding_content'] += ('##### ' + privateIp + '\t' + privatePort + '\t' + publicIp + '\t' + publicPort + '\n')
-                exists = True       # 表示存在新开放端口
+                msg['ding_content'] += (
+                            '##### ' + privateIp + '\t' + privatePort + '\t' + publicIp + '\t' + publicPort + '\n')
+                exists = True  # 表示存在新开放端口
                 count += 1
         # print(content)
         if exists:
@@ -364,3 +367,21 @@ def nat_upload(request):
             return JsonResponse(error)
         return JsonResponse({'msg': 'upload successfully'})
     return JsonResponse({'error': 'permission deny'})
+
+
+@csrf_exempt
+@require_http_methods(['POST'])
+def harbor_webhook(request):
+    """harbor webhook接口"""
+    content = request.data
+    # 判断上传格式
+    if content and content.get('event_data') and (
+            content.get('event_data').get('resources')[0].get('scan_overview').get(
+                    'application/vnd.scanner.adapter.vuln.report.harbor+json; version=1.0').get(
+                'scan_status') == 'Success'):
+        if content.get('type') == 'SCANNING_COMPLETED':  # webhook提交类型为扫描完成
+            result = Img_Scan.main(content)
+            return JsonResponse(result)
+
+        return JsonResponse({'msg': 'unknown type'})
+    return JsonResponse({'msg': 'The scan failed or the data was empty'})
