@@ -1,11 +1,11 @@
 from django.test import TestCase
 import requests
-from API.Functions.rsas import RSAS
-from SeMF.redis import Cache
-from VulnManage.models import Vulnerability_scan
+# from API.Functions.rsas import RSAS
+# from SeMF.redis import Cache
+# from VulnManage.models import Vulnerability_scan
 from API.Functions.api_auth import JWT
-from django.contrib.auth.models import User
-from RBAC.models import Profile
+# from django.contrib.auth.models import User
+# from RBAC.models import Profile
 from ldap3 import Server, Connection, ALL, SUBTREE, ServerPool, ALL_ATTRIBUTES
 from ldap3 import Server, Connection, ALL, SUBTREE, ServerPool
 import random
@@ -14,8 +14,9 @@ import time
 import jwt
 from SeMF.settings import APP_SECRET, ALGORITHM, APP_KEY
 import datetime
-from RBAC.service.user_process import get_user_area, han_to_pinyin
-from API.tasks import refresh_cache
+# from RBAC.service.user_process import get_user_area, han_to_pinyin
+# from API.tasks import refresh_cache
+from RBAC.service.ldap_auth import ldap_auth
 
 # Create your tests here.
 
@@ -99,52 +100,12 @@ if __name__ == '__main__':
 
     # # SEARCH_BASE = "ou=corp,dc=corp,dc=yingzi,dc=com"
 
-    def ldap_auth(username, password):
-        ldap_server_pool = ServerPool(LDAP_SERVER_POOL)
-        conn = Connection(ldap_server_pool, user=ADMIN_DN, password=ADMIN_PASSWORD,
-                          check_names=True, lazy=False, raise_exceptions=False)
-
-        conn.open()
-        conn.bind()
-
-        res = conn.search(
-            search_base=SEARCH_BASE,
-            search_filter='(sAMAccountName={})'.format(username),
-            search_scope=SUBTREE,
-            attributes=['cn', 'givenName', 'mail', 'sAMAccountName'],
-            paged_size=5
-        )
-
-        if res:
-            entry = conn.response[0]
-            dn = entry['dn']
-            attr_dict = entry['attributes']
-
-            # check password by dn
-            try:
-                conn2 = Connection(ldap_server_pool, user=dn, password=password, check_names=True, lazy=False,
-                                   raise_exceptions=False)
-                conn2.bind()
-                if conn2.result["description"] == "success":
-                    return {'auth_res': True, 'mail': attr_dict["mail"], 'sName': attr_dict["sAMAccountName"],
-                            'gName': attr_dict["givenName"]}
-                else:
-                    print(111)
-                    return {'auth_res': False}
-            except Exception as e:
-                print(e)
-                return {'auth_res': False}
-        else:
-            print(222)
-            return {'auth_res': False}
-
-
     username = 'lintechao'
-    passwd = 'Iandi1562618'
+    passwd = 'Iandi156261'
     # username = 'test04'
     # passwd = '1qaz@WSXwaf1'
-    # res = ldap_auth(username, passwd)
-    # print(res)
+    res = ldap_auth(username, passwd)
+    print(res)
 
     test = None or '1'
     print(test)
@@ -197,14 +158,14 @@ if __name__ == '__main__':
     # print(user_id, profile_id)
     # r = get_user_area(name).get('user_area_list')
     # print(r)
-    vuln_list = Vulnerability_scan.objects.filter(
+    # vuln_list = Vulnerability_scan.objects.filter(
         # vuln_asset__asset_area__in=r,
         # fix_status__icontains='2',
-        leave__gte=1,
-    ).exclude(fix_status__icontains='2').exclude(fix_status__icontains='1').order_by('-fix_status', '-leave')
-    print(vuln_list)
-    for each in vuln_list:
-        print(each.fix_status)
+        # leave__gte=1,
+    # ).exclude(fix_status__icontains='2').exclude(fix_status__icontains='1').order_by('-fix_status', '-leave')
+    # print(vuln_list)
+    # for each in vuln_list:
+    #     print(each.fix_status)
     # user_area = Profile.objects.filter(user=user).values('area').all()
     def test(u, **kwargs):
         a = {}
@@ -229,7 +190,7 @@ if __name__ == '__main__':
     #     print(22)
     #
     # # refresh_cache()
-    name = Cache.get_value(key='lintechao')
+    # name = Cache.get_value(key='lintechao')
     # info = Cache.get_value(key='191152606026429443')
     print(name)
     #
