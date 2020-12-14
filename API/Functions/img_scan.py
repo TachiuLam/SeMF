@@ -6,6 +6,7 @@
 # @Software  : PyCharm
 
 import time
+import json
 import requests
 from AssetManage.models import Asset
 from API.Functions.vulnerability import VulnerabilityManage
@@ -51,9 +52,9 @@ class Img_Scan:
             v['name'] = each_v.get('package') + ' ' + each_v.get('id')  # 库名+ cve名称作为漏洞名字
             v['fix'] = each_v.get('fix_version')
             v['introduce'] = each_v.get('description')
-            v['port'] = each_v.get('scopen')  # 影响版本，为适应函数，命名为port
-            v['introduce'] = v['vuln_info'] = each_v.get('links')
-            v['severity'] = cls.transform_severity_to_level(each_v.get('severity'))
+            v['port'] = each_v.get('version')  # 影响版本，为适应函数，命名为port
+            v['introduce'] = v['vuln_info'] = each_v.get('links')[0]
+            v['level'] = cls.transform_severity_to_level(each_v.get('severity'))
 
             v_num_id = VulnerabilityManage.get_vuln_id() + 1  # 获取漏洞表id
 
@@ -70,12 +71,13 @@ class Img_Scan:
                 VulnerabilityManage.update_or_create(v, exits=False).get('result')
                 v_num_id += 1  # 新建查询漏洞，漏洞id都需要递增
 
-            return {'result': '漏洞导入成功'}
+        return {'result': '漏洞导入成功'}
 
     @classmethod
     def scan_deal(cls, api_url, sha256, img_name):
         """获取harbor漏洞接口的数据，新建or更新资产，更新漏洞信息"""
         content = requests.get(api_url).content
+        content = json.loads(content)
         # 判断数据是否存在
         if content.get('application/vnd.scanner.adapter.vuln.report.harbor+json; version=1.0'):
             data = content.get('application/vnd.scanner.adapter.vuln.report.harbor+json; version=1.0')
@@ -88,10 +90,10 @@ class Img_Scan:
                 asset_create = Asset.objects.get_or_create(
                     asset_id=asset_id,
                     asset_name=img_name,
-                    asset_type__name='镜像',  # 镜像资产分类
+                    asset_type_id=37,  # 镜像资产分类
                     asset_key=sha256,  # 镜像哈希为唯一ID
                     asset_score=data.get('severity'),
-                    asset_area__name='安全',  # 默认归类到安全组项目
+                    asset_area_id=13,  # 默认归类到安全组项目
                     # asset_description=asset_description,
                 )
                 # asset_create : (<Asset: asset_key>, True)
@@ -99,7 +101,7 @@ class Img_Scan:
                     asset_create[0].save()
             else:  # 镜像已存在的情况,需要查找到资产对应的id，并更新资产类型
                 num_id = Asset.objects.get(asset_key=sha256).id
-                Asset.objects.filter(asset_key=sha256).update(asset_type__name='镜像')
+                Asset.objects.filter(asset_key=sha256).update(asset_type_id=37)
 
             # 漏洞更新
             vuln_result = cls.create_or_update_vulnerability(num_id, data.get("vulnerabilities"))
