@@ -3,9 +3,10 @@
 # lintechoa@yingzi.com
 # 2020/7/8 14:06
 
-from ldap3 import Connection, SUBTREE, ServerPool
+from ldap3 import Connection, SUBTREE, ServerPool, Tls, Server, ALL
 from SeMF.settings import SEARCH_BASE, LDAP_SERVER_POOL, ADMIN_DN, ADMIN_PASSWORD
 import random
+import ssl
 
 
 def ldap_auth(username, password):
@@ -16,9 +17,14 @@ def ldap_auth(username, password):
     :return: {'auth_res': True, 'mail': attr_dict["mail"], 'sAMAccountName': attr_dict["sAMAccountName"],
                         'givenName': attr_dict["givenName"]}
     """
-    ldap_server_pool = ServerPool(LDAP_SERVER_POOL)
-    conn = Connection(ldap_server_pool, user=ADMIN_DN, password=ADMIN_PASSWORD, check_names=True, lazy=False,
-                      raise_exceptions=False)
+    # ldap_server_pool = ServerPool(LDAP_SERVER_POOL)
+    # conn = Connection(ldap_server_pool, user=ADMIN_DN, password=ADMIN_PASSWORD, check_names=True, lazy=False,
+    #                   raise_exceptions=False)
+
+    # tls_configuration = Tls(validate=ssl.CERT_REQUIRED, version=ssl.PROTOCOL_TLSv1)
+    server = Server(LDAP_SERVER_POOL, use_ssl=True, get_info=ALL)
+    conn = Connection(server, user=ADMIN_DN, password=ADMIN_PASSWORD, check_names=True, lazy=False,
+                      raise_exceptions=False )
 
     conn.open()
     conn.bind()
@@ -38,8 +44,10 @@ def ldap_auth(username, password):
 
         # check password by dn
         try:
-            conn2 = Connection(ldap_server_pool, user=dn, password=password, check_names=True, lazy=False,
-                               raise_exceptions=False)
+            # conn2 = Connection(ldap_server_pool, user=dn, password=password, check_names=True, lazy=False,
+            #                    raise_exceptions=False)
+            conn2 = Connection(server, user=dn, password=ADMIN_PASSWORD, check_names=True, lazy=False,
+                              raise_exceptions=False)
             conn2.bind()
             if conn2.result["description"] == "success":
                 return {'auth_res': True, 'mail': attr_dict["mail"], 'sAMAccountName': attr_dict["sAMAccountName"],
