@@ -65,7 +65,7 @@ class Asset(models.Model):
     asset_id = models.CharField('系统编号', max_length=50, unique=True, null=True)
     asset_out_id = models.CharField('资产编号', max_length=50, null=True, blank=True)
     asset_name = models.CharField('资产名称', max_length=100)
-    asset_key = models.CharField('唯一标记', max_length=50, unique=True)
+    asset_key = models.CharField('唯一标记', max_length=100, unique=True)
     asset_description = models.TextField('资产介绍', null=True)
     # asset_score = models.IntegerField('重要性估值', default='0')
     asset_status = models.CharField('资产状态', max_length=50, choices=ASSET_STATUS, default='0')

@@ -373,7 +373,8 @@ def nat_upload(request):
 @require_http_methods(['POST'])
 def harbor_webhook(request):
     """harbor webhook接口"""
-    content = request.data
+    content = request.body
+    content = json.loads(content)
     # 判断上传格式
     if content and content.get('event_data') and (
             content.get('event_data').get('resources')[0].get('scan_overview').get(

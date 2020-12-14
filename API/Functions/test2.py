@@ -6,6 +6,7 @@
 # @Software  : PyCharm
 
 import requests
+import json
 
 data = {'type': 'SCANNING_COMPLETED', 'occur_at': 1607654984, 'operator': 'auto', 'event_data': {'resources': [
     {'digest': 'sha256:9db4781eaf30d7cb779a6636c84b5ddd49f02d129c0705feb05ec76eb1dcad00', 'tag': '',
@@ -42,4 +43,5 @@ print(api_url)
 # api_url = 'http://test-harbor.yingzi.com/api/v2.0/projects/test/repositories/nginx/artifacts/sha256:99d0a53e3718cef59443558607d1e100b325d6a2b678cd2a48b05e5e22ffeb49/additions/vulnerabilities'
 res = requests.get(api_url)
 print(res.content)
-
+content = json.loads(res.content)
+print(content.get("application/vnd.scanner.adapter.vuln.report.harbor+json; version=1.0"))
