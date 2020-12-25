@@ -40,7 +40,7 @@ class Img_Scan:
             'application/vnd.scanner.adapter.vuln.report.harbor+json; version=1.0').get(
             'scanner').get('name')
 
-        api_url = 'http://' + resource_url + '/api/v2.0/projects/' + namespace + '/repositories/' + img_name + '/artifacts/' + sha256 + '/additions/vulnerabilities'
+        api_url = 'https://' + resource_url + '/api/v2.0/projects/' + namespace + '/repositories/' + img_name + '/artifacts/' + sha256 + '/additions/vulnerabilities'
         return {'api_url': api_url, 'sha256': sha256, 'img_name': img_name}
 
     @classmethod
