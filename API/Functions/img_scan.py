@@ -84,8 +84,6 @@ class Img_Scan:
         if content.get('application/vnd.scanner.adapter.vuln.report.harbor+json; version=1.0'):
             data = content.get('application/vnd.scanner.adapter.vuln.report.harbor+json; version=1.0')
             exits = Asset.objects.filter(asset_key=sha256).first()  # 查看唯一值asset_key是否存在
-            with open('./log.txt', 'a') as f:
-                f.write('44')
             if not exits:
                 num_id = Asset.objects.latest('id').id
                 num_id += 1  #
