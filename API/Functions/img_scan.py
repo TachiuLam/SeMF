@@ -78,7 +78,7 @@ class Img_Scan:
         """获取harbor漏洞接口的数据，新建or更新资产，更新漏洞信息"""
         content = requests.get(api_url, verify=False).content   # 自签证书需要取消证书校验
         with open('./log.txt', 'a') as f:
-            f.write(content)
+            f.write(str(content))
         content = json.loads(content)
         # 判断数据是否存在
         if content.get('application/vnd.scanner.adapter.vuln.report.harbor+json; version=1.0'):
