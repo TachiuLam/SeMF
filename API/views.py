@@ -380,13 +380,19 @@ def harbor_webhook(request):
         if user and User.objects.filter(username=user).first():
             content = request.body
             content = json.loads(content)
+            with open('./log.txt', 'a') as f:
+                f.write('11')
             # 判断上传格式
             if content and content.get('event_data') and (
                     content.get('event_data').get('resources')[0].get('scan_overview').get(
                             'application/vnd.scanner.adapter.vuln.report.harbor+json; version=1.0').get(
                         'scan_status') == 'Success'):
                 if content.get('type') == 'SCANNING_COMPLETED':  # webhook提交类型为扫描完成
+                    with open('./log.txt', 'a') as f:
+                        f.write('22')
                     result = Img_Scan.main(content)
+                    with open('./log.txt', 'a') as f:
+                        f.write('33')
                     return JsonResponse(result)
 
                 return JsonResponse({'msg': 'unknown type'})

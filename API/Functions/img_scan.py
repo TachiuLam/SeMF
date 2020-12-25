@@ -76,7 +76,7 @@ class Img_Scan:
     @classmethod
     def scan_deal(cls, api_url, sha256, img_name):
         """获取harbor漏洞接口的数据，新建or更新资产，更新漏洞信息"""
-        content = requests.get(api_url, verify=False).content   # 自签证书需要取消证书校验
+        content = requests.get(api_url, verify=False).text   # 自签证书需要取消证书校验
         content = json.loads(content)
         # 判断数据是否存在
         if content.get('application/vnd.scanner.adapter.vuln.report.harbor+json; version=1.0'):
