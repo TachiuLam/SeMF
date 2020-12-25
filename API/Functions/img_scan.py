@@ -76,12 +76,16 @@ class Img_Scan:
     @classmethod
     def scan_deal(cls, api_url, sha256, img_name):
         """获取harbor漏洞接口的数据，新建or更新资产，更新漏洞信息"""
-        content = requests.get(api_url, verify=False).text   # 自签证书需要取消证书校验
+        content = requests.get(api_url, verify=False).content   # 自签证书需要取消证书校验
+        with open('./log.txt', 'a') as f:
+            f.write(content)
         content = json.loads(content)
         # 判断数据是否存在
         if content.get('application/vnd.scanner.adapter.vuln.report.harbor+json; version=1.0'):
             data = content.get('application/vnd.scanner.adapter.vuln.report.harbor+json; version=1.0')
             exits = Asset.objects.filter(asset_key=sha256).first()  # 查看唯一值asset_key是否存在
+            with open('./log.txt', 'a') as f:
+                f.write('44')
             if not exits:
                 num_id = Asset.objects.latest('id').id
                 num_id += 1  #
