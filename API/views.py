@@ -373,23 +373,25 @@ def nat_upload(request):
 @require_http_methods(['POST'])
 def harbor_webhook(request):
     """harbor webhook接口"""
-    with open('./log.txt', 'a') as f:
-        f.write(str(request.body))
-    token = request.META.get('HTTP_AUTHORIZATION')
-    jwt = JWT.decode_jwt(token)
-    user = jwt.get('username') if jwt else None
-    if user and User.objects.filter(username=user).first():
-        content = request.body
-        content = json.loads(content)
-        # 判断上传格式
-        if content and content.get('event_data') and (
-                content.get('event_data').get('resources')[0].get('scan_overview').get(
-                        'application/vnd.scanner.adapter.vuln.report.harbor+json; version=1.0').get(
-                    'scan_status') == 'Success'):
-            if content.get('type') == 'SCANNING_COMPLETED':  # webhook提交类型为扫描完成
-                result = Img_Scan.main(content)
-                return JsonResponse(result)
+    try:
+        token = request.META.get('HTTP_AUTHORIZATION')
+        jwt = JWT.decode_jwt(token)
+        user = jwt.get('username') if jwt else None
+        if user and User.objects.filter(username=user).first():
+            content = request.body
+            content = json.loads(content)
+            # 判断上传格式
+            if content and content.get('event_data') and (
+                    content.get('event_data').get('resources')[0].get('scan_overview').get(
+                            'application/vnd.scanner.adapter.vuln.report.harbor+json; version=1.0').get(
+                        'scan_status') == 'Success'):
+                if content.get('type') == 'SCANNING_COMPLETED':  # webhook提交类型为扫描完成
+                    result = Img_Scan.main(content)
+                    return JsonResponse(result)
 
-            return JsonResponse({'msg': 'unknown type'})
-        return JsonResponse({'msg': 'The scan failed or the data was empty'})
-    return JsonResponse({'error': 'permission deny'})
+                return JsonResponse({'msg': 'unknown type'})
+            return JsonResponse({'msg': 'The scan failed or the data was empty'})
+        return JsonResponse({'error': 'permission deny'})
+    except Exception as e:
+        with open('./log.txt', 'a') as f:
+            f.write(str(e))
