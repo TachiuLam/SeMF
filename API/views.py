@@ -373,6 +373,8 @@ def nat_upload(request):
 @require_http_methods(['POST'])
 def harbor_webhook(request):
     """harbor webhook接口"""
+    with open('./log.txt', 'a') as f:
+        f.write(str(request.body))
     token = request.META.get('HTTP_AUTHORIZATION')
     jwt = JWT.decode_jwt(token)
     user = jwt.get('username') if jwt else None
