@@ -39,35 +39,39 @@ from MappedManage.models import Mapped
 def report_upload(request):
     """漏洞报告上传接口"""
     # print(request.FILES)
-    token = request.META.get('HTTP_AUTHORIZATION')
+    try:
+        token = request.META.get('HTTP_AUTHORIZATION')
 
-    jwt = JWT.decode_jwt(token)
-    user = jwt.get('username') if jwt else None
+        jwt = JWT.decode_jwt(token)
+        user = jwt.get('username') if jwt else None
 
-    if user and User.objects.filter(username=user).first():
-        if request.POST.get('type') == MEDIA_TYPE[0]:  # rsas处理漏扫结果
-            file = request.FILES.get('file', None)
-            # 保存报告
-            if file and file.name.endswith('.zip'):  # 只接收.zip后缀文件
-                with open(MEDIA_API + '/' + file.name, 'wb+') as dst:  # 打开特定的文件进行二进制的写操作
-                    for chunk in file.chunks():  # 分块写入文件
-                        dst.write(chunk)
-                # 处理报告
-                # 按文件名判断漏洞报告类型，服务器/办公设备/容器等
-                report_type = RSAS.report_type(dst.name)
-                file_list = RSAS.unzip_file(dst.name, MEDIA_API)
-                for f in file_list:
-                    RSAS.report_main(f, report_type)
-                # 清空文件夹
-                shutil.rmtree(MEDIA_API)
-                os.mkdir(MEDIA_API)
+        if user and User.objects.filter(username=user).first():
+            if request.POST.get('type') == MEDIA_TYPE[0]:  # rsas处理漏扫结果
+                file = request.FILES.get('file', None)
+                # 保存报告
+                if file and file.name.endswith('.zip'):  # 只接收.zip后缀文件
+                    with open(MEDIA_API + '/' + file.name, 'wb+') as dst:  # 打开特定的文件进行二进制的写操作
+                        for chunk in file.chunks():  # 分块写入文件
+                            dst.write(chunk)
+                    # 处理报告
+                    # 按文件名判断漏洞报告类型，服务器/办公设备/容器等
+                    report_type = RSAS.report_type(dst.name)
+                    file_list = RSAS.unzip_file(dst.name, MEDIA_API)
+                    for f in file_list:
+                        RSAS.report_main(f, report_type)
+                    # 清空文件夹
+                    shutil.rmtree(MEDIA_API)
+                    os.mkdir(MEDIA_API)
+                    return JsonResponse({'success': 'success upload',
+                                         'body': file.name,
+                                         })
                 return JsonResponse({'success': 'success upload',
-                                     'body': file.name,
+                                     'body': 'file no found',
                                      })
-            return JsonResponse({'success': 'success upload',
-                                 'body': 'file no found',
-                                 })
-    return JsonResponse({'error': 'permission deny'})
+        return JsonResponse({'error': 'permission deny'})
+    except Exception as e:
+        with open('./logs/err.log', 'a') as f:
+            f.write(str(e))
 
 
 @login_required()
