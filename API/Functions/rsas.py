@@ -116,12 +116,13 @@ class RSAS:
     @staticmethod
     def port_line(other_info):
         if other_info:  # other_info不为空时
-            if other_info.get('端口信息'):  # 当"端口信息"在第一行时
+            # 绿盟固件升级，漏洞报告格式有调整
+            if other_info.get('端口信息') or other_info.get('远程端口信息'):  # 当"远程端口信息"/"端口信息"在第一行时
                 # dict_keys(['端口信息', 'Unnamed: 1', 'Unnamed: 2', 'Unnamed: 3', 'Unnamed: 4'])
                 return 0
             else:  # 当"端口信息"不在第一行时
                 # dict_keys(['任意列名', 'Unnamed: 1', 'Unnamed: 2', 'Unnamed: 3', 'Unnamed: 4'])
-                k = [k for (k, v) in list(other_info.values())[0].items() if v == '端口信息']  # ep: k = [7]
+                k = [k for (k, v) in list(other_info.values())[0].items() if v in ('端口信息', '远程端口信息')]  # ep: k = [7]
                 if k:
                     return int(k[0])
         return None
