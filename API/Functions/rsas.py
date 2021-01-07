@@ -14,6 +14,7 @@ import zipfile
 
 class RSAS:
     """处理绿盟极光扫描器报告/.xls格式"""
+
     @staticmethod
     def report_type(file_name):
         """
@@ -181,6 +182,80 @@ class RSAS:
         return {'result': '无漏洞信息'}
 
     @classmethod
+    def vlun2_add_or_update(cls, num_id, filename):
+        """
+        关联漏洞信息，漏洞信息只新增和更新，不自动删除
+        :param num_id: 根据资产id获取相应字段进行关联
+        :param filename:  单个ip.xls的绝对路径+文件名
+        :return: {'result': '执行结果'}
+        """
+        # 绿盟漏洞格式更新
+        """
+        {'漏洞信息': {0: '端口', 1: '--', 2: nan, 3: nan}, 'Unnamed: 1': {0: '协议', 1: 'ICMP', 2: nan, 3: nan},
+         'Unnamed: 2': {0: '服务', 1: '--', 2: nan, 3: nan},
+         'Unnamed: 3': {0: '漏洞名称', 1: '允许Traceroute探测', 2: 'ICMP timestamp请求响应漏洞', 3: 'ICMP网络掩码请求响应漏洞'},
+         'Unnamed: 4': {0: '漏洞风险值', 1: 1, 2: 2.1, 3: 2.1}, 'Unnamed: 5': {0: '风险等级', 1: '[低]', 2: '[低]', 3: '[低]'},
+         'Unnamed: 6': {0: '服务分类', 1: '其他', 2: 'Kernel', 3: 'Kernel'},
+         'Unnamed: 7': {0: '应用分类', 1: '其他', 2: '其他', 3: '其他'},
+         'Unnamed: 8': {0: '系统分类', 1: '系统无关', 2: '系统无关', 3: '系统无关'},
+         'Unnamed: 9': {0: '威胁分类', 1: '远程信息泄露', 2: '远程信息泄露', 3: '远程信息泄露'},
+         'Unnamed: 10': {0: '时间分类', 1: '1999年', 2: '1999年', 3: '1999年'},
+         'Unnamed: 11': {0: 'CVE年份分类', 1: 'Others', 2: 'CVE-1999', 3: 'CVE-1999'},
+         'Unnamed: 12': {0: '发现日期', 1: datetime.datetime(1999, 1, 1, 0, 0), 2: datetime.datetime(1997, 8, 1, 0, 0),
+                         3: datetime.datetime(1997, 8, 1, 0, 0)},
+         'Unnamed: 13': {0: 'CVE编号', 1: nan, 2: 'CVE-1999-0524', 3: 'CVE-1999-0524'},
+         'Unnamed: 14': {0: 'CNNVD编号', 1: nan, 2: 'CNNVD-199708-003', 3: 'CNNVD-199708-003'},
+         'Unnamed: 15': {0: 'CNCVE编号', 1: nan, 2: 'CNCVE-19990524', 3: 'CNCVE-19990524'},
+         'Unnamed: 16': {0: 'CNVD编号', 1: nan, 2: nan, 3: nan},
+         'Unnamed: 17': {0: '详细描述', 1: '本插件使用Traceroute探测来获取扫描器与远程主机之间的路由信息。攻击者也可以利用这些信息来了解目标网络的网络拓扑。',
+                         2: '远程主机会回复ICMP_TIMESTAMP查询并返回它们系统的当前时间。\n\n这可能允许攻击者攻击一些基于时间认证的协议。',
+                         3: '远程主机会回复ICMP_MASKREQ查询并返回它们的子网掩码信息。攻击者可能利用这些信息了解目标网络的拓扑以及路由规则设置，以便进一步攻击。\n'},
+         'Unnamed: 18': {0: '解决办法', 1: '在防火墙中禁用Time Exceeded类型的ICMP包',
+                         2: 'NSFOCUS建议您采取以下措施以降低威胁：\n\n* 在您的防火墙上过滤外来的ICMP timestamp（类型 13）报文以及外出的ICMP timestamp回复报文。',
+                         3: 'NSFOCUS建议您采取以下措施以降低威胁：\n\n* 禁止您的系统回复ICMP_MASKREQ查询；\n\n* 在您的防火墙上过滤ICMP 17类型的报文。'},
+         'Unnamed: 19': {0: '返回信息', 1: '路由跟踪列表:\n172.19.130.1\n*\n218.17.115.163\n*\n172.20.196.2', 2: nan,
+                         3: 'NETMASK:255.255.255.248'}}
+        """
+        # Vulnerability_scan.objects.filter(vuln_asset_id=num_id).delete()  # 删除已有漏洞
+        v_info = pd.read_excel(filename, sheet_name=1).to_dict()
+
+        if v_info.get('漏洞信息'):
+            v_num_id = VulnerabilityManage.get_vuln_id() + 1  # 获取漏洞表id
+            v_num_id_2 = VulnerabilityManage.get_vuln_id(v_type='2') + 1  # 获取漏洞库表id
+            rows = len(v_info.get('Unnamed: 3'))  # 获取漏洞数目,包括列名
+            for row in range(1, rows):  # 去掉列名
+                v = {}
+                v['port'] = str(v_info.get('漏洞信息').get(row)).replace('.0', '')
+                v['level'] = cls.vuln_severity(v_info.get('Unnamed: 4').get(row))
+                v['name'] = v_info.get('Unnamed: 3').get(row)
+                v['introduce'] = v_info.get('Unnamed: 17').get(row)
+                v['fix'] = v_info.get('Unnamed: 18').get(row)
+                v['cve'] = v_info.get('Unnamed: 13').get(row)
+                v['return'] = v_info.get('Unnamed: 19').get(row)
+
+                exits = VulnerabilityManage.status(num_id=num_id, name=v['name'], v_num_id=v_num_id)
+                v['asset'] = exits['asset']  # 先进行漏洞和资产绑定，避免删除其他资产漏洞
+                if exits.get('exits') is True:
+                    v['fix_status'] = exits['fix_status']  # 继承漏洞状态
+                    VulnerabilityManage.update_or_create(v, exits=True).get('result')
+                else:
+                    v['fix_status'] = exits['fix_status']
+                    v['v_id'] = exits['v_id']
+                    v['v_type'] = exits['v_type']
+                    VulnerabilityManage.update_or_create(v, exits=False).get('result')
+                    v_num_id += 1  # 新建查询漏洞，漏洞id都需要递增
+                # 导入漏洞库
+                exits2 = VulnerabilityManage.status(name=v['name'], v_num_id=v_num_id_2, v_type='2')
+                if exits2.get('exits') is True:
+                    VulnerabilityManage.update_or_create(v, exits=True, v_type='2').get('result')
+                else:
+                    v['v_id'] = exits2['v_id']
+                    VulnerabilityManage.update_or_create(v, exits=False, v_type='2').get('result')
+                    v_num_id_2 += 1  # 新建查询漏洞，漏洞id都需要递增
+            return {'result': '漏洞导入成功'}
+        return {'result': '无漏洞信息'}
+
+    @classmethod
     def report_main(cls, filename, report_type):
         """
         单个IP报告处理主程序
@@ -216,7 +291,7 @@ class RSAS:
                     asset_type_id=asset_type_id,
                     asset_key=asset_key,
                     asset_score=asset_score,
-                    asset_area_id=13,      # 默认归类到安全组项目
+                    asset_area_id=13,  # 默认归类到安全组项目
                     # asset_description=asset_description,
                 )
                 # asset_create : (<Asset: asset_key>, True)
@@ -240,5 +315,5 @@ class RSAS:
         # 更新端口，有公网映射的端口不删除原端口映射
         port_result = cls.port_update(num_id, filename, mapped=mapped)
         # 导入漏洞，后续逻辑需要细化
-        vuln_result = cls.vlun_add_or_update(num_id, filename)
+        vuln_result = cls.vlun2_add_or_update(num_id, filename)
         return {'ip': asset_key, 'port': port_result, 'vulnerability': vuln_result}
