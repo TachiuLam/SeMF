@@ -6,17 +6,16 @@
 # @Software  : PyCharm
 import datetime
 
+
 class DateTime:
 
     @classmethod
     def time_range(cls, timing=None):
         """处理查询输入的时间范围"""
-        data_range = []
-        if not timing:      # 返回默认查询时间范围
+        if not timing:  # 返回默认查询时间范围
             data_range = ['1899-01-01', str(datetime.datetime.now())]
-            return data_range
-
-        data_range = str(timing).split(' - ')  # 注意前后有空格' - '
+        else:
+            data_range = str(timing).split(' - ')  # 注意前后有空格' - '
         return data_range
 
 
