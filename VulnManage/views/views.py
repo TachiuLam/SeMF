@@ -10,6 +10,7 @@ from django.utils.html import escape
 from django.db.models import Q
 from SeMF.redis import Cache
 from RBAC.service.user_process import get_user_area, username_list_identify
+from API.Functions.time_range import DateTime
 
 # Create your views here.
 
@@ -198,6 +199,9 @@ def vulntablelist(request):
     fix_status = request.POST.get('fix_status')
     if not fix_status:
         fix_status = ''
+    time_range = request.POST.get('time_range')
+    # 处理时间范围
+    time_range = DateTime.time_range(time_range)
     try:
         user_name_zh = Cache.get_value(key=user).get('name_zh')
     except Exception as e:
@@ -209,6 +213,7 @@ def vulntablelist(request):
             leave__icontains=leave,
             fix_status__icontains=fix_status,
             leave__gte=1,
+            update_data__range=[time_range[0], time_range[1]],
         ).order_by('-fix_status', '-leave')
     else:
         # 获取用户所在项目组所有
@@ -222,6 +227,7 @@ def vulntablelist(request):
                 leave__icontains=leave,
                 fix_status__icontains=fix_status,
                 leave__gte=1,
+                update_data__range=[time_range[0], time_range[1]],
             ).order_by('-fix_status', '-leave')
         else:
             # 根据项目ID进行筛选或派发人员
@@ -232,6 +238,7 @@ def vulntablelist(request):
                 leave__icontains=leave,
                 fix_status__icontains=fix_status,
                 leave__gte=1,
+                update_data__range=[time_range[0], time_range[1]],
             ).filter(
                 Q(vuln_asset__asset_area__in=user_area_list) | Q(assign_user__icontains=user_name_zh)
             ).order_by('-fix_status', '-leave')

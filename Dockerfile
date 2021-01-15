@@ -2,6 +2,7 @@ FROM python:3.7.0 as build
 WORKDIR /semf
 COPY ./ ./
 RUN \
+    mkdir -p /files/api && \
     mkdir -p /data/uwsgi && \
     cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
     pip install -r requirements.txt \
