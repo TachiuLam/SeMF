@@ -181,6 +181,7 @@ layui.use('table', function(){
 	    	,leave: $("#id_leave option:selected").val()
 	    	,fix_status: $("#id_vuln_status option:selected").val()
 			,asset_type: $("#id_asset_type option:selected").val()
+			,time_range: $("#test1").val()
         }
       });
     }
@@ -217,11 +218,11 @@ layui.use('table', function(){
   		var laydate = layui.laydate;
 	  //执行一个laydate实例
 	  laydate.render({
-		elem: '#test1' //指定元素
+		elem: '#test1' //指定自定义的元素位置
 		,type: 'datetime'
 		,trigger: 'click'  //日期不允许修改
   		,range: '-'
- 		,format: 'yyyy/M/d/ H:m:s'
+ 		,format: 'yyyy-MM-dd HH:MM:ss'   //前端展示和返回给后端的字符串格式
 	  });
 	});
 </script>
