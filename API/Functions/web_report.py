@@ -52,6 +52,7 @@ class WebReport:
 
         exits = VulnerabilityManage.status(num_id=num_id, name=vuln_info.get("name"), v_num_id=v_num_id)
         vuln_info['asset'] = exits['asset']  # 先进行漏洞和资产绑定，避免删除其他资产漏洞
+        vuln_info['source'] = '3'
         if exits.get('exits') is True:
             res = VulnerabilityManage.update_or_create(vuln_info, exits=True).get('result')
         else:

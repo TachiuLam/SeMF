@@ -206,6 +206,9 @@ def vulntablelist(request):
     v_project = request.POST.get('v_project')
     if not v_project:
         v_project = ''
+    v_source = request.POST.get('v_source')
+    if not v_source:
+        v_source = ''
     leave = request.POST.get('leave')
     if not leave:
         leave = ''
@@ -224,6 +227,7 @@ def vulntablelist(request):
             vuln_asset__asset_key__icontains=key,
             vuln_name__icontains=v_key,
             project__icontains=v_project,
+            source__icontains=v_source,
             leave__icontains=leave,
             fix_status__icontains=fix_status,
             leave__gte=1,
@@ -239,6 +243,7 @@ def vulntablelist(request):
                 vuln_asset__asset_key__icontains=key,
                 vuln_name__icontains=v_key,
                 project__icontains=v_project,
+                source__icontains=v_source,
                 leave__icontains=leave,
                 fix_status__icontains=fix_status,
                 leave__gte=1,
@@ -251,6 +256,7 @@ def vulntablelist(request):
                 vuln_asset__asset_key__icontains=key,
                 vuln_name__icontains=v_key,
                 project__icontains=v_project,
+                source__icontains=v_source,
                 leave__icontains=leave,
                 fix_status__icontains=fix_status,
                 leave__gte=1,
@@ -277,6 +283,7 @@ def vulntablelist(request):
         dic['leave'] = escape(VULN_LEAVE[vuln_item.leave])
         dic['fix_status'] = escape(VULN_STATUS[vuln_item.fix_status])
         dic['update_data'] = escape(vuln_item.update_data)
+        dic['source'] = escape(vuln_item.source)
         dic['asset'] = escape(vuln_item.vuln_asset.asset_key)
         dic['asset_id'] = escape(vuln_item.vuln_asset.asset_id)
         dic['process_user'] = escape(vuln_item.process_user if vuln_item.process_user else '无')
@@ -382,13 +389,14 @@ def vuln_files(request):
                             title=str(file.name),
                         )
                         for file in file_list:
-                            filepath = os.path.join(MEDIA_REPORT, file.title)
+                            filepath = os.path.join(MEDIA_REPORT, str(file.file))
                             WebReport.main(filepath, report_type="1")
                             break
                         error = '更新成功'
                         shutil.rmtree(MEDIA_REPORT)
                         os.mkdir(MEDIA_REPORT)
-                    except:
+                    except Exception as e:
+                        print(e)
                         error = '文件处理异常'
                 else:
                     error = '文件格式错误'

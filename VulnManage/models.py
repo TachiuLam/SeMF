@@ -27,6 +27,12 @@ VULN_STATUS2 = (
     ('4', '修复中'),
     ('6', '修复完成'),
 )
+VULN_SOURCE = (
+    ('0', '其他'),
+    ('1', '绿盟扫描'),
+    ('2', '镜像扫描'),
+    ('3', '手工录入'),
+)
 
 
 class Advance_vulns(models.Model):
@@ -89,12 +95,13 @@ class Vulnerability_scan(models.Model):
     fix = models.TextField('修复方案', null=True)
     fix_action = models.TextField('处理记录', null=True)
     fix_status = models.CharField('修复状态', max_length=30, choices=VULN_STATUS)
+    source = models.CharField('漏洞来源', max_length=30, choices=VULN_SOURCE, default='0')
     create_data = models.DateTimeField('发现时间', auto_now_add=True)
     update_data = models.DateTimeField('修复时间', auto_now=True)
     assign_user = models.CharField('派发用户', max_length=100, null=True)
     process_user = models.CharField('受理人', max_length=30, null=True)
     owner = models.CharField('责任人', max_length=30, null=True)
-    project = models.CharField('所属项目', max_length=100, null=True)    # 与资产的所属项目区分
+    project = models.CharField('所属项目', max_length=100, null=True)  # 与资产的所属项目区分
     note = models.TextField("备注", null=True)
     # vuln_port = models.CharField('漏洞端口', max_length=50, null=True)
     vuln_asset = models.ForeignKey(Asset, related_name='vuln_for_asset', on_delete=models.CASCADE)
