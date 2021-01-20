@@ -41,11 +41,13 @@ class Advance_vulns_form(ModelForm):
 class Vuln_edit_form(ModelForm):
     class Meta:
         model = models.Vulnerability_scan
-        fields = ['vuln_name', 'cve_name', 'leave',
-                  'scopen', 'introduce', 'vuln_info', 'fix']
+        fields = ['vuln_name', 'cve_name','project', 'leave', 'owner',
+                  'scopen', 'introduce', 'vuln_info', 'fix', 'note']
         widgets = {
             'vuln_name': widgets.TextInput(attrs={'class': 'form-control', 'placeholder': '漏洞名称'}),
             'cve_name': widgets.TextInput(attrs={'class': 'form-control', 'placeholder': 'cve编号'}),
+            'project': widgets.TextInput(attrs={'class': 'form-control', 'placeholder': '所属项目'}),
+            'owner': widgets.TextInput(attrs={'class': 'form-control', 'placeholder': '责任人'}),
             'leave': widgets.Select(attrs={'class': 'form-control', 'placeholder': '危险等级'}),
             'scopen': widgets.TextInput(attrs={'class': 'form-control', 'placeholder': '影响范围'}),
             'introduce': widgets.Textarea(
@@ -53,6 +55,7 @@ class Vuln_edit_form(ModelForm):
             'vuln_info': widgets.Textarea(
                 attrs={'class': 'form-control', 'placeholder': '漏洞验证', 'style': 'height:100px'}),
             'fix': widgets.Textarea(attrs={'class': 'form-control', 'placeholder': '修复方案', 'style': 'height:100px'}),
+            'note': widgets.TextInput(attrs={'class': 'form-control', 'placeholder': '备注'}),
         }
 
 

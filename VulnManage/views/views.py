@@ -129,6 +129,9 @@ def vulncreate(request, asset_id):
             vuln_info = form.cleaned_data['vuln_info']
             scopen = form.cleaned_data['scopen']
             fix = form.cleaned_data['fix']
+            project = form.cleaned_data['project']
+            owner = form.cleaned_data['owner']
+            note = form.cleaned_data['note']
             vuln_id = str(asset.asset_type.id) + time.strftime('%Y%m%d', time.localtime(time.time())) + str(num)
             vuln_type = asset.asset_type.name
             res = models.Vulnerability_scan.objects.get_or_create(
@@ -141,6 +144,9 @@ def vulncreate(request, asset_id):
                 scopen=scopen,
                 fix=fix,
                 vuln_asset=asset,
+                project=project,
+                owner=owner,
+                note=note,
             )
             vuln = res[0]
             if vuln.vuln_id == vuln_id:
@@ -197,6 +203,9 @@ def vulntablelist(request):
     v_key = request.POST.get('v_key')
     if not v_key:
         v_key = ''
+    v_project = request.POST.get('v_project')
+    if not v_project:
+        v_project = ''
     leave = request.POST.get('leave')
     if not leave:
         leave = ''
@@ -214,6 +223,7 @@ def vulntablelist(request):
         vuln_list = models.Vulnerability_scan.objects.filter(
             vuln_asset__asset_key__icontains=key,
             vuln_name__icontains=v_key,
+            project__icontains=v_project,
             leave__icontains=leave,
             fix_status__icontains=fix_status,
             leave__gte=1,
@@ -228,6 +238,7 @@ def vulntablelist(request):
             vuln_list = models.Vulnerability_scan.objects.filter(
                 vuln_asset__asset_key__icontains=key,
                 vuln_name__icontains=v_key,
+                project__icontains=v_project,
                 leave__icontains=leave,
                 fix_status__icontains=fix_status,
                 leave__gte=1,
@@ -239,6 +250,7 @@ def vulntablelist(request):
                 # vuln_asset__asset_area__in=user_area_list,  # 根据项目ID进行筛选
                 vuln_asset__asset_key__icontains=key,
                 vuln_name__icontains=v_key,
+                project__icontains=v_project,
                 leave__icontains=leave,
                 fix_status__icontains=fix_status,
                 leave__gte=1,
@@ -259,7 +271,7 @@ def vulntablelist(request):
     for vuln_item in vuln_list:
         dic = {}
         dic['vuln_id'] = escape(vuln_item.vuln_id)
-        dic['vuln_info'] = escape(vuln_item.vuln_info)
+        dic['vuln_info'] = escape(vuln_item.vuln_info if vuln_item.vuln_info else '无')
         dic['vuln_name'] = escape(vuln_item.vuln_name)
         dic['asset_type'] = escape(vuln_item.vuln_asset.asset_type)
         dic['leave'] = escape(VULN_LEAVE[vuln_item.leave])
@@ -268,6 +280,8 @@ def vulntablelist(request):
         dic['asset'] = escape(vuln_item.vuln_asset.asset_key)
         dic['asset_id'] = escape(vuln_item.vuln_asset.asset_id)
         dic['process_user'] = escape(vuln_item.process_user if vuln_item.process_user else '无')
+        dic['owner'] = escape(vuln_item.owner if vuln_item.owner else '无')
+        dic['project'] = escape(vuln_item.project if vuln_item.project else '无')
         data.append(dic)
     resultdict['code'] = 0
     resultdict['msg'] = "漏洞列表"
