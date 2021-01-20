@@ -129,8 +129,7 @@ class WebReport:
         """
         # 导入web资产
         web_info = pd.read_excel(filename, sheet_name=0).to_dict()
-        for each in web_info:
-            print(each, web_info.get(each))
+
         asset_info = web_info.get("Unnamed: 2")
         for n, key in enumerate(asset_info):
             if n > 1:
@@ -141,12 +140,10 @@ class WebReport:
                              "owner": WebReport.none_value_trans(web_info.get("Unnamed: 4").get(n)),
                              "fix_status": WebReport.vuln_fix_status(web_info.get("Unnamed: 5").get(n)),
                              "note": WebReport.none_value_trans(web_info.get("Unnamed: 6").get(n))}
-                print(vuln_info)
                 for asset in asset_info.get(key).split("\n"):
                     num_id = WebReport.asset_add_or_update(asset)
                     # 根据资产导入漏洞
                     vuln_result = WebReport.vlun_add_or_update(num_id, vuln_info)
-                    print(vuln_result)
         return True
 
     @classmethod

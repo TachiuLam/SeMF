@@ -383,7 +383,6 @@ def vuln_files(request):
                         )
                         for file in file_list:
                             filepath = os.path.join(MEDIA_REPORT, file.title)
-                            print(filepath)
                             WebReport.main(filepath, report_type="1")
                             break
                         error = '更新成功'
