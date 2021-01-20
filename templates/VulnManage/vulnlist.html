@@ -17,6 +17,7 @@
 	       <form class="layui-form layui-col-md12 x-so" id="input" onchange="selectclick()">
 				<input class="layui-input" placeholder="资产关联" name="key" id="id_key">
                 <input class="layui-input" placeholder="漏洞名称" name="v_key" id="id_v_key">
+			    <input class="layui-input" placeholder="所属项目" name="v_project" id="id_v_project">
 				<div class="layui-input-inline">
 		           <select name="contrller" id ='id_leave' lay-filter="v_select">
 		              <option value="">威胁等级</option>
@@ -98,15 +99,17 @@ layui.use('table', function(){
     ,where: {'csrfmiddlewaretoken':csrf}
     ,cols: [[
       {checkbox: true, fixed: true}
-      ,{field:'vuln_id', title: '漏洞编号', sort: true, fixed: true}
+      // ,{field:'vuln_id', title: '漏洞编号', sort: true, fixed: true}
       ,{field:'vuln_name', title: '漏洞名称', sort: true}
       ,{field:'vuln_info', title: '验证信息', sort: true}
       ,{field:'asset', title: '关联资产', event:'Asset'}
       // ,{field:'asset_description', title: '资产介绍', sort: true}
       ,{field:'asset_type', title: '资产类型', sort: true}
+      ,{field:'project', title: '漏洞所属项目',sort: true}
       ,{field:'leave', title: '威胁等级',sort: true}
       ,{field:'fix_status', title: '修复状态',sort: true}
       ,{field:'process_user', title: '受理人',sort: true}
+      ,{field:'owner', title: '责任人',sort: true}
       ,{field:'update_data', title: '更新时间', sort:true}
       ,{ title: '高级选项',fixed: 'right', align:'center', toolbar: '#barDemo'}
     ]]
@@ -183,6 +186,7 @@ layui.use('table', function(){
 	    	,fix_status: $("#id_vuln_status option:selected").val()
 			,asset_type: $("#id_asset_type option:selected").val()
 			,time_range: $("#test1").val()
+			,v_project: $("#id_v_project").val()
         }
       });
     }

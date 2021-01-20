@@ -16,7 +16,7 @@ class WebReport:
 
     @staticmethod
     def none_value_trans(string):
-        result = '' if str(string) == 'nan' else string
+        result = '无' if str(string) == 'nan' else string
         return result
 
     @staticmethod
