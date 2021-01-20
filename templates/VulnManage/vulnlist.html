@@ -51,6 +51,15 @@
 					  <option value="34">公网IP</option>
 		            </select>
 		        </div>
+			    <div class="layui-input-inline">
+		            <select name="contrller" id ='id_v_source' lay-filter="v_select">
+		              <option value="">漏洞来源</option>
+		              <option value="1">绿盟扫描</option>
+		              <option value="2">镜像扫描</option>
+					  <option value="3">手工录入</option>
+					  <option value="0">其他</option>
+		            </select>
+		        </div>
 			   <div class="layui-input-inline">
 				   <input type="text" class="layui-input" placeholder="时间范围" id="test1">
 			   </div>
@@ -187,6 +196,7 @@ layui.use('table', function(){
 			,asset_type: $("#id_asset_type option:selected").val()
 			,time_range: $("#test1").val()
 			,v_project: $("#id_v_project").val()
+			,v_source: $("#id_v_source").val()
         }
       });
     }

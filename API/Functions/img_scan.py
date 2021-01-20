@@ -55,6 +55,7 @@ class Img_Scan:
             v['port'] = each_v.get('version')  # 影响版本，为适应函数，命名为port
             v['introduce'] = v['vuln_info'] = each_v.get('links')[0]
             v['level'] = cls.transform_severity_to_level(each_v.get('severity'))
+            v['source'] = '2'    # 漏洞导入方式：镜像扫描
 
             v_num_id = VulnerabilityManage.get_vuln_id() + 1  # 获取漏洞表id
 
