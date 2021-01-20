@@ -56,6 +56,7 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 # 设置上传路径
 MEDIA_ROOT = os.path.join(BASE_DIR, 'files')
+MEDIA_REPORT = os.path.join(MEDIA_ROOT, 'reports')
 MEDIA_API = os.path.join(MEDIA_ROOT, 'api')
 MEDIA_URL = "/uploads/"
 # 上传报告类型

@@ -17,6 +17,15 @@ class Cnvd_file_form(ModelForm):
         }
 
 
+class Vuln_file_form(ModelForm):
+    class Meta:
+        model = models.Vulnfiles
+        fields = ['file']
+        widgets = {
+            'file': widgets.FileInput(),
+        }
+
+
 class Advance_vulns_form(ModelForm):
     class Meta:
         model = models.Advance_vulns
@@ -100,4 +109,3 @@ class Vulnlist_assign(ModelForm):
             'assign_user': widgets.TextInput(attrs={'class': 'form-control', 'placeholder': '分配人员'}),
             'assign_notes': widgets.Textarea(attrs={'class': 'form-control', 'placeholder': '漏洞派发备注'}),
         }
-
