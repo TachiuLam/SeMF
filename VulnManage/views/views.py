@@ -1,4 +1,6 @@
 # coding:utf-8
+import os
+import shutil
 from django.shortcuts import render, get_object_or_404
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth.decorators import login_required
@@ -11,6 +13,8 @@ from django.db.models import Q
 from SeMF.redis import Cache
 from RBAC.service.user_process import get_user_area, username_list_identify
 from API.Functions.time_range import DateTime
+from API.Functions.web_report import WebReport
+from SeMF.settings import MEDIA_REPORT
 
 # Create your views here.
 
@@ -56,7 +60,7 @@ def vuln_change_status(request, vuln_id):
                 if not is_admin and (form.cleaned_data['fix_status'] in ['1', '3']):
                     error = '仅允许更改为"待修复"，"修复中"，"已忽略"'
                 else:
-                    if vuln.fix_status == '5':      # 修改为已派发时，重置漏洞受理人
+                    if vuln.fix_status == '5':  # 修改为已派发时，重置漏洞受理人
                         vuln.process_user = None
                         vuln.save()
                     form.save()
@@ -346,3 +350,40 @@ def vulnlist_assign(request, v_id):
 
     return render(request, 'formupdate.html',
                   {'form': form, 'post_url': 'vulnassign', 'argu': v_id, 'error': error})
+
+
+@login_required
+@csrf_protect
+def vuln_files(request):
+    user = request.user
+    if user.is_superuser or get_user_area(user).get('is_admin'):
+        if request.method == 'POST':
+            form = forms.Vuln_file_form(request.POST, request.FILES)
+            if form.is_valid():
+                file = form.cleaned_data['file']
+                if file.name.lower().endswith('.xls') or file.name.lower().endswith('.xlsx') or file.name.lower().endswith('.csv'):
+                    try:
+                        file_list = models.Vulnfiles.objects.get_or_create(
+                            file=file,
+                            title=str(file.name),
+                        )
+                        for file in file_list:
+                            filepath = os.path.join(MEDIA_REPORT, file.title)
+                            print(filepath)
+                            WebReport.main(filepath, report_type="1")
+                            break
+                        error = '更新成功'
+                        shutil.rmtree(MEDIA_REPORT)
+                        os.mkdir(MEDIA_REPORT)
+                    except:
+                        error = '文件处理异常'
+                else:
+                    error = '文件格式错误'
+            else:
+                error = '文件错误'
+        else:
+            form = forms.Vuln_file_form()
+            return render(request, 'formedit.html', {'form': form, 'post_url': 'reportupload', 'title': '漏洞导入'})
+    else:
+        error = '权限不足'
+    return render(request, 'error.html', {'error': error})

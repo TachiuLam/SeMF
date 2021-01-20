@@ -14,6 +14,7 @@ urlpatterns = [
     path('user/listfixid/<str:v_id>', views.vulnlist_change_status_id, name='vulnlistfixid'),
     path('user/fix/<str:vuln_id>/', views.vuln_change_status, name='vulnfix'),
     path('user/details/<str:vuln_id>/', views.vulndetails, name='vulndetails'),
+    path('user/files/upload/', views.vuln_files, name='reportupload'),
 
     path('cnvd/', cnvdviews.cnvdvuln_view, name='cnvdvulnview'),
     path('cnvd/list/', cnvdviews.cnvdvulntablelist, name='cnvdvulnlist'),

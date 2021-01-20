@@ -78,6 +78,7 @@
 			{% if user.is_superuser %}
 			<button class="layui-btn " data-type="statuschoice" id="1"><i class="layui-icon layui-icon-senior"></i>批量变更</button>
             <button class="layui-btn " data-type="statuschoice" id="2"><i class="layui-icon ">&#xe601;</i>漏洞派发</button>
+			<button class="layui-btn" onclick="x_admin_show('漏洞导入','{% url 'reportupload' %}',600,300)"><i class="layui-icon"></i>漏洞导入</button>
             {% endif %}
 		</div>
 	</xblock>

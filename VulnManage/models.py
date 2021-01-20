@@ -2,6 +2,7 @@
 from django.db import models
 from AssetManage.models import Asset
 from SeMFSetting.models import SCANNER_TYPE
+from SeMF.settings import MEDIA_REPORT
 
 # Create your models here.
 VULN_LEAVE = (
@@ -49,11 +50,20 @@ class Cnvdfiles(models.Model):
         return self.title
 
 
+class Vulnfiles(models.Model):
+    title = models.CharField('文件标题', max_length=50)
+    file = models.FileField('漏洞报告', upload_to=MEDIA_REPORT)
+    update_data = models.DateField("更新日期", auto_now=True)
+
+    def __str__(self):
+        return self.title
+
+
 # Create your models here.
 class Vulnerability(models.Model):
     vuln_id = models.CharField('漏洞编号', max_length=30)
     # cnvd_id = models.CharField('cnvd编号', max_length=30, null=True)
-    vuln_name = models.CharField('漏洞名称', max_length=255,null=True)
+    vuln_name = models.CharField('漏洞名称', max_length=255, null=True)
     cve_name = models.CharField('cve编号', max_length=50, null=True, blank=True)
     leave = models.CharField('危险等级', max_length=10, choices=VULN_LEAVE)
     introduce = models.TextField('漏洞简介', null=True)
@@ -64,7 +74,7 @@ class Vulnerability(models.Model):
     note = models.TextField("其他", null=True)
 
     def __str__(self):
-        return self.cve_id
+        return self.vuln_id
 
 
 class Vulnerability_scan(models.Model):
@@ -75,7 +85,7 @@ class Vulnerability_scan(models.Model):
     leave = models.CharField('危险等级', max_length=10, choices=VULN_LEAVE)
     introduce = models.TextField('漏洞简介', null=True)
     vuln_info = models.TextField('漏洞信息', null=True)
-    scopen = models.TextField('影响范围')
+    scopen = models.TextField('影响范围', null=True)
     fix = models.TextField('修复方案', null=True)
     fix_action = models.TextField('处理记录', null=True)
     fix_status = models.CharField('修复状态', max_length=30, choices=VULN_STATUS)
@@ -83,8 +93,10 @@ class Vulnerability_scan(models.Model):
     update_data = models.DateTimeField('修复时间', auto_now=True)
     assign_user = models.CharField('派发用户', max_length=100, null=True)
     process_user = models.CharField('受理人', max_length=30, null=True)
+    owner = models.CharField('责任人', max_length=30, null=True)
+    project = models.CharField('所属项目', max_length=100, null=True)    # 与资产的所属项目区分
+    note = models.TextField("备注", null=True)
     # vuln_port = models.CharField('漏洞端口', max_length=50, null=True)
-
     vuln_asset = models.ForeignKey(Asset, related_name='vuln_for_asset', on_delete=models.CASCADE)
 
     def __str__(self):
