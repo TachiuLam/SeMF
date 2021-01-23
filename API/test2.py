@@ -7,7 +7,6 @@ import re
 # from MappedManage.models import Mapped
 
 
-
 def report_main(filename):
     host_info = pd.read_excel(filename, sheet_name=0).to_dict()
 

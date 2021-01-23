@@ -15,8 +15,8 @@ nat_mail_info = {
     # 邮箱授权码
     "password":  EMAIL_HOST_PASSWORD,
     # 接收邮箱
-    "toaddrs": ['lintechao@yingzi.com'],
-    # "toaddrs": ['lintechao@yingzi.com','huangzehong@yingzi.com','yuxiaotian@yingzi.com'],
+    # "toaddrs": ['lintechao@yingzi.com'],
+    "toaddrs": ['lintechao@yingzi.com','huangzehong@yingzi.com','yuxiaotian@yingzi.com'],
     # 邮件内容
     "content" :'防火墙发现不在白名单内的服务器NAT映射！',
     # 邮件标题
@@ -27,6 +27,7 @@ nat_mail_info = {
 }
 
 dingtalk_info = {
+    # 'username_list': ['林特超',]
     'username_list': ['林特超','黄泽鸿','余小添']
 }
 
