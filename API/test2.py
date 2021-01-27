@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Tachiu Lam
-# lintechao@yingzi.com
+# techaolin@gamil.com
 # 2020/9/15 11:53
 import pandas as pd
 import re

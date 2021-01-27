@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 # -*- coding : utf-8 -*-
 # @Author    : Tachiu Lam
-# @Mail      : lintechao@yingzi.com
+# @Mail      : techaolin@gamil.com
 # @Datetime  : 2021/1/14 11:48
 # @Software  : PyCharm
 import datetime

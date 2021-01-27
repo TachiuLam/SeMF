@@ -83,7 +83,7 @@ if __name__ == '__main__':
     # print(r,type(r))
     # for each in r:
     #     print(each)
-    # user_email = 'lintechao@yingzi.com'
+    # user_email = 'techaolin@gamil.com'
     # user = User.objects.filter(email=user_email).first()
     # print(user)
     # ii = '["520200611279"]'

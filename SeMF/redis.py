@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Tachiu Lam
-# lintechao@yingzi.com
+# techaolin@gamil.com
 # 2020/6/18 16:32
 
 import json

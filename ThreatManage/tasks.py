@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Tachiu Lam
-# lintechao@yingzi.com
+# techaolin@gamil.com
 # 2020/11/11 19:56
 
 from __future__ import absolute_import
