@@ -158,7 +158,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         # 'NAME': 'SeMF',
         # 'USER': 'root',
-        # 'PASSWORD': '1qaz@WSX',
+        # 'PASSWORD': 'xxxxxxxxx',
         # 'HOST': '172.19.130.20',
         'NAME': 'defectdojo',
         'USER': 'defectdojo',

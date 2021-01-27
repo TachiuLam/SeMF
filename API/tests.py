@@ -92,7 +92,7 @@ if __name__ == '__main__':
 
     LDAP_SERVER_POOL = ["corp.company.com:389"]
     # ADMIN_DN = "test04"
-    # ADMIN_PASSWORD = "1qaz@WSXwaf1"
+    # ADMIN_PASSWORD = "xxxxxxxxxwaf1"
     SEARCH_BASE = "ou=corp,dc=corp,dc=company,dc=com"
     ADMIN_DN = "tc_semf"
     ADMIN_PASSWORD = "9ik44DENWa8"
@@ -103,7 +103,7 @@ if __name__ == '__main__':
     username = 'lintechao'
     passwd = 'Iandi156261'
     # username = 'test04'
-    # passwd = '1qaz@WSXwaf1'
+    # passwd = 'xxxxxxxxxwaf1'
     res = ldap_auth(username, passwd)
     print(res)
 
