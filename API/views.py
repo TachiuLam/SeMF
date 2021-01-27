@@ -77,8 +77,8 @@ def report_upload(request):
 @login_required()
 def api_info(request):
     """API文档接口"""
-    from .tasks import refresh_cache
-    refresh_cache()
+    # from .tasks import refresh_cache
+    # refresh_cache()
     user = request.user
     token = JWT.generate_jwt(user=user)
     return render(request, 'API/apiinfo.html', {'info': {'token': token}})
@@ -331,7 +331,7 @@ def nat_upload(request):
     jwt = JWT.decode_jwt(token)
     user = jwt.get('username') if jwt else None
     exists = False
-    false = 0
+    false = 0  # 推送的数据有未定义的false，防止出错，接口内定义
     if user and User.objects.filter(username=user).first():
         nat = request.POST.get('data')
         nat = eval(nat)

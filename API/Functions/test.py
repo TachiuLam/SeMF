@@ -743,7 +743,8 @@ for num, each in enumerate(a):
 # SendMail.send_mail(nat_mail_info)
 
 d_url = 'http://127.0.0.1:8000/api/nat/upload/'
-r_token = "Token ey"
+r_token = "Token eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJzaXRlIjoia" \
+          "HR0cDovL2xvY2FsaG9zdDo4MDAwIn0.11V46DHb5LHsdqVbKuO6d79qZZQGwOeDMakSFfK_aj8"
 info = json.dumps(a)
 print(type(info),info)
 
@@ -753,6 +754,15 @@ data = {
 headers = {
         "Authorization": r_token
     }
-res = requests.post(url=d_url, data=data, headers=headers)
-print(res.text)
+# res = requests.post(url=d_url, data=data, headers=headers)
+# print(res.text)
 # print(data)
+
+from API.Functions.dingtalk import DinkTalk
+from API.Functions.dingtalk_msg import DingTalkMsg
+from .alert_info import dingtalk_info
+
+msg = {'tittle': '', 'content': '\n'}
+msg['tittle'] = '发现新的服务器NAT映射！！！'
+username_list = dingtalk_info.get('username_list')
+nat_msg = DingTalkMsg.card_msg(msg)

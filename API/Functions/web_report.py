@@ -76,9 +76,9 @@ class WebReport:
         """检测资产类型"""
         if re.match(r"^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$",
                     asset):
-            asset_type_id = 4  # 服务器22
+            asset_type_id = 22  # 服务器22
         else:
-            asset_type_id = 14  # web应用31
+            asset_type_id = 31  # web应用31
         return asset_type_id
 
     @classmethod

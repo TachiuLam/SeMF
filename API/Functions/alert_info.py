@@ -16,6 +16,7 @@ nat_mail_info = {
     "password":  EMAIL_HOST_PASSWORD,
     # 接收邮箱
     "toaddrs": [''],
+
     # 邮件内容
     "content" :'防火墙发现不在白名单内的服务器NAT映射！',
     # 邮件标题
@@ -27,6 +28,7 @@ nat_mail_info = {
 
 dingtalk_info = {
     'username_list': ['林xx','','']
+
 }
 
 if __name__ == '__main__':
