@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Tachiu Lam
-# lintechoa@yingzi.com
+# techaolin@gamil.com
 # 2020/7/7 14:11
 
 from django.contrib.auth.models import User

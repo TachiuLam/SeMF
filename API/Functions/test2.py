@@ -10,7 +10,7 @@ import json
 
 data = {'type': 'SCANNING_COMPLETED', 'occur_at': 1607654984, 'operator': 'auto', 'event_data': {'resources': [
     {'digest': 'sha256:9db4781eaf30d7cb779a6636c84b5ddd49f02d129c0705feb05ec76eb1dcad00', 'tag': '',
-     'resource_url': 'test-harbor.yingzi.com/test/semf:', 'scan_overview': {
+     'resource_url': 'test-harbor.company.com/test/semf:', 'scan_overview': {
         'application/vnd.scanner.adapter.vuln.report.harbor+json; version=1.0': {
             'report_id': 'd2f3ffb3-591f-4b59-a6b8-1edef5b79fb4', 'scan_status': 'Success', 'severity': 'Critical',
             'duration': 64, 'summary': {'total': 702, 'fixable': 369,
@@ -40,7 +40,7 @@ namespace = repository.get('namespace')
 print(sha256, resource_url, scan_status, scanner, img_name, namespace)
 api_url = 'http://' + resource_url + '/api/v2.0/projects/' + namespace + '/repositories/' + img_name + '/artifacts/' + sha256 + '/additions/vulnerabilities'
 print(api_url)
-# api_url = 'http://test-harbor.yingzi.com/api/v2.0/projects/test/repositories/nginx/artifacts/sha256:99d0a53e3718cef59443558607d1e100b325d6a2b678cd2a48b05e5e22ffeb49/additions/vulnerabilities'
+# api_url = 'http://test-harbor.company.com/api/v2.0/projects/test/repositories/nginx/artifacts/sha256:99d0a53e3718cef59443558607d1e100b325d6a2b678cd2a48b05e5e22ffeb49/additions/vulnerabilities'
 res = requests.get(api_url)
 print(res.content)
 content = json.loads(res.content)

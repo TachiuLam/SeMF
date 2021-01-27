@@ -75,7 +75,7 @@ LvyeCMS StyeController.class.php页面存在代码执行漏洞。攻击者通过
 http://www.onesoft.com.cn/</formalWay><description>厦门凤凰创壹软件有限公司主要致力于互联网络三维动态交互软件平台的研制、开发、运用与推广。&#xD;
 &#xD;
 多元评价系统存在SQL注入漏洞。允许攻击者利用漏洞获取数据库敏感信息。</description><patchName>多元评价系统存在SQL注入漏洞</patchName><patchDescription>已由CNVD通过软件生产厂商公开联系渠道向其邮件通报，由其后续提供解决方案并协调相关用户单位处置。</patchDescription></vulnerability><vulnerability><number>CNVD-2017-36668</number><title>影音之星处理AVI视频存在内存破坏漏洞</title><serverity>中</serverity><products><product>影音之星 影音之星 5.4</product></products><isEvent>通用软硬件漏洞</isEvent><submitTime>2017-11-22</submitTime><openTime>2018-01-06</openTime><discovererName>天融信阿尔法实验室 陈思远</discovererName><formalWay>厂商尚未提供漏洞修补方案，请关注厂商主页及时更新：&#xD;
-http://www.yyzx.com/</formalWay><description>影音之星是一款视频播放器。&#xD;
+http://www.ytcx.com/</formalWay><description>影音之星是一款视频播放器。&#xD;
 &#xD;
 影音之星播放器在处理AVI视频时存在内存破坏漏洞。攻击者通过构造畸形的AVI视频可导致程序崩溃，如若成功利用，可导致任意代码执行。</description><patchName>影音之星处理AVI存在拒绝服务漏洞 </patchName></vulnerability><vulnerability><number>CNVD-2017-36541</number><title>APPCMS admin\download_frame.php文件存在SSRF漏洞</title><serverity>高</serverity><products><product>AppCMS AppCMS &lt;=2.0.101</product></products><isEvent>通用软硬件漏洞</isEvent><submitTime>2017-11-22</submitTime><openTime>2018-01-06</openTime><discovererName>Thinking</discovererName><formalWay>厂商尚未提供修复方案，请关注厂商主页更新：&#xD;
 http://www.appcms.cc/</formalWay><description>APPCMS是一套专业的APP内容管理系统，提供了资讯、推荐位、专题、友链、正文内链等各种扩展模块，帮助站长更好的个性化自己的网站。&#xD;

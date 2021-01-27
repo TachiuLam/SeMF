@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Tachiu Lam
-# lintechoa@yingzi.com
+# techaolin@gamil.com
 # 2020/6/16 16:35
 import requests
 import os
@@ -25,10 +25,10 @@ def send_report(url, token, filename=None):
 
 
 if __name__ == '__main__':
-    d_url = 'http://semf.yingzi.com/api/upload/'
+    d_url = 'http://semf.company.com/api/upload/'
     # d_url = 'http://127.0.0.1:8000/api/upload/'
-    r_token = "Token eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJzaXRlIjoia" \
-              "HR0cDovL2xvY2FsaG9zdDo4MDAwIn0.11V46DHb5LHsdqVbKuO6d79qZZQGwOeDMakSFfK_aj8"
+    r_token = "Token x.eyJ1c2VybmFtZSI6InJvb3QiLCJzaXRlIjoia" \
+              "HR0cDovL2xvY2FsaG9zdDo4MDAwIn0.xxx"
     file_path = '/data/ftp/'
     # file_path = r'C:\Users\lintechao\Downloads\test'
 

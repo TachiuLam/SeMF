@@ -347,7 +347,7 @@ http://bftpd.sourceforge.net/news.html#032390</formalWay><description>Bftpd是�
 Bftpd 4.7之前的版本中的文件重命名函数存在安全漏洞。攻击者可利用该漏洞造成拒绝服务（内存泄露）。</description><patchName>bftpd拒绝服务漏洞的补丁</patchName><patchDescription>Bftpd是一款小型的FTP服务器。&#xD;
 &#xD;
 Bftpd 4.7之前的版本中的文件重命名函数存在安全漏洞。攻击者可利用该漏洞造成拒绝服务（内存泄露）。目前，供应商发布了安全公告及相关补丁信息，修复了此漏洞。</patchDescription></vulnerability><vulnerability><number>CNVD-2017-37488</number><cves><cve><cveNumber>CVE-2017-16894</cveNumber></cve></cves><title>Laravel framework信息泄露漏洞</title><serverity>中</serverity><products><product>Laravel framework &lt;=5.5.21</product></products><isEvent>通用软硬件漏洞</isEvent><submitTime>2017-11-20</submitTime><openTime>2017-12-19</openTime><discovererName>unknow</discovererName><referenceLink>https://nvd.nist.gov/vuln/detail/CVE-2017-16894</referenceLink><formalWay>厂商已发布漏洞修复程序，请及时关注更新：&#xD;
-http://whiteboyz.xyz/laravel-env-file-vuln.html</formalWay><description>Laravel framework是软件开发者Taylor Otwell开发的一款基于PHP的Web应用程序开发框架。&#xD;
+http://whitebotc.xtc/laravel-env-file-vuln.html</formalWay><description>Laravel framework是软件开发者Taylor Otwell开发的一款基于PHP的Web应用程序开发框架。&#xD;
 &#xD;
 Laravel framework 5.5.21及之前的版本中存在安全漏洞。远程攻击者可利用该漏洞获取敏感信息（例如：密码）。</description><patchName>Laravel framework信息泄露漏洞的补丁</patchName><patchDescription>Laravel framework是软件开发者Taylor Otwell开发的一款基于PHP的Web应用程序开发框架。&#xD;
 &#xD;
@@ -1520,7 +1520,7 @@ http://www.kernel.org/</formalWay><description>Linux kernel是一款流行的操
 &#xD;
 Linux kernel存在信息泄露漏洞，允许本地攻击者利用漏洞提交特殊的请求，获取敏感信息。</description><patchName>Linux kernel信息泄露漏洞（CNVD-2017-37613）的补丁</patchName><patchDescription>Linux kernel是一款流行的操作系统。&#xD;
 &#xD;
-Linux kernel存在信息泄露漏洞，允许本地攻击者利用漏洞提交特殊的请求，获取敏感信息。目前，供应商发布了安全公告及相关补丁信息，修复了此漏洞。</patchDescription></vulnerability><vulnerability><number>CNVD-2017-37597</number><cves><cve><cveNumber>CVE-2017-17741</cveNumber></cve></cves><title>Linux kernel拒绝服务漏洞（CNVD-2017-37597）</title><serverity>中</serverity><products><product>Linux Kernel 4.14.7</product></products><isEvent>通用软硬件漏洞</isEvent><submitTime>2017-12-18</submitTime><openTime>2017-12-20</openTime><discovererName>syzkaller</discovererName><referenceLink>https://nvd.nist.gov/vuln/detail/CVE-2017-17741</referenceLink><formalWay>厂商已发布漏洞修复程序，请及时关注更新：&#xD;
+Linux kernel存在信息泄露漏洞，允许本地攻击者利用漏洞提交特殊的请求，获取敏感信息。目前，供应商发布了安全公告及相关补丁信息，修复了此漏洞。</patchDescription></vulnerability><vulnerability><number>CNVD-2017-37597</number><cves><cve><cveNumber>CVE-2017-17741</cveNumber></cve></cves><title>Linux kernel拒绝服务漏洞（CNVD-2017-37597）</title><serverity>中</serverity><products><product>Linux Kernel 4.14.7</product></products><isEvent>通用软硬件漏洞</isEvent><submitTime>2017-12-18</submitTime><openTime>2017-12-20</openTime><discovererName>stckaller</discovererName><referenceLink>https://nvd.nist.gov/vuln/detail/CVE-2017-17741</referenceLink><formalWay>厂商已发布漏洞修复程序，请及时关注更新：&#xD;
 https://www.spinics.net/lists/kvm/msg160710.html</formalWay><description>Linux kernel是一种计算机操作系统内核，以C语言和汇编语言写成，符合POSIX标准，按GNU通用公共许可证发行。&#xD;
 &#xD;
 Linux kernel中的KVM存在拒绝服务漏洞。攻击者可利用该漏洞导致拒绝服务（write_mmio栈越界读取）。</description><patchName>Linux kernel拒绝服务漏洞（CNVD-2017-37597）的补丁</patchName><patchDescription>Linux kernel是一种计算机操作系统内核，以C语言和汇编语言写成，符合POSIX标准，按GNU通用公共许可证发行。&#xD;

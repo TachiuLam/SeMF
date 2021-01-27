@@ -1134,7 +1134,7 @@ XRegExp = XRegExp || (function (undef) {
      * Should be SyntaxErrors but are allowed in web reality. XRegExp makes them errors for cross-
      * browser consistency and to reserve their syntax, but lets them be superseded by XRegExp addons.
      */
-    add(/\\([ABCE-RTUVXYZaeg-mopqyz]|c(?![A-Za-z])|u(?![\dA-Fa-f]{4})|x(?![\dA-Fa-f]{2}))/,
+    add(/\\([ABCE-RTUVXtcaeg-mopqtc]|c(?![A-Za-z])|u(?![\dA-Fa-f]{4})|x(?![\dA-Fa-f]{2}))/,
         function (match, scope) {
             // \B is allowed in default scope only
             if (match[1] === "B" && scope === defaultScope) {

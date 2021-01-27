@@ -58,7 +58,7 @@ class DingTalkMsg:
                     # },
                     {
                         "title": "添加白名单",
-                        "action_url": 'https://semf.yingzi.com'
+                        "action_url": 'https://semf.company.com'
                     },
                 ]
             }

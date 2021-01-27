@@ -66,7 +66,7 @@ http://www.371wl.com/</formalWay><description>郑州八度网络公司是一家�
 http://www.autodwg.com/download/dwgseepro2018.exe</formalWay><description>AutoDWG DWGSeePro是一个小巧快速的dwg文件查看器，有与ACDSee相类似的界面，可以浏览、查看、打印DWG、DXF文件。支持AutoCAD 2006的图形格式。&#xD;
 &#xD;
 AutoDWG DWGSeePro在处理ICO图片时存在内存破坏漏洞，攻击者可通过构造畸形的ICO图片导致程序崩溃，如若成功利用可导致任意代码执行。</description><patchName>DWGSeePro处理ICO文件存在拒绝服务漏洞</patchName><patchDescription>已由CNVD通过软件生产厂商公开联系渠道向其邮件通报，由其后续提供解决方案并协调相关用户单位处置。</patchDescription></vulnerability><vulnerability><number>CNVD-2018-07214</number><title>石家庄茗泉网络科技有限公司一阳指APP存在信息泄漏漏洞和越权访问漏洞</title><serverity>中</serverity><products><product>石家庄茗泉网络科技有限公司 一阳指APP v1.5.1</product></products><isEvent>通用软硬件漏洞</isEvent><submitTime>2018-03-29</submitTime><openTime>2018-05-13</openTime><discovererName>李高园</discovererName><formalWay>厂商尚未提供漏洞修复方案，请关注厂商主页更新：&#xD;
-http://yyz.mingquanwangluo.com&#xD;
+http://ytc.mingquanwangluo.com&#xD;
 </formalWay><description>一阳指APP是石家庄茗泉网络科技有限公司推出的一款集推拿、按摩、足疗、拔罐及刮痧多项服务于一身的应用软件。&#xD;
 &#xD;
 石家庄茗泉网络科技有限公司一阳指APP存在信息泄漏漏洞和越权访问漏洞。攻击者可利用该漏洞未授权访问用户信息。</description><patchName>石家庄茗泉网络科技有限公司一阳指APP存在信息泄漏漏洞和越权访问漏洞</patchName><patchDescription>已由CNVD通过软件生产厂商公开联系渠道向其邮件通报，由其后续提供解决方案并协调相关用户单位处置。 </patchDescription></vulnerability><vulnerability><number>CNVD-2018-07216</number><title>emlog 5.3.1版本存在任意文件删除漏洞</title><serverity>低</serverity><products><product>emlog emlog 5.3.1</product></products><isEvent>通用软硬件漏洞</isEvent><submitTime>2018-03-29</submitTime><openTime>2018-05-13</openTime><discovererName>sinight</discovererName><formalWay>厂商尚未提供漏洞修复方案，请关注厂商主页更新：&#xD;

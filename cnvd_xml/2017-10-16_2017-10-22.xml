@@ -54,7 +54,7 @@ XYHCMS \App\Runtime\Data\config\site.php页面存在任意文件写入漏洞。�
 http://www.senyusoft.com/</formalWay><description>昆明森昱科技有限公司建站系统是一款网站建站系统。&#xD;
 &#xD;
 昆明森昱科技有限公司建站系统about.php页面class2id参数存在SQL注入漏洞。攻击者可利用该漏洞获取数据库敏感信息。 </description><patchName>昆明森昱科技有限公司建站系统about.php?class2id=存在SQL注入漏洞</patchName><patchDescription>已由CNVD通过软件生产厂商公开联系渠道向其邮件通报，由其后续提供解决方案并协调相关用户单位处置。</patchDescription></vulnerability><vulnerability><number>CNVD-2017-26511</number><title>九江联创网络科技有限公司建站系统artlist_detail.php页面lbid参数存在SQL注入漏洞</title><serverity>高</serverity><products><product>九江联创网络科技有限公司 九江建站系统 </product></products><isEvent>通用软硬件漏洞</isEvent><submitTime>2017-08-29</submitTime><openTime>2017-10-16</openTime><discovererName>南瑞集团信息安全与软件工程实验室</discovererName><formalWay>厂商尚未提供漏洞修补方案，请关注厂商主页及时更新：&#xD;
-http://www.jjyzw.cn</formalWay><description>九江联创网络科技有限公司建站系统是一款网站建站系统。&#xD;
+http://www.jjtcw.cn</formalWay><description>九江联创网络科技有限公司建站系统是一款网站建站系统。&#xD;
 &#xD;
 九江联创网络科技有限公司建站系统artlist_detail.php页面lbid参数存在SQL注入漏洞。攻击者可利用该漏洞获取数据库敏感信息。</description><patchName>九江联创网络公司建站系统artlist_detail.php存在SQL注入漏洞</patchName><patchDescription>已由CNVD通过软件生产厂商公开联系渠道向其邮件通报，由其后续提供解决方案并协调相关用户单位处置。</patchDescription></vulnerability><vulnerability><number>CNVD-2017-26548</number><title>QQ音乐客户端存在内存越权访问漏洞</title><serverity>中</serverity><products><product>腾讯公司 QQMusic.exe v15.4.0.0</product></products><isEvent>通用软硬件漏洞</isEvent><submitTime>2017-08-29</submitTime><openTime>2017-10-16</openTime><discovererName>hanzhe</discovererName><formalWay>腾讯TSRC已经反馈，并确认在新版本修复缺陷，请关注官方网站：https://y.qq.com/</formalWay><description>QQ音乐客户端是腾讯旗下音乐播放软件。&#xD;
 &#xD;
@@ -1506,7 +1506,7 @@ https://support.apple.com/zh-cn/HT208140 </formalWay><description>Apple iTunes�
 &#xD;
 Apple iTunes 12.7之前的版本中存在安全绕过漏洞。攻击者可利用该漏洞访问通过iTunes完成的iOS备份。</description><patchName>Apple iTunes安全绕过漏洞的补丁</patchName><patchDescription>Apple iTunes是美国苹果（Apple）公司的一套媒体播放器应用程序，它主要用于对数字音乐和视频文件进行播放以及管理。&#xD;
 &#xD;
-Apple iTunes 12.7之前的版本中存在安全绕过漏洞。攻击者可利用该漏洞访问通过iTunes完成的iOS备份。目前，供应商发布了安全公告及相关补丁信息，修复了此漏洞。</patchDescription></vulnerability><vulnerability><number>CNVD-2017-30920</number><cves><cve><cveNumber>CVE-2017-14942</cveNumber></cve></cves><title>Intelbras WRN 150安全绕过漏洞</title><serverity>高</serverity><products><product>Intelbras WRN 150 </product></products><isEvent>通用软硬件漏洞</isEvent><submitTime>2017-10-11</submitTime><openTime>2017-10-22</openTime><discovererName>Elber Tavares</discovererName><referenceLink>http://whiteboyz.xyz/authentication-bypass-intelbras-wrn-150.html&#xD;
+Apple iTunes 12.7之前的版本中存在安全绕过漏洞。攻击者可利用该漏洞访问通过iTunes完成的iOS备份。目前，供应商发布了安全公告及相关补丁信息，修复了此漏洞。</patchDescription></vulnerability><vulnerability><number>CNVD-2017-30920</number><cves><cve><cveNumber>CVE-2017-14942</cveNumber></cve></cves><title>Intelbras WRN 150安全绕过漏洞</title><serverity>高</serverity><products><product>Intelbras WRN 150 </product></products><isEvent>通用软硬件漏洞</isEvent><submitTime>2017-10-11</submitTime><openTime>2017-10-22</openTime><discovererName>Elber Tavares</discovererName><referenceLink>http://whitebotc.xtc/authentication-bypass-intelbras-wrn-150.html&#xD;
 https://www.exploit-db.com/exploits/42916/</referenceLink><formalWay>厂商尚未提供漏洞修复方案，请关注厂商主页更新：&#xD;
 http://intelbras.com.br/</formalWay><description>Intelbras WRN 150 devices是巴西Intelbras公司的一款无线路由器。&#xD;
 &#xD;

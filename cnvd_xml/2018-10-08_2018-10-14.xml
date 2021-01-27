@@ -146,7 +146,7 @@ https://www.damicms.com/Down</formalWay><description>大米CMS是PC建站和手�
 http://www.chshcms.com</formalWay><description>CSCMS是一款由崇胜网络科技研制开发的一款多功能网络信息管理系统。CSCMS采用PHP5+MYSQL做为技术基础进行开发。采用OOP（面向对象）方式进行基础运行框架搭建。&#xD;
 &#xD;
 CSCMS V4.1.0后台存在任意文件删除漏洞。攻击者可利用漏洞删除任意文件。</description><patchName>cscms V4.1.0版本后台存在任意文件删除漏洞</patchName><patchDescription>已由CNVD通过软件生产厂商公开联系渠道向其邮件通报，由其后续提供解决方案并协调相关用户单位处置。</patchDescription></vulnerability><vulnerability><number>CNVD-2018-18083</number><title>扬州能动网络科技有限公司建站系统存在SQL注入漏洞</title><serverity>高</serverity><products><product>扬州能动网络科技有限公司 建站系统 </product></products><isEvent>通用软硬件漏洞</isEvent><submitTime>2018-08-26</submitTime><openTime>2018-10-12</openTime><discovererName>王鑫</discovererName><formalWay>厂商尚未提供漏洞修补方案，请关注厂商主页及时更新：&#xD;
-http://www.yzce.com/</formalWay><description>扬州能动网络科技有限公司是致力于移动互联网，业务包括：电商微网、网站建设、魔方建站、手机即时通、企业邮局、域名主机、400电话等，面向全国商家和企业提供电子商务应用与解决方案。&#xD;
+http://www.tcce.com/</formalWay><description>扬州能动网络科技有限公司是致力于移动互联网，业务包括：电商微网、网站建设、魔方建站、手机即时通、企业邮局、域名主机、400电话等，面向全国商家和企业提供电子商务应用与解决方案。&#xD;
 &#xD;
 扬州能动网络科技有限公司建站系统存在SQL注入漏洞。攻击者可利用漏洞获取数据库敏感信息。 &#xD;
 </description><patchName>扬州能动网络科技有限公司建站系统存在SQL注入漏洞</patchName><patchDescription>已由CNVD通过软件生产厂商公开联系渠道向其邮件通报，由其后续提供解决方案并协调相关用户单位处置。</patchDescription></vulnerability><vulnerability><number>CNVD-2018-18082</number><title>BEESCMS存在文件上传漏洞</title><serverity>高</serverity><products><product>BEESCMS BEESCMS v4.0</product></products><isEvent>通用软硬件漏洞</isEvent><submitTime>2018-08-26</submitTime><openTime>2018-10-12</openTime><discovererName>无心</discovererName><formalWay>厂商尚未提供修复方案，请关注厂商主页更新：&#xD;

@@ -72,7 +72,7 @@ if __name__ == '__main__':
     print(r)
     # print(type(r))
     # # r= r+b'kjahkhdkashd'
-    r = 'Token eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImxpbnRlY2hhbyIsInNpdGUiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAifQ.UY0IYz7CrwcI-jrVznruQkMOjHmmQ5Y3mlY8U6YHxsE'
+    r = 'Token eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6ImxpbnRlY2hhbyIsInNpdGUiOiJodHRwOi8vbG9jYWxob3N0OjgwMDAifQ.UY0Itc7CrwcI-jrVznruQkMOjHmmQ5Y3mlY8U6YHxsE'
     d = JWT.decode_jwt(r)
     print(d)
 
@@ -90,15 +90,15 @@ if __name__ == '__main__':
     # ii = eval(ii)
     # print(ii, type(ii))
 
-    LDAP_SERVER_POOL = ["corp.yingzi.com:389"]
+    LDAP_SERVER_POOL = ["corp.company.com:389"]
     # ADMIN_DN = "test04"
     # ADMIN_PASSWORD = "1qaz@WSXwaf1"
-    SEARCH_BASE = "ou=corp,dc=corp,dc=yingzi,dc=com"
-    ADMIN_DN = "yz_semf"
+    SEARCH_BASE = "ou=corp,dc=corp,dc=company,dc=com"
+    ADMIN_DN = "tc_semf"
     ADMIN_PASSWORD = "9ik44DENWa8"
 
 
-    # # SEARCH_BASE = "ou=corp,dc=corp,dc=yingzi,dc=com"
+    # # SEARCH_BASE = "ou=corp,dc=corp,dc=company,dc=com"
 
     username = 'lintechao'
     passwd = 'Iandi156261'
@@ -111,8 +111,8 @@ if __name__ == '__main__':
     print(test)
 
     # def generate_password(code_len=16):
-    #     all_lowercase = 'abcdefghijklmnopqrstuvwxyz'
-    #     all_uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    #     all_lowercase = 'abcdefghijklmnopqrstuvwxtc'
+    #     all_uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXtc'
     #     all_numbers = '0123456789'
     #     all_punctuations = r'!@#$%^&*'
     #     all_password = all_lowercase + all_uppercase + all_numbers + all_punctuations
@@ -124,7 +124,7 @@ if __name__ == '__main__':
     # print(generate_password(16))
 
     # 告警平台钉钉推送测试
-    url = 'http://ywalert.yingzi.com/api/v1/alert/event/unified'
+    url = 'http://ywalert.company.com/api/v1/alert/event/unified'
     headers = {"Content-Type": "application/json;charset=utf-8"}
 
     body = {
@@ -201,7 +201,7 @@ if __name__ == '__main__':
     # user_name_zh = tk_user_name_zh.split('tk_')[1]
     # print(user_name_zh)
     #
-    # v_id = 'yz' + '122131231'
-    # print(v_id.split('yz')[1])
+    # v_id = 'tc' + '122131231'
+    # print(v_id.split('tc')[1])
     print(datetime.date.today())
 

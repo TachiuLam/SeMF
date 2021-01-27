@@ -21,7 +21,7 @@ http://www.lmxcms.com/about.html</formalWay><description>梦想cms简称“lmxcm
 http://www.zdvictory.com</formalWay><description>广州中大凯旋电子科技有限公司网上办事大厅是集社会管理、公共服务、信息公开、效能监督于一体的综合性电子政务服务平台。&#xD;
 &#xD;
 广州中大凯旋电子科技有限公司网上办事大厅department参数存在SQL注入漏洞。允许攻击者利用漏洞可获取数据库敏感信息。</description><patchName>广州中大凯旋电子科技有限公司行政服务中心存在SQL注入漏洞</patchName><patchDescription>已由CNVD通过软件生产厂商公开联系渠道向其邮件通报，由其后续提供解决方案并协调相关用户单位处置。</patchDescription></vulnerability><vulnerability><number>CNVD-2016-11366</number><title>快早餐APP存在设计缺陷漏洞</title><serverity>中</serverity><products><product>西安涅槃软件科技有限公司 快早餐APP </product></products><isEvent>通用软硬件漏洞</isEvent><submitTime>2016-11-17</submitTime><openTime>2017-01-02</openTime><discovererName>毛璀</discovererName><formalWay>厂商尚未提供漏洞修补方案，请关注厂商主页及时更新：&#xD;
-http://www.cyzone.cn/</formalWay><description>快早餐APP是一款能够帮你买到早餐的手机服务软件。&#xD;
+http://www.ctcone.cn/</formalWay><description>快早餐APP是一款能够帮你买到早餐的手机服务软件。&#xD;
 &#xD;
 快早餐APP存在手机验证码设计缺陷漏洞，允许攻击者利用漏洞可注册任意手机号。</description></vulnerability><vulnerability><number>CNVD-2016-11365</number><title>梦想CMS V1.4存在存储型跨站脚本漏洞</title><serverity>中</serverity><products><product>lmxcms 梦想CMS 1.4</product></products><isEvent>通用软硬件漏洞</isEvent><submitTime>2016-11-18</submitTime><openTime>2017-01-03</openTime><discovererName>mvike</discovererName><formalWay>厂商尚未提供漏洞修补方案，请关注厂商主页及时更新：&#xD;
 http://www.lmxcms.com/about.html</formalWay><description>梦想cms简称“lmxcms”，是一套开源的网站管理系统（cms），无授权限制。&#xD;

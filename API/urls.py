@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Tachiu Lam
-# lintechoa@yingzi.com
+# techaolin@gamil.com
 # 2020/6/4 18:00
 
 from django.urls import path

@@ -81,7 +81,7 @@ http://www.wiegand.com.cn/&#xD;
 </formalWay><description>微耕遥控智能锁系统是一种智能卡标识（包括感应卡、IC卡、TM卡等）。&#xD;
 &#xD;
 微耕遥控锁智能锁系统在结合微耕WG2082手机APP门锁控制器使用时存在设计漏洞，导致可被远程重放攻击，进而导致锁可被任意打开或者关闭。</description><patchName>微耕遥控智能锁系统存在设计缺陷漏洞</patchName><patchDescription>已由CNVD通过软件生产厂商公开联系渠道向其邮件通报，由其后续提供解决方案并协调相关用户单位处置。</patchDescription></vulnerability><vulnerability><number>CNVD-2016-12404</number><title>快早餐APP存在任意用户支付密码修改漏洞</title><serverity>中</serverity><products><product>西安涅槃软件科技有限公司 快早餐APP </product></products><isEvent>通用软硬件漏洞</isEvent><submitTime>2016-12-12</submitTime><openTime>2017-01-27</openTime><discovererName>毛璀，杨超</discovererName><formalWay>厂商尚未提供漏洞修补方案，请关注厂商主页及时更新：&#xD;
-http://www.cyzone.cn/</formalWay><description>快早餐APP是一款手机服务软件。&#xD;
+http://www.ctcone.cn/</formalWay><description>快早餐APP是一款手机服务软件。&#xD;
 &#xD;
 快早餐APP存在任意用户支付密码修改漏洞。由于使用loginStatus和userTel参数查询任意用户userID，导致可以修改任意用户的支付密码。</description></vulnerability><vulnerability><number>CNVD-2016-12403</number><title>Phpems V3.1后台编辑器存在任意文件上传漏洞</title><serverity>高</serverity><products><product>PHPEMS PHPEMS </product></products><isEvent>通用软硬件漏洞</isEvent><submitTime>2016-12-12</submitTime><openTime>2017-01-27</openTime><discovererName>卢鑫</discovererName><formalWay>厂商尚未提供漏洞修复方案，请关注厂商主页及时更新：&#xD;
 http://www.phpems.net/</formalWay><description>PHPEMS(PHP Exam Management System)在线模拟考试系统基于PHP+Mysql开发，是一个支持多种题型和展现方式的PHP在线模拟考试系统。&#xD;

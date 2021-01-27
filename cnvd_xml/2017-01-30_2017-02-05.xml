@@ -53,7 +53,7 @@ x5music V2.0免费版会员中心存在注入漏洞。由于X5music采用了全�
 &#xD;
 SS-Panel 3.3.9版本存在存储型跨站脚本漏洞。由于默认HttpOnly不开启，攻击者利用漏洞可获取管理员Cookie，利用Cookie登录后台。&#xD;
 </description></vulnerability><vulnerability><number>CNVD-2016-12669</number><title>快早餐APP存在设计漏洞</title><serverity>中</serverity><products><product>西安涅槃软件科技有限公司 快早餐APP </product></products><isEvent>通用软硬件漏洞</isEvent><submitTime>2016-12-16</submitTime><openTime>2017-01-31</openTime><discovererName>毛璀，杨超</discovererName><formalWay>厂商尚未提供漏洞修补方案，请关注厂商主页及时更新：&#xD;
-http://www.cyzone.cn/</formalWay><description>快早餐APP是一款手机服务软件。 &#xD;
+http://www.ctcone.cn/</formalWay><description>快早餐APP是一款手机服务软件。 &#xD;
 &#xD;
 快早餐APP存在设计漏洞。允许攻击者利用漏洞修改任何用户的实名认证信息。</description></vulnerability><vulnerability><number>CNVD-2016-12670</number><title>深圳思泉CRM系统存在SQL注入漏洞</title><serverity>高</serverity><products><product>深圳市思泉软件有限公司 思泉CRM系统 </product></products><isEvent>通用软硬件漏洞</isEvent><submitTime>2016-12-16</submitTime><openTime>2017-02-03</openTime><discovererName>杜家昂-北京国舜科技股份有限公司</discovererName><formalWay>厂商尚未提供漏洞修补方案，请关注厂商主页及时更新：&#xD;
 http://www.8crm.com/</formalWay><description>深圳市思泉软件有限公司是从事OA、CRM、ERP、HRM、企业邮箱系统咨询和服务的企业。&#xD;

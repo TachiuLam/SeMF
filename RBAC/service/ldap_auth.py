@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Tachiu Lam
-# lintechoa@yingzi.com
+# techaolin@gamil.com
 # 2020/7/8 14:06
 
 from ldap3 import Connection, SUBTREE, Server, ALL
@@ -61,8 +61,8 @@ def ldap_auth(username, password):
 
 def generate_password(code_len=16):
     """生成由大小写字母、数字、部分特殊符号默认16位的密码"""
-    all_lowercase = 'abcdefghijklmnopqrstuvwxyz'
-    all_uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    all_lowercase = 'abcdefghijklmnopqrstuvwxtc'
+    all_uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXtc'
     all_numbers = '0123456789'
     all_punctuations = r'!@#$%^&*'
     all_password = all_lowercase + all_uppercase + all_numbers + all_punctuations

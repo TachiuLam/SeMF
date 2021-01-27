@@ -31,10 +31,10 @@ http://www.wineim.com/</formalWay><description>助讯通（WinEIM）是一款企
 助讯通软件（客户端）在处理文件夹传送时存在内存破坏漏洞，允许攻击者通过构造畸形的文件夹可导致远程程序崩溃，如若成功利用，可造成任意代码执行。</description></vulnerability><vulnerability><number>CNVD-2017-02791</number><title>助讯通存在本地缓冲区溢出漏洞</title><serverity>低</serverity><products><product>企业即时通讯软件 助讯通（WinEIM） 9.3.26</product></products><isEvent>通用软硬件漏洞</isEvent><submitTime>2017-03-10</submitTime><openTime>2017-04-25</openTime><discovererName>陈思远</discovererName><formalWay>厂商尚未提供漏洞修补方案，请关注厂商主页及时更新：&#xD;
 http://www.wineim.com/</formalWay><description>助讯通（WinEIM）是一款企业即时通讯软件。&#xD;
 &#xD;
-助讯通软件（客户端）在处理文件夹时存在本地缓冲区溢出漏洞，攻击者如若伪装畸形文件夹，诱惑用户去解析（如诱骗用户发送畸形文件夹给对方）或解析畸形的文件夹，可导致任意代码执行。</description><patchName>助讯通存在本地缓冲区溢出漏洞</patchName><patchDescription>已由CNVD通过软件生产厂商公开联系渠道向其邮件通报，由其后续提供解决方案并协调相关用户单位处置。</patchDescription></vulnerability><vulnerability><number>CNVD-2017-02790</number><title>Yzmcms前台存在跨站脚本漏洞</title><serverity>低</serverity><products><product>YzmCMS YzmCMS </product></products><isEvent>通用软硬件漏洞</isEvent><submitTime>2017-03-10</submitTime><openTime>2017-04-25</openTime><discovererName>Map1e</discovererName><formalWay>用户可联系供应商获得补丁信息：&#xD;
-http://www.yzmcms.com/html/dongtai/29.html</formalWay><description>YzmCMS是一款基于PHP+Mysql架构的轻量级开源的内容管理系统，可运行在Linux、Windows、MacOSX、Solaris等各种平台上。&#xD;
+助讯通软件（客户端）在处理文件夹时存在本地缓冲区溢出漏洞，攻击者如若伪装畸形文件夹，诱惑用户去解析（如诱骗用户发送畸形文件夹给对方）或解析畸形的文件夹，可导致任意代码执行。</description><patchName>助讯通存在本地缓冲区溢出漏洞</patchName><patchDescription>已由CNVD通过软件生产厂商公开联系渠道向其邮件通报，由其后续提供解决方案并协调相关用户单位处置。</patchDescription></vulnerability><vulnerability><number>CNVD-2017-02790</number><title>tcmcms前台存在跨站脚本漏洞</title><serverity>低</serverity><products><product>tcmCMS tcmCMS </product></products><isEvent>通用软硬件漏洞</isEvent><submitTime>2017-03-10</submitTime><openTime>2017-04-25</openTime><discovererName>Map1e</discovererName><formalWay>用户可联系供应商获得补丁信息：&#xD;
+http://www.tcmcms.com/html/dongtai/29.html</formalWay><description>tcmCMS是一款基于PHP+Mysql架构的轻量级开源的内容管理系统，可运行在Linux、Windows、MacOSX、Solaris等各种平台上。&#xD;
 &#xD;
-Yzmcms前台存在跨站脚本漏洞。攻击者可在页面中插入恶意js代码，获得用户cookie等信息，导致用户被劫持。&#xD;
+tcmcms前台存在跨站脚本漏洞。攻击者可在页面中插入恶意js代码，获得用户cookie等信息，导致用户被劫持。&#xD;
 &#xD;
 </description></vulnerability><vulnerability><number>CNVD-2017-02830</number><title>麒麟堡垒机应用发布功能处存在文件上传漏洞</title><serverity>高</serverity><products><product>麒麟堡垒机 麒麟堡垒机 </product></products><isEvent>通用软硬件漏洞</isEvent><submitTime>2017-03-11</submitTime><openTime>2017-04-26</openTime><discovererName>wefgod</discovererName><formalWay>厂商尚未提供漏洞修补方案，请关注厂商主页及时更新：&#xD;
 http://www.tosec.com.cn/</formalWay><description>麒麟堡垒机是开源运维堡垒机。&#xD;

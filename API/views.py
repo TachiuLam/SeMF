@@ -287,7 +287,7 @@ def ding_vuln_token(request):
     if not tk_user_name_zh:  # 校验token，防止cc攻击，导致缓存空间不足
         return page_not_found(request)
 
-    v_detail_id = 'yz' + vuln_id
+    v_detail_id = 'tc' + vuln_id
     if not Cache.get_value(key=v_detail_id):
         v_token = JWT.generate_jwt(user=tk_user_name_zh, v_detail_id=v_detail_id)
         v_detail_id = Cache.set_value(v_token, key=v_detail_id, key_time_id=2)
@@ -308,7 +308,7 @@ def ding_vuln_detail(request, v_detail_id):
     tk_user_name_zh = jwt.get('username') if jwt else None
 
     user_name_zh = tk_user_name_zh.split('tk_')[1]
-    vuln_id = JWT.decode_jwt(v_token).get('v_detail_id').split('yz')[1]
+    vuln_id = JWT.decode_jwt(v_token).get('v_detail_id').split('tc')[1]
     user_name = han_to_pinyin(user_name_zh)
     res = get_user_area(user_name)
     is_admin, user_area_list = res.get('is_admin'), res.get('user_area_list')

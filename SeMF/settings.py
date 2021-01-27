@@ -41,7 +41,7 @@ SAFE_URL = [
 MANAGE_TEAM = ['安全']
 
 # 设置网站根地址
-WEB_URL = 'http://semf.yingzi.com'
+WEB_URL = 'http://semf.company.com'
 
 # 设置登录初始路径
 LOGIN_URL = '/view/'
@@ -71,10 +71,10 @@ ALL_MENU_KEY = 'amk'
 PERMISSION_MENU_KEY = 'pmk'
 
 # 设置邮箱
-EMAIL_HOST = 'smtp.yingzi.com'  # SMTP地址
+EMAIL_HOST = 'smtp.company.com'  # SMTP地址
 EMAIL_PORT = 25  # SMTP端口
-EMAIL_HOST_USER = 'scanning@yingzi.com'  # 我自己的邮箱
-EMAIL_HOST_PASSWORD = 'B68PvUZ4mRY'  # 我的邮箱密码
+EMAIL_HOST_USER = 'scanning@company.com'  # 我自己的邮箱
+EMAIL_HOST_PASSWORD = 'xxx'  # 我的邮箱密码
 EMAIL_SUBJECT_PREFIX = u'[SeMF]'  # 为邮件Subject-line前缀,默认是'[django]'
 EMAIL_USE_TLS = True  # 与SMTP服务器通信时，是否启动TLS链接(安全链接)。默认是false
 # 管理员站点
@@ -82,7 +82,7 @@ SERVER_EMAIL = 'techaolin@gamil.com'
 DEFAULT_FROM_EMAIL = '安全管控平台<Se@outlook.com>'
 
 # 设置队列存储
-BROKER_URL = 'amqp://semf:1qaz@WSX@rabbitmq/semf'  # 设置与rabbitmq一致
+BROKER_URL = 'amqp://semf:xxx@WSX@rabbitmq/semf'  # 设置与rabbitmq一致
 # BROKER_URL = 'amqp://172.19.130.20/semf'
 CELERY_ACCEPT_CONTENT = ['pickle', 'json', 'msgpack', 'yaml']
 
@@ -162,7 +162,7 @@ DATABASES = {
         # 'HOST': '172.19.130.20',
         'NAME': 'defectdojo',
         'USER': 'defectdojo',
-        'PASSWORD': 'l8f3JJOhFor',
+        'PASSWORD': 'xxx',
         'HOST': '172.18.10.35',
         'PORT': '3306',
         'OPTIONS': {
@@ -182,7 +182,7 @@ CACHES = {
             "SOCKET_CONNECT_TIMEOUT": 5,  # 建立连接超时 in seconds
             "SOCKET_TIMEOUT": 5,  # 连接建立后读写超时 in seconds
             "IGNORE_EXCEPTIONS": True,  # 忽略异常
-            "PASSWORD": "143edid8Svaq",
+            "PASSWORD": "xxx",
             "DECODE_RESPONSES": True    # 数据存储格式为字符串
         }
     },
@@ -192,19 +192,19 @@ CUBES_REDIS_TIMEOUT = 1 * 50 * 60
 NEVER_REDIS_TIMEOUT = 365 * 24 * 60 * 60
 
 # LDAP 认证
-LDAP_SERVER_POOL = ["corp.yingzi.com:636"]
-ADMIN_DN = "yz_semf"
-ADMIN_PASSWORD = "9ik44DENWa8"
-SEARCH_BASE = "ou=corp,dc=corp,dc=yingzi,dc=com"
+LDAP_SERVER_POOL = ["corp.company.com:636"]
+ADMIN_DN = "semf"
+ADMIN_PASSWORD = "xx"
+SEARCH_BASE = "ou=corp,dc=corp,dc=company,dc=com"
 
 # 钉钉H5微应用
-AGENT_ID = "825883923"
-APP_KEY = 'dingkpdsu0ojcv1dvsqw'
-APP_SECRET = 'd-RnJoghM9MDULNobwsl4j64DWV5-_xAMzk8RrrWAABsYGg8Saj9ZVC4VctoC4_Y'
+AGENT_ID = "xxxx"
+APP_KEY = 'xxxxxx'
+APP_SECRET = 'd-x-xx'
 # 钉钉第三方免登
-AUTH_APP_ID = 'dingoab5rfj5eecmn00yvr'
-AUTH_APP_SECRET = 'AU0zCu5-E4clzz21nI4OCUX4t2k1GMsGb3bor4VWjesj5HIxWHRZ4Fpc2dgKFFQH'
-REDIRECT_URL = 'http://semf-dingtalk.yingzi.com/api/dingtalk/'
+AUTH_APP_ID = 'xxxx'
+AUTH_APP_SECRET = 'xx-xxxx'
+REDIRECT_URL = 'http://semf-dingtalk.company.com/api/dingtalk/'
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
